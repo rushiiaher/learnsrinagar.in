@@ -108,12 +108,17 @@ export async function loader({ request }) {
       'SELECT id, name FROM users WHERE role_id = 4 ORDER BY name'
     )
     const [liveClassesResult] = await query(`
-      SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
+      SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, 
+             CASE 
+               WHEN lc.is_all_schools = 1 THEN 'All Schools'
+               ELSE sch.name 
+             END as school_name
       FROM live_classes lc
       LEFT JOIN subjects s ON lc.subject_id = s.id
       JOIN classes c ON lc.class_id = c.id
       JOIN users u ON lc.teacher_id = u.id
-      JOIN schools sch ON lc.school_id = sch.id
+      LEFT JOIN schools sch ON lc.school_id = sch.id
+      WHERE lc.is_active = 1
       ORDER BY lc.created_at DESC
     `)
 
@@ -139,8 +144,8 @@ export async function loader({ request }) {
         LEFT JOIN subjects s ON lc.subject_id = s.id
         JOIN classes c ON lc.class_id = c.id
         JOIN users u ON lc.teacher_id = u.id
-        JOIN schools sch ON lc.school_id = sch.id
-        WHERE lc.school_id = ?
+        LEFT JOIN schools sch ON lc.school_id = sch.id
+        WHERE (lc.school_id = ? OR lc.is_all_schools = 1) AND lc.is_active = 1
         ORDER BY lc.created_at DESC
       `, [schoolId])
 
@@ -174,8 +179,8 @@ export async function loader({ request }) {
       LEFT JOIN subjects s ON lc.subject_id = s.id
       JOIN classes c ON lc.class_id = c.id
       JOIN users u ON lc.teacher_id = u.id
-      JOIN schools sch ON lc.school_id = sch.id
-      WHERE lc.teacher_id = ?
+      LEFT JOIN schools sch ON lc.school_id = sch.id
+      WHERE lc.teacher_id = ? AND lc.is_active = 1
       ORDER BY lc.created_at DESC
     `, [user.id])
 
