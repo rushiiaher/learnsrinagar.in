@@ -428,11 +428,11 @@ export default function ManageLiveClasses() {
                   )}
                   <div className='grid gap-4 py-4'>
                     <div className='grid gap-2'>
-                      <Label htmlFor='title'>Session Title *</Label>
+                      <Label htmlFor='title'>Lecture Title *</Label>
                       <Input
                         id='title'
                         name='title'
-                        placeholder='e.g., Mathematics Live Session'
+                        placeholder='e.g., Mathematics Live Lecture'
                         required
                         defaultValue={selectedClass?.title || ''}
                       />

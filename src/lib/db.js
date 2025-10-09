@@ -1,20 +1,20 @@
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
+    host: '69.62.84.118',
+    user: 'learnsrinagar',
     database: 'learnsrinagar',
-    password: '',
+    password: 'e3iWzvZnZifgN38OiM2Q',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 });
 
 // const pool = mysql.createPool({
-//     host: '69.62.84.118',
-//     user: 'learnsrinagar',
+//     host: 'localhost',
+//     user: 'root',
 //     database: 'learnsrinagar',
-//     password: 'e3iWzvZnZifgN38OiM2Q',
+//     password: '',
 //     waitForConnections: true,
 //     connectionLimit: 10,
 //     queueLimit: 0,

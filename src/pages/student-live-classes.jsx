@@ -11,7 +11,15 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Play, Clock, CheckCircle, ExternalLink } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Play, Clock, CheckCircle, ExternalLink, Search, Filter } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -98,17 +106,28 @@ export async function loader({ request }) {
       lc.created_at DESC
   `, [classId, schoolId])
 
+  // Get all subjects for filter dropdown
+  const [subjects] = await query('SELECT * FROM subjects ORDER BY name')
+
   // Get student's school name
   const [schoolInfo] = await query('SELECT name FROM schools WHERE id = ?', [schoolId])
   const schoolName = schoolInfo[0]?.name || 'Unknown School'
 
-  return { liveClasses, user, classId, schoolId, schoolName }
+  return { liveClasses, subjects, user, classId, schoolId, schoolName }
 }
 
 export default function StudentLiveClasses() {
-  const { liveClasses, user, schoolName } = useLoaderData()
+  const { liveClasses, subjects, user, schoolName } = useLoaderData()
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    search: '',
+    subject: 'all',
+    status: 'all',
+    date: 'all'
+  })
 
   const handleWatchLive = (liveClass) => {
     // YouTube blocks embedding, so open in new tab
@@ -131,9 +150,41 @@ export default function StudentLiveClasses() {
     return { ...lc, status }
   })
 
-  const liveSessions = updatedLiveClasses.filter(lc => lc.status === 'live')
-  const upcomingSessions = updatedLiveClasses.filter(lc => lc.status === 'upcoming' || lc.status === 'scheduled')
-  const completedSessions = updatedLiveClasses.filter(lc => lc.status === 'completed')
+  // Filter live classes
+  const filteredLiveClasses = updatedLiveClasses.filter(lc => {
+    const matchesSearch = !filters.search || 
+      lc.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+      lc.topic_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      lc.teacher_name?.toLowerCase().includes(filters.search.toLowerCase())
+    
+    const matchesSubject = filters.subject === 'all' || 
+      lc.subject_id?.toString() === filters.subject
+    
+    const matchesStatus = filters.status === 'all' || lc.status === filters.status
+    
+    const matchesDate = filters.date === 'all' || (() => {
+      if (!lc.start_time) return filters.date === 'all'
+      const classDate = new Date(lc.start_time).toDateString()
+      const today = new Date().toDateString()
+      const tomorrow = new Date(Date.now() + 86400000).toDateString()
+      
+      switch (filters.date) {
+        case 'today': return classDate === today
+        case 'tomorrow': return classDate === tomorrow
+        case 'this_week': {
+          const weekFromNow = new Date(Date.now() + 7 * 86400000)
+          return new Date(lc.start_time) <= weekFromNow
+        }
+        default: return true
+      }
+    })()
+    
+    return matchesSearch && matchesSubject && matchesStatus && matchesDate
+  })
+
+  const liveSessions = filteredLiveClasses.filter(lc => lc.status === 'live')
+  const upcomingSessions = filteredLiveClasses.filter(lc => lc.status === 'upcoming' || lc.status === 'scheduled')
+  const completedSessions = filteredLiveClasses.filter(lc => lc.status === 'completed')
 
   return (
     <div className='container mx-auto p-6'>
@@ -143,6 +194,67 @@ export default function StudentLiveClasses() {
           {schoolName} - Watch live lectures and access recorded sessions
         </p>
       </div>
+
+      {/* Filters */}
+      <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle className='text-lg flex items-center gap-2'>
+            <Filter className='h-5 w-5' />
+            Filter Classes
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+            <div className='relative'>
+              <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+              <Input
+                placeholder='Search lectures...'
+                value={filters.search}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                className='pl-8'
+              />
+            </div>
+            
+            <Select value={filters.subject} onValueChange={(value) => setFilters(prev => ({ ...prev, subject: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Subjects' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Subjects</SelectItem>
+                {subjects.map((subject) => (
+                  <SelectItem key={subject.id} value={subject.id.toString()}>
+                    {subject.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={filters.status} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Status' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Status</SelectItem>
+                <SelectItem value='live'>Live Now</SelectItem>
+                <SelectItem value='upcoming'>Upcoming</SelectItem>
+                <SelectItem value='completed'>Completed</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={filters.date} onValueChange={(value) => setFilters(prev => ({ ...prev, date: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Dates' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Dates</SelectItem>
+                <SelectItem value='today'>Today</SelectItem>
+                <SelectItem value='tomorrow'>Tomorrow</SelectItem>
+                <SelectItem value='this_week'>This Week</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Live Now Section */}
       {liveSessions.length > 0 && (
@@ -315,6 +427,18 @@ export default function StudentLiveClasses() {
       )}
 
       {/* No Sessions Message */}
+      {filteredLiveClasses.length === 0 && liveClasses.length > 0 && (
+        <Card>
+          <CardContent className='text-center py-12'>
+            <Filter className='mx-auto h-12 w-12 text-muted-foreground mb-4' />
+            <h3 className='text-lg font-semibold mb-2'>No Classes Match Your Filters</h3>
+            <p className='text-muted-foreground'>
+              Try adjusting your filters to see more live classes.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+      
       {liveClasses.length === 0 && (
         <Card>
           <CardContent className='text-center py-12'>
