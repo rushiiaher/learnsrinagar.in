@@ -7,7 +7,7 @@ const sessionStorage = createCookieSessionStorage({
         sameSite: "lax",
         path: "/",
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
     },
 });
 
@@ -20,7 +20,7 @@ export async function createSession(request, user) {
         headers: {
             "Set-Cookie": await sessionStorage.commitSession(session, {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
                 maxAge: 60 * 60 * 24 * 7
             }),
