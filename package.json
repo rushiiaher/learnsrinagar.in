@@ -6,7 +6,8 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev",
-    "start": "remix-serve ./build/server/index.js"
+    "start": "remix-serve ./build/server/index.js",
+    "production": "node build-and-start.js"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.11",
