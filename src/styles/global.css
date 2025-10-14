@@ -118,3 +118,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Mobile-first responsive utilities */
+  .container {
+    @apply w-full max-w-7xl mx-auto;
+  }
+  
+  /* Ensure tables are scrollable on mobile */
+  .table-responsive {
+    @apply overflow-x-auto;
+  }
+  
+  /* Mobile-friendly button groups */
+  .btn-group-mobile {
+    @apply flex flex-col sm:flex-row gap-2;
+  }
+  
+  /* Responsive text sizes */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+  
+  /* Mobile-friendly form layouts */
+  .form-responsive {
+    @apply flex flex-col sm:flex-row gap-3;
+  }
+}

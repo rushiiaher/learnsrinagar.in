@@ -500,7 +500,7 @@ export default function Attendance() {
       id: 'markAttendance',
       header: 'Mark Attendance',
       cell: ({ row }) => (
-        <div className='flex justify-center space-x-2'>
+        <div className='flex flex-col sm:flex-row justify-center gap-1 sm:gap-2'>
           {user.role_name === 'class_admin' ? (
             <>
               <Button
@@ -511,9 +511,11 @@ export default function Attendance() {
                 }
                 size='sm'
                 onClick={() => markAttendance(row.original.id, 'present')}
+                className='text-xs sm:text-sm'
               >
-                <CheckCircleIcon className='mr-1 size-4' />
-                Present
+                <CheckCircleIcon className='mr-1 size-3 sm:size-4' />
+                <span className='hidden sm:inline'>Present</span>
+                <span className='sm:hidden'>P</span>
               </Button>
               <Button
                 variant={
@@ -523,9 +525,11 @@ export default function Attendance() {
                 }
                 size='sm'
                 onClick={() => markAttendance(row.original.id, 'absent')}
+                className='text-xs sm:text-sm'
               >
-                <XCircleIcon className='mr-1 size-4' />
-                Absent
+                <XCircleIcon className='mr-1 size-3 sm:size-4' />
+                <span className='hidden sm:inline'>Absent</span>
+                <span className='sm:hidden'>A</span>
               </Button>
               <Button
                 variant={
@@ -535,13 +539,15 @@ export default function Attendance() {
                 }
                 size='sm'
                 onClick={() => markAttendance(row.original.id, 'late')}
+                className='text-xs sm:text-sm'
               >
-                <ClockIcon className='mr-1 size-4' />
-                Late
+                <ClockIcon className='mr-1 size-3 sm:size-4' />
+                <span className='hidden sm:inline'>Late</span>
+                <span className='sm:hidden'>L</span>
               </Button>
             </>
           ) : (
-            <span className='text-sm text-gray-500 italic'>
+            <span className='text-xs sm:text-sm text-gray-500 italic'>
               Only class admins can mark attendance
             </span>
           )}
@@ -579,56 +585,55 @@ export default function Attendance() {
   })
 
   return (
-    <div className='container mx-auto pb-10'>
-      <div className='flex flex-col space-y-4 md:flex-row md:items-center md:justify-end mb-6'>
-        <div className='flex flex-col md:flex-row gap-4'>
-          <div className='w-full'>
-            <Select value={selectedClass} onValueChange={setSelectedClass}>
-              <SelectTrigger>
-                <SelectValue placeholder='Select a class' />
-              </SelectTrigger>
-              <SelectContent>
-                {classes.map((cls) => (
-                  <SelectItem key={cls.id} value={cls.id.toString()}>
-                    Class {cls.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className='container mx-auto px-4 pb-10'>
+      <div className='flex flex-col gap-4 mb-6'>
+        <h1 className='text-xl font-semibold'>Attendance</h1>
+        <div className='flex flex-col sm:flex-row gap-3'>
+          <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <SelectTrigger className='w-full sm:w-[200px]'>
+              <SelectValue placeholder='Select a class' />
+            </SelectTrigger>
+            <SelectContent>
+              {classes.map((cls) => (
+                <SelectItem key={cls.id} value={cls.id.toString()}>
+                  Class {cls.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <div className='w-full'>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant='outline'
-                  className='w-full justify-start text-left font-normal'
-                >
-                  <CalendarIcon className='mr-2 h-4 w-4' />
-                  {selectedDate ? format(selectedDate, 'PPP') : 'Select date'}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className='w-auto p-0'>
-                <Calendar
-                  mode='single'
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant='outline'
+                className='w-full sm:w-auto justify-start text-left font-normal'
+              >
+                <CalendarIcon className='mr-2 h-4 w-4 flex-shrink-0' />
+                <span className='truncate'>
+                  {selectedDate ? format(selectedDate, 'MMM dd, yyyy') : 'Select date'}
+                </span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-auto p-0' align='end'>
+              <Calendar
+                mode='single'
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
       {tableData.length > 0 ? (
-        <div className='rounded-md border'>
+        <div className='rounded-md border overflow-x-auto'>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className='text-center'>
+                    <TableHead key={header.id} className='text-center whitespace-nowrap'>
                       {header.isPlaceholder
                         ? null
                         : flexRender(

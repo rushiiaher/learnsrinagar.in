@@ -355,25 +355,28 @@ export default function Teacher() {
         const id = row.original.id
         const assigned = teacherAssignments[id] || []
         return (
-          <div className='flex flex-wrap gap-1 justify-center'>
+          <div className='flex flex-col gap-1 items-center max-w-xs'>
             {assigned.length > 0 ? (
-              assigned.map((a) => (
-                <Badge
-                  key={a.id}
-                  variant='secondary'
-                  className='flex items-center gap-1'
-                >
-                  {a.subject_name} (Class {a.class_name})
-                  <button
-                    className='ml-1 text-xs hover:text-destructive'
-                    onClick={() => handleRemoveAssignment(a.id)}
+              <div className='flex flex-wrap gap-1 justify-center'>
+                {assigned.map((a) => (
+                  <Badge
+                    key={a.id}
+                    variant='secondary'
+                    className='flex items-center gap-1 text-xs'
                   >
-                    ×
-                  </button>
-                </Badge>
-              ))
+                    <span className='hidden sm:inline'>{a.subject_name} (Class {a.class_name})</span>
+                    <span className='sm:hidden'>{a.subject_name} ({a.class_name})</span>
+                    <button
+                      className='ml-1 text-xs hover:text-destructive'
+                      onClick={() => handleRemoveAssignment(a.id)}
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+              </div>
             ) : (
-              <span className='text-muted-foreground text-sm'>
+              <span className='text-muted-foreground text-xs sm:text-sm'>
                 No subjects assigned
               </span>
             )}
@@ -381,9 +384,10 @@ export default function Teacher() {
               variant='outline'
               size='sm'
               onClick={() => handleAssignSubject(id)}
-              className='mt-1 h-6'
+              className='mt-1 h-6 text-xs'
             >
               <PlusIcon className='h-3 w-3' />
+              <span className='hidden sm:inline ml-1'>Assign</span>
             </Button>
           </div>
         )
@@ -402,20 +406,24 @@ export default function Teacher() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <div className='flex justify-center gap-2'>
+        <div className='flex justify-center gap-1 sm:gap-2'>
           <Button
             variant='outline'
             size='sm'
             onClick={() => handleEditTeacher(row.original)}
+            className='p-2'
           >
-            <PencilIcon className='size-4' />
+            <PencilIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Edit</span>
           </Button>
           <Button
             variant='outline'
             size='sm'
             onClick={() => openDeleteDialog(row.original)}
+            className='p-2'
           >
-            <TrashIcon className='size-4' />
+            <TrashIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Delete</span>
           </Button>
         </div>
       ),
@@ -436,16 +444,16 @@ export default function Teacher() {
     dialogType === 'create' ? 'Create New Teacher' : 'Edit Teacher'
 
   return (
-    <div className='container mx-auto pb-10'>
-      <div className='flex justify-between items-center mb-6'>
-        <span className='ml-2 pt-2 text-xl font-semibold'>Manage Teachers</span>
-        <Button onClick={handleCreateTeacher}>
+    <div className='container mx-auto px-4 pb-10'>
+      <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6'>
+        <h1 className='text-xl font-semibold'>Manage Teachers</h1>
+        <Button onClick={handleCreateTeacher} className='w-full sm:w-auto'>
           <PlusIcon className='mr-2 h-4 w-4' />
           <span>Add Teacher</span>
         </Button>
       </div>
 
-      <div className='rounded-md border'>
+      <div className='rounded-md border overflow-x-auto'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
@@ -494,23 +502,28 @@ export default function Teacher() {
         </Table>
       </div>
 
-      <div className='flex items-center justify-end space-x-2 py-4'>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className='flex items-center justify-between py-4'>
+        <div className='text-sm text-muted-foreground'>
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </div>
+        <div className='flex space-x-2'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       {/* Create/Edit Teacher Dialog */}

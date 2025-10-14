@@ -207,20 +207,24 @@ export default function Admins() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <div className='flex justify-center gap-2'>
+        <div className='flex justify-center gap-1 sm:gap-2'>
           <Button
             variant='outline'
             size='sm'
             onClick={() => handleEditAdmin(row.original)}
+            className='p-2'
           >
-            <PencilIcon className='size-4' />
+            <PencilIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Edit</span>
           </Button>
           <Button
             variant='outline'
             size='sm'
             onClick={() => openDeleteDialog(row.original)}
+            className='p-2'
           >
-            <TrashIcon className='size-4' />
+            <TrashIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Delete</span>
           </Button>
         </div>
       ),
@@ -239,16 +243,16 @@ export default function Admins() {
     dialogType === 'create' ? 'Create New Admin' : 'Edit Admin'
 
   return (
-    <div className='container mx-auto pb-10'>
-      <div className='flex justify-between items-center mb-6'>
-        <span className='ml-2 pt-2 text-xl font-semibold'>Manage Admins</span>
-        <Button onClick={handleCreateAdmin}>
+    <div className='container mx-auto px-4 pb-10'>
+      <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6'>
+        <h1 className='text-xl font-semibold'>Manage Admins</h1>
+        <Button onClick={handleCreateAdmin} className='w-full sm:w-auto'>
           <PlusIcon className='mr-2 h-4 w-4' />
           <span>Add Admin</span>
         </Button>
       </div>
 
-      <div className='rounded-md border'>
+      <div className='rounded-md border overflow-x-auto'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
@@ -297,23 +301,28 @@ export default function Admins() {
         </Table>
       </div>
 
-      <div className='flex items-center justify-end space-x-2 py-4'>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className='flex items-center justify-between py-4'>
+        <div className='text-sm text-muted-foreground'>
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </div>
+        <div className='flex space-x-2'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       {/* Create/Edit Dialog */}

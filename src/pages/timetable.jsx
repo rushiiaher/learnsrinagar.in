@@ -214,22 +214,17 @@ export default function Timetable() {
   }, [liveClasses, selectedDate, user, isTeacher, selectedTeacher])
 
   return (
-    <div className='container mx-auto pb-10'>
-      <div className='flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6'>
-        <div className='flex items-center gap-2'>
-          <h1 className='ml-2 pt-2 text-xl font-semibold'>Class Schedule</h1>
-        </div>
-
-        <div className='flex flex-col sm:flex-row gap-4'>
-          <div className='flex items-center gap-2'>
-            {/* <CalendarIcon className='h-4 w-4' /> */}
-            <Input
-              type='date'
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className='w-full sm:w-[200px]'
-            />
-          </div>
+    <div className='container mx-auto px-4 pb-10'>
+      <div className='flex flex-col gap-4 mb-6'>
+        <h1 className='text-xl font-semibold'>Class Schedule</h1>
+        
+        <div className='flex flex-col sm:flex-row gap-3'>
+          <Input
+            type='date'
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className='w-full sm:w-[200px]'
+          />
 
           {!isTeacher && teachersData.length > 0 && (
             <Select
@@ -254,25 +249,26 @@ export default function Timetable() {
 
       {/* Display selected date */}
       <div className='mb-4 p-3 bg-gray-50 rounded-lg'>
-        <span className='font-medium text-gray-700'>
-          Showing schedule for: {format(new Date(selectedDate), 'dd/MM/yyyy')}
+        <span className='font-medium text-gray-700 text-sm sm:text-base'>
+          Schedule: {format(new Date(selectedDate), 'dd/MM/yyyy')}
         </span>
       </div>
 
       {timeSlots.length > 0 && classesData.length > 0 ? (
         <div className='overflow-x-auto'>
-          <table className='w-full border-collapse'>
+          <table className='w-full border-collapse min-w-[600px]'>
             <thead>
               <tr>
-                <th className='border border-gray-300 bg-gray-100 p-2 text-center font-medium text-sm'>
+                <th className='border border-gray-300 bg-gray-100 p-2 text-center font-medium text-xs sm:text-sm min-w-[80px]'>
                   Class
                 </th>
                 {timeSlots.map((slot) => (
                   <th
                     key={slot.key}
-                    className='border border-gray-300 bg-gray-100 p-2 text-center font-medium text-sm'
+                    className='border border-gray-300 bg-gray-100 p-2 text-center font-medium text-xs sm:text-sm min-w-[120px]'
                   >
-                    {slot.formattedTime}
+                    <div className='hidden sm:block'>{slot.formattedTime}</div>
+                    <div className='sm:hidden text-xs'>{slot.formattedTime.replace(' - ', '-')}</div>
                   </th>
                 ))}
               </tr>
@@ -280,8 +276,9 @@ export default function Timetable() {
             <tbody>
               {classesData.map((cls) => (
                 <tr key={cls.id}>
-                  <td className='border border-gray-300 bg-gray-50 p-3 text-center font-medium'>
-                    Class {cls.name}
+                  <td className='border border-gray-300 bg-gray-50 p-2 sm:p-3 text-center font-medium text-xs sm:text-sm'>
+                    <div className='hidden sm:block'>Class {cls.name}</div>
+                    <div className='sm:hidden'>{cls.name}</div>
                   </td>
                   {timeSlots.map((slot) => {
                     const classInfo = classTimeTable[cls.id]?.[slot.key]
@@ -290,7 +287,7 @@ export default function Timetable() {
                       return (
                         <td
                           key={slot.key}
-                          className='border border-gray-300 p-4 text-center text-gray-400'
+                          className='border border-gray-300 p-2 sm:p-4 text-center text-gray-400 text-xs sm:text-sm'
                         >
                           -
                         </td>
@@ -300,27 +297,29 @@ export default function Timetable() {
                     return (
                       <td
                         key={slot.key}
-                        className='border border-gray-300 p-4 text-center'
+                        className='border border-gray-300 p-2 sm:p-4 text-center'
                       >
-                        <div className='font-medium'>{classInfo.subject}</div>
-                        <div className='text-sm mt-1'>
-                          ({classInfo.teacher})
+                        <div className='font-medium text-xs sm:text-sm'>{classInfo.subject}</div>
+                        <div className='text-xs mt-1'>
+                          <span className='hidden sm:inline'>({classInfo.teacher})</span>
+                          <span className='sm:hidden'>({classInfo.teacher.split(' ')[0]})</span>
                         </div>
                         {classInfo.description && (
-                          <div className='text-xs text-gray-600 mt-1 italic'>
+                          <div className='text-xs text-gray-600 mt-1 italic hidden sm:block'>
                             {classInfo.description}
                           </div>
                         )}
                         {canJoinClass && (
-                          <div className='mt-3'>
+                          <div className='mt-2 sm:mt-3'>
                             <a
                               href={classInfo.joinUrl}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='inline-flex items-center justify-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+                              className='inline-flex items-center justify-center rounded-md bg-primary px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90'
                             >
-                              <VideoIcon className='h-3.5 w-3.5 mr-1.5' />
-                              Join Class
+                              <VideoIcon className='h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 sm:mr-1.5' />
+                              <span className='hidden sm:inline'>Join Class</span>
+                              <span className='sm:hidden'>Join</span>
                             </a>
                           </div>
                         )}

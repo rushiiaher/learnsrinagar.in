@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getUser } from '@/lib/auth'
 import { query } from '@/lib/db'
 import { redirect } from '@remix-run/node'
@@ -37,7 +37,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, BarChart3, MessageSquare, Users } from 'lucide-react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
 
 export async function loader({ request }) {
   const user = await getUser(request)
@@ -142,6 +148,14 @@ export default function Dashboard() {
     from: subDays(new Date(), 14),
     to: new Date(),
   })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Calculate average rating for a specific section
   const calculateAverageRating = (section) => {
@@ -329,209 +343,295 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='container mx-auto pb-10'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-xl font-semibold'>Dashboard</h1>
-        <div className='flex flex-col justify-end md:flex-row gap-4 mt-4'>
-          {/* <div className='w-full md:w-1/3'> */}
-          <Select
-            value={selectedSchool}
-            onValueChange={(value) => {
-              setSelectedSchool(value)
-              // Reset class selection when school changes
-              if (value !== selectedSchool) {
-                setSelectedClass('all')
-              }
-            }}
-            defaultValue='all'
-          >
-            <SelectTrigger>
-              <SelectValue placeholder='Select a school' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All Schools</SelectItem>
-              {Array.isArray(schools) &&
-                schools.map((school) => (
-                  <SelectItem
-                    key={school.id}
-                    value={school.id ? school.id.toString() : ''}
-                  >
-                    {school.name} ({school.class_count || 0} classes)
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
-          {/* </div> */}
-
-          {/* <div className='w-full'> */}
-          <Select
-            value={selectedClass}
-            onValueChange={setSelectedClass}
-            defaultValue='all'
-          >
-            <SelectTrigger>
-              <SelectValue placeholder='Select a class' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All Classes</SelectItem>
-              {Array.isArray(filteredClasses) &&
-                filteredClasses.map((cls) => (
-                  <SelectItem
-                    key={cls.id}
-                    value={cls.id ? cls.id.toString() : ''}
-                  >
-                    {cls.name}
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
-          {/* </div> */}
-
-          <div className='w-full '>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id='date'
-                  variant='outline'
-                  className='w-full justify-start text-left font-normal'
-                >
-                  <CalendarIcon className='mr-2 h-4 w-4' />
-                  {dateRange.from ? (
-                    dateRange.to ? (
-                      <>
-                        {format(dateRange.from, 'LLL dd, y')} -{' '}
-                        {format(dateRange.to, 'LLL dd, y')}
-                      </>
-                    ) : (
-                      format(dateRange.from, 'LLL dd, y')
-                    )
-                  ) : (
-                    <span>Pick a date range</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className='w-auto p-0' align='start'>
-                <Calendar
-                  initialFocus
-                  mode='range'
-                  defaultMonth={dateRange.from}
-                  selected={dateRange}
-                  onSelect={onDateRangeChange}
-                  numberOfMonths={2}
-                  disabled={(date) => date > new Date()}
-                />
-              </PopoverContent>
-            </Popover>
+    <div className='container mx-auto px-4 pb-10'>
+      <div className='flex flex-col gap-4 mb-6'>
+        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+          <h1 className='text-xl font-semibold'>Dashboard</h1>
+          <div className='text-sm text-muted-foreground'>
+            {selectedSchool !== 'all' && filteredClasses.length > 0 && (
+              <span>Showing data for selected filters</span>
+            )}
           </div>
         </div>
-      </div>
-
-      <h2 className='mt-8 mb-4 text-xl font-semibold'>Parent's Feedback</h2>
-
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
-        <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium text-muted-foreground'>
-              Academic Feedback
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {calculateAverageRating('academic').toFixed(1)}/5.0
-            </div>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {getFeedbackCount('academic')} ratings from parents
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium text-muted-foreground'>
-              Behavioral Feedback
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {calculateAverageRating('behavioral').toFixed(1)}/5.0
-            </div>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {getFeedbackCount('behavioral')} ratings from parents
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium text-muted-foreground'>
-              Overall Satisfaction
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {calculateAverageRating('satisfaction').toFixed(1)}/5.0
-            </div>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {getFeedbackCount('satisfaction')} ratings from parents
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <h2 className='mt-8 mb-4 text-xl font-semibold'>Student's Attendance</h2>
-
-      <Card>
-        <CardContent className='pt-6'>
-          <div style={{ width: '100%', height: 400 }}>
-            <ResponsiveContainer width='100%' height='100%'>
-              <LineChart
-                data={chartData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
+        
+        <Card className='p-4'>
+          <div className='flex flex-col gap-3'>
+            <div className='text-sm font-medium text-muted-foreground'>Filters</div>
+            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
+              <Select
+                value={selectedSchool}
+                onValueChange={(value) => {
+                  setSelectedSchool(value)
+                  if (value !== selectedSchool) {
+                    setSelectedClass('all')
+                  }
                 }}
+                defaultValue='all'
               >
-                <CartesianGrid strokeDasharray='3 3' />
-                <XAxis dataKey='date' />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type='monotone'
-                  dataKey='present'
-                  stroke='#10b981'
-                  activeDot={{ r: 8 }}
-                  strokeWidth={2}
-                  name='Present'
-                />
-                <Line
-                  type='monotone'
-                  dataKey='absent'
-                  stroke='#ef4444'
-                  strokeWidth={2}
-                  name='Absent'
-                />
-                <Line
-                  type='monotone'
-                  dataKey='late'
-                  stroke='#f59e0b'
-                  strokeWidth={2}
-                  name='Late'
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+                <SelectTrigger className='w-full'>
+                  <SelectValue placeholder='Select a school' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all'>All Schools</SelectItem>
+                  {Array.isArray(schools) &&
+                    schools.map((school) => (
+                      <SelectItem
+                        key={school.id}
+                        value={school.id ? school.id.toString() : ''}
+                      >
+                        {school.name} ({school.class_count || 0})
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
 
-          {chartData.length === 0 && (
-            <p className='text-center text-muted-foreground py-4'>
-              No attendance data available for the selected criteria. Please
-              adjust your filters.
-            </p>
-          )}
-        </CardContent>
-      </Card>
+              <Select
+                value={selectedClass}
+                onValueChange={setSelectedClass}
+                defaultValue='all'
+              >
+                <SelectTrigger className='w-full'>
+                  <SelectValue placeholder='Select a class' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all'>All Classes</SelectItem>
+                  {Array.isArray(filteredClasses) &&
+                    filteredClasses.map((cls) => (
+                      <SelectItem
+                        key={cls.id}
+                        value={cls.id ? cls.id.toString() : ''}
+                      >
+                        Class {cls.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id='date'
+                    variant='outline'
+                    className='w-full justify-start text-left font-normal'
+                  >
+                    <CalendarIcon className='mr-2 h-4 w-4 flex-shrink-0' />
+                    <span className='truncate text-xs sm:text-sm'>
+                      {dateRange.from ? (
+                        dateRange.to ? (
+                          <>
+                            {format(dateRange.from, 'MMM dd')} - {format(dateRange.to, 'MMM dd')}
+                          </>
+                        ) : (
+                          format(dateRange.from, 'MMM dd')
+                        )
+                      ) : (
+                        'Date range'
+                      )}
+                    </span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-auto p-0' align='end'>
+                  <Calendar
+                    initialFocus
+                    mode='range'
+                    defaultMonth={dateRange.from}
+                    selected={dateRange}
+                    onSelect={onDateRangeChange}
+                    numberOfMonths={isMobile ? 1 : 2}
+                    disabled={(date) => date > new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <Tabs defaultValue='overview' className='w-full'>
+        <TabsList className='grid w-full grid-cols-3 mb-6'>
+          <TabsTrigger value='overview' className='flex items-center gap-2 text-xs sm:text-sm'>
+            <BarChart3 className='h-4 w-4' />
+            <span className='hidden sm:inline'>Overview</span>
+            <span className='sm:hidden'>Stats</span>
+          </TabsTrigger>
+          <TabsTrigger value='feedback' className='flex items-center gap-2 text-xs sm:text-sm'>
+            <MessageSquare className='h-4 w-4' />
+            <span className='hidden sm:inline'>Feedback</span>
+            <span className='sm:hidden'>Reviews</span>
+          </TabsTrigger>
+          <TabsTrigger value='attendance' className='flex items-center gap-2 text-xs sm:text-sm'>
+            <Users className='h-4 w-4' />
+            <span className='hidden sm:inline'>Attendance</span>
+            <span className='sm:hidden'>Present</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value='overview' className='space-y-6'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                  Academic Feedback
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {calculateAverageRating('academic').toFixed(1)}/5.0
+                </div>
+                <p className='text-xs text-muted-foreground mt-1'>
+                  {getFeedbackCount('academic')} ratings from parents
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                  Behavioral Feedback
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {calculateAverageRating('behavioral').toFixed(1)}/5.0
+                </div>
+                <p className='text-xs text-muted-foreground mt-1'>
+                  {getFeedbackCount('behavioral')} ratings from parents
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                  Overall Satisfaction
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {calculateAverageRating('satisfaction').toFixed(1)}/5.0
+                </div>
+                <p className='text-xs text-muted-foreground mt-1'>
+                  {getFeedbackCount('satisfaction')} ratings from parents
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value='feedback' className='space-y-6'>
+          <div className='grid grid-cols-1 gap-6'>
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>Parent Feedback Summary</CardTitle>
+                <CardDescription>
+                  Detailed breakdown of parent feedback across different categories
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                  <div className='text-center p-4 bg-blue-50 rounded-lg'>
+                    <div className='text-2xl font-bold text-blue-600'>
+                      {calculateAverageRating('academic').toFixed(1)}
+                    </div>
+                    <div className='text-sm text-blue-600 font-medium'>Academic</div>
+                    <div className='text-xs text-muted-foreground'>
+                      {getFeedbackCount('academic')} reviews
+                    </div>
+                  </div>
+                  <div className='text-center p-4 bg-green-50 rounded-lg'>
+                    <div className='text-2xl font-bold text-green-600'>
+                      {calculateAverageRating('behavioral').toFixed(1)}
+                    </div>
+                    <div className='text-sm text-green-600 font-medium'>Behavioral</div>
+                    <div className='text-xs text-muted-foreground'>
+                      {getFeedbackCount('behavioral')} reviews
+                    </div>
+                  </div>
+                  <div className='text-center p-4 bg-purple-50 rounded-lg'>
+                    <div className='text-2xl font-bold text-purple-600'>
+                      {calculateAverageRating('satisfaction').toFixed(1)}
+                    </div>
+                    <div className='text-sm text-purple-600 font-medium'>Satisfaction</div>
+                    <div className='text-xs text-muted-foreground'>
+                      {getFeedbackCount('satisfaction')} reviews
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value='attendance' className='space-y-6'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-lg'>Student Attendance Trends</CardTitle>
+              <CardDescription>
+                Daily attendance tracking across selected date range
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='w-full h-[300px] sm:h-[400px]'>
+                <ResponsiveContainer width='100%' height='100%'>
+                  <LineChart
+                    data={chartData}
+                    margin={{
+                      top: 5,
+                      right: 10,
+                      left: 10,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis 
+                      dataKey='date' 
+                      fontSize={12}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis 
+                      fontSize={12}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <Tooltip />
+                    <Legend 
+                      wrapperStyle={{ fontSize: '12px' }}
+                    />
+                    <Line
+                      type='monotone'
+                      dataKey='present'
+                      stroke='#10b981'
+                      activeDot={{ r: 6 }}
+                      strokeWidth={2}
+                      name='Present'
+                    />
+                    <Line
+                      type='monotone'
+                      dataKey='absent'
+                      stroke='#ef4444'
+                      strokeWidth={2}
+                      name='Absent'
+                    />
+                    <Line
+                      type='monotone'
+                      dataKey='late'
+                      stroke='#f59e0b'
+                      strokeWidth={2}
+                      name='Late'
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {chartData.length === 0 && (
+                <p className='text-center text-muted-foreground py-4'>
+                  No attendance data available for the selected criteria. Please
+                  adjust your filters.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* <Card>
         <CardHeader>

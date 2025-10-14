@@ -627,20 +627,24 @@ export default function Student() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <div className='flex justify-center gap-2'>
+        <div className='flex justify-center gap-1 sm:gap-2'>
           <Button
             variant='outline'
             size='sm'
             onClick={() => handleEditStudent(row.original)}
+            className='p-2'
           >
-            <PencilIcon className='size-4' />
+            <PencilIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Edit</span>
           </Button>
           <Button
             variant='outline'
             size='sm'
             onClick={() => openDeleteDialog(row.original)}
+            className='p-2'
           >
-            <TrashIcon className='size-4' />
+            <TrashIcon className='size-3 sm:size-4' />
+            <span className='sr-only'>Delete</span>
           </Button>
         </div>
       ),

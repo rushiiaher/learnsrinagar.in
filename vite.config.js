@@ -25,6 +25,7 @@ export default defineConfig({
         return defineRoutes((route) => {
           route("/", "./pages/index.jsx", { index: true });
           route("/login", "./pages/login.jsx");
+          route("/.well-known/*", "./pages/.well-known.jsx");
           route("", "./components/layout.jsx", () => {
             return [
               route("/logout", "./pages/logout.jsx"),

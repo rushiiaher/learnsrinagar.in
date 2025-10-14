@@ -127,7 +127,7 @@ export default function Layout() {
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='truncate font-semibold'>Hybrid School</span>
                   <span className='truncate text-xs'>
-                    Powered by Cano Solutions
+                    Powered by Learn Srinagar
                   </span>
                 </div>
               </SidebarMenuButton>
@@ -204,7 +204,7 @@ export default function Layout() {
             </Breadcrumb>
           </div>
         </header>
-        <div className='p-4 pt-0'>
+        <div className='p-2 sm:p-4 pt-0'>
           <Outlet />
         </div>
       </SidebarInset>
