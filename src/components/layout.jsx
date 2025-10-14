@@ -125,9 +125,9 @@ export default function Layout() {
                   <BookOpen className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Hybrid School</span>
+                  <span className='truncate font-semibold'>Learn Srinagar</span>
                   <span className='truncate text-xs'>
-                    Powered by Learn Srinagar
+                    Transforming Education
                   </span>
                 </div>
               </SidebarMenuButton>
@@ -190,7 +190,7 @@ export default function Layout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink>Hybrid School</BreadcrumbLink>
+                  <BreadcrumbLink>Learn Srinagar</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block' />
                 <BreadcrumbItem>

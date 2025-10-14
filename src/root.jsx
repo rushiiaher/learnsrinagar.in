@@ -9,7 +9,7 @@ import '@/styles/global.css'
 import { Toaster } from '@/components/ui/sonner'
 
 export function meta() {
-  return [{ title: 'Hybrid School | learnsrinagar.in' }]
+  return [{ title: 'Learn Srinagar | learnsrinagar.in' }]
 }
 
 export default function App() {
