@@ -20,7 +20,7 @@ export async function loader({ params }) {
       FROM blogs b
       JOIN blog_categories bc ON b.category_id = bc.id
       JOIN users u ON b.author_id = u.id
-      WHERE b.id = ? AND b.status = 'published'
+      WHERE b.id = ?
     `, [blogId])
     
     if (blog) {
@@ -42,9 +42,6 @@ export async function loader({ params }) {
       throw new Response('Blog not found', { status: 404 })
     }
 
-    // Increment view count
-    await db.query('UPDATE blogs SET views = views + 1 WHERE id = ?', [blogId])
-
     // Fetch related blogs from same category
     const relatedBlogs = await db.query(`
       SELECT 
@@ -54,7 +51,7 @@ export async function loader({ params }) {
       FROM blogs b
       JOIN blog_categories bc ON b.category_id = bc.id
       JOIN users u ON b.author_id = u.id
-      WHERE b.category_id = ? AND b.id != ? AND b.status = 'published'
+      WHERE b.category_id = ? AND b.id != ?
       ORDER BY b.publish_date DESC
       LIMIT 3
     `, [blog.category_id, blogId])
@@ -71,7 +68,14 @@ export async function loader({ params }) {
       }
     })
 
-    return { blog, relatedBlogs: relatedBlogsWithImages }
+    return new Response(JSON.stringify({ blog, relatedBlogs: relatedBlogsWithImages }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
   } catch (error) {
     console.error('Error loading blog:', error)
     throw new Response('Blog not found', { status: 404 })
@@ -146,10 +150,7 @@ export default function BlogDetail() {
               <Calendar className="h-4 w-4" />
               <span>{formatDate(blog.publish_date)}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              <span>{blog.views} views</span>
-            </div>
+
           </div>
 
           <div className="flex items-center gap-2">
