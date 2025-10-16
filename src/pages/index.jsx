@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -8,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Link } from '@remix-run/react'
 import {
   BookOpen,
@@ -25,9 +27,12 @@ import {
   Globe,
   Zap,
   Shield,
+  Menu,
 } from 'lucide-react'
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
   const schools = [
     {
       zone: 'Srinagar',
@@ -145,14 +150,104 @@ export default function Home() {
               Schools
               <span className='absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full'></span>
             </button>
+            <Link to='/blogs' className='relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group'>
+              Blog
+              <span className='absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full'></span>
+            </Link>
           </nav>
           <div className='flex items-center gap-3'>
-            <Link to='/login'>
+            <Link to='/login' className='hidden sm:block'>
               <Button size='sm' className='shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105'>
                 <Users className='mr-2 h-4 w-4' />
-                <span className='hidden sm:inline'>Login</span>
+                Login
               </Button>
             </Link>
+            
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant='ghost' size='sm' className='md:hidden'>
+                  <Menu className='h-5 w-5' />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side='right' className='w-80'>
+                <div className='flex flex-col gap-6 mt-6'>
+                  <div className='flex items-center gap-3 pb-4 border-b'>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground'>
+                      <GraduationCap className='h-5 w-5' />
+                    </div>
+                    <div>
+                      <span className='text-lg font-bold'>Learn Srinagar</span>
+                      <p className='text-xs text-muted-foreground'>Transforming Education</p>
+                    </div>
+                  </div>
+                  
+                  <nav className='flex flex-col gap-4'>
+                    <button
+                      onClick={() => {
+                        document.getElementById('impact')?.scrollIntoView({ behavior: 'smooth' })
+                        setMobileMenuOpen(false)
+                      }}
+                      className='flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors'
+                    >
+                      <Award className='h-5 w-5 text-primary' />
+                      <span className='font-medium'>Impact</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+                        setMobileMenuOpen(false)
+                      }}
+                      className='flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors'
+                    >
+                      <Zap className='h-5 w-5 text-primary' />
+                      <span className='font-medium'>Features</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        document.getElementById('mission')?.scrollIntoView({ behavior: 'smooth' })
+                        setMobileMenuOpen(false)
+                      }}
+                      className='flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors'
+                    >
+                      <Globe className='h-5 w-5 text-primary' />
+                      <span className='font-medium'>Mission</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        document.getElementById('schools')?.scrollIntoView({ behavior: 'smooth' })
+                        setMobileMenuOpen(false)
+                      }}
+                      className='flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors'
+                    >
+                      <School className='h-5 w-5 text-primary' />
+                      <span className='font-medium'>Schools</span>
+                    </button>
+                    
+                    <Link 
+                      to='/blogs' 
+                      className='flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors'
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <BookOpen className='h-5 w-5 text-primary' />
+                      <span className='font-medium'>Blog</span>
+                    </Link>
+                  </nav>
+                  
+                  <div className='mt-auto pt-6 border-t'>
+                    <Link to='/login' onClick={() => setMobileMenuOpen(false)}>
+                      <Button className='w-full'>
+                        <Users className='mr-2 h-4 w-4' />
+                        Login to Portal
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
@@ -708,6 +803,9 @@ export default function Home() {
                 </Link>
                 <Link to='#mission' className='block text-muted-foreground hover:text-primary transition-colors'>
                   Our Mission
+                </Link>
+                <Link to='/blogs' className='block text-muted-foreground hover:text-primary transition-colors'>
+                  Blog
                 </Link>
                 <Link to='#schools' className='block text-muted-foreground hover:text-primary transition-colors'>
                   Partner Schools

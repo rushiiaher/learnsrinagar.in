@@ -27,7 +27,7 @@ export async function query(sql, params = []) {
         const connection = await pool.getConnection();
         try {
             const [results] = await connection.query(sql, params);
-            return [results];
+            return results;
         } finally {
             connection.release();
         }
@@ -36,3 +36,5 @@ export async function query(sql, params = []) {
         throw error;
     }
 }
+
+export const db = { query };

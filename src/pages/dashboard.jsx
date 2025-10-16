@@ -159,7 +159,7 @@ export default function Dashboard() {
 
   // Calculate average rating for a specific section
   const calculateAverageRating = (section) => {
-    if (!feedbackData || feedbackData.length === 0) return 0
+    if (!feedbackData || !Array.isArray(feedbackData) || feedbackData.length === 0) return 0
 
     // Filter by selected school and class, and by section
     const relevantFeedback = feedbackData.filter((item) => {
@@ -185,7 +185,7 @@ export default function Dashboard() {
 
   // Get count of feedback for a specific section
   const getFeedbackCount = (section) => {
-    if (!feedbackData || feedbackData.length === 0) return 0
+    if (!feedbackData || !Array.isArray(feedbackData) || feedbackData.length === 0) return 0
 
     // Filter by selected school and class, and by section
     const relevantFeedback = feedbackData.filter((item) => {
@@ -209,7 +209,7 @@ export default function Dashboard() {
 
   // Function to prepare data for the feedback chart
   const prepareFeedbackChartData = () => {
-    if (!feedbackData || feedbackData.length === 0) return []
+    if (!feedbackData || !Array.isArray(feedbackData) || feedbackData.length === 0) return []
 
     // Filter based on selected school and class
     const filteredFeedback = feedbackData.filter((item) => {

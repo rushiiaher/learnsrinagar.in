@@ -19,6 +19,7 @@ import {
   UserPlus,
   UserCheck,
   User,
+  FileText,
 } from 'lucide-react'
 
 import { getUser } from '@/lib/auth'
@@ -67,6 +68,7 @@ const ALL_LINKS = [
   { title: 'Feedback', icon: BookOpen, url: '/feedback' },
   { title: 'Homework', icon: GraduationCap, url: '/homework' },
   { title: 'Student', icon: UserPlus, url: '/student' },
+  { title: 'Manage Blogs', icon: FileText, url: '/manage-blogs' },
   // { title: 'Parent', icon: User, url: '/parent' },
   { title: 'Logout', icon: LogOut, url: '/logout' },
 ]
@@ -82,6 +84,7 @@ const ROLE_LINKS = {
     'Manage Live Classes',
     'Timetable',
     'Feedback',
+    'Manage Blogs',
   ],
   school_admin: ['Class Admin', 'Manage Live Classes', 'Attendance', 'Timetable', 'Student', 'Parent'],
   class_admin: ['Attendance', 'Timetable', 'Student', 'Parent'],

@@ -25,6 +25,8 @@ export default defineConfig({
         return defineRoutes((route) => {
           route("/", "./pages/index.jsx", { index: true });
           route("/login", "./pages/login.jsx");
+          route("/blogs", "./pages/blogs.jsx");
+          route("/blog/:id", "./pages/blog.$id.jsx");
           route("/.well-known/*", "./pages/.well-known.jsx");
           route("", "./components/layout.jsx", () => {
             return [
@@ -45,6 +47,7 @@ export default defineConfig({
               route("/homework", "./pages/homework.jsx"),
               route("/feedback", "./pages/feedback.jsx"),
               route("/student-live-classes", "./pages/student-live-classes.jsx"),
+              route("/manage-blogs", "./pages/manage-blogs.jsx"),
             ];
           })
         });
