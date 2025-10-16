@@ -11,16 +11,15 @@ import { db } from '@/lib/db'
 
 export async function loader() {
   try {
-    // Fetch published blogs with category and author info
+    // Fetch all blogs with category and author info
     const blogs = await db.query(`
       SELECT 
-        b.id, b.title, b.short_desc, b.thumbnail_image, b.publish_date, b.views,
+        b.id, b.title, b.short_desc, b.thumbnail_image, b.publish_date,
         bc.name as category_name,
         u.name as author_name
       FROM blogs b
       JOIN blog_categories bc ON b.category_id = bc.id
       JOIN users u ON b.author_id = u.id
-      WHERE b.status = 'published'
       ORDER BY b.publish_date DESC, b.created_at DESC
     `)
     
@@ -42,10 +41,22 @@ export async function loader() {
     console.log('Public blogs loaded:', blogsWithImages.length)
     console.log('Categories loaded:', categories.length)
     
-    return { blogs: blogsWithImages, categories }
+    return new Response(JSON.stringify({ blogs: blogsWithImages, categories }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
   } catch (error) {
     console.error('Error loading blogs:', error)
-    return { blogs: [], categories: [] }
+    return new Response(JSON.stringify({ blogs: [], categories: [] }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
+      }
+    })
   }
 }
 

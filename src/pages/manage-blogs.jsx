@@ -26,7 +26,7 @@ export async function loader({ request }) {
     const blogs = await db.query(`
       SELECT 
         b.id, b.title, b.category_id, b.author_id, b.short_desc, b.content, 
-        b.publish_date, b.status, b.audience, b.comments_enabled, b.views, b.created_at,
+        b.publish_date, b.created_at,
         bc.name as category_name,
         u.name as author_name
       FROM blogs b
@@ -41,10 +41,22 @@ export async function loader({ request }) {
     console.log('Loaded blogs:', blogs.length)
     console.log('Loaded categories:', categories.length)
 
-    return { blogs, categories, user }
+    return new Response(JSON.stringify({ blogs, categories, user }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
   } catch (error) {
     console.error('Error loading blog management data:', error)
-    return { blogs: [], categories: [], user }
+    return new Response(JSON.stringify({ blogs: [], categories: [], user }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
+      }
+    })
   }
 }
 
@@ -80,16 +92,13 @@ export async function action({ request }) {
         content: formData.get('content'),
         thumbnail_image: thumbnailBuffer,
         cover_image: coverBuffer,
-        publish_date: formData.get('publish_date'),
-        status: formData.get('status'),
-        audience: formData.get('audience'),
-        comments_enabled: formData.get('comments_enabled') === 'on' ? 1 : 0
+        publish_date: formData.get('publish_date')
       }
 
       if (action === 'create') {
         await db.query(`
-          INSERT INTO blogs (title, category_id, author_id, short_desc, content, thumbnail_image, cover_image, publish_date, status, audience, comments_enabled)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO blogs (title, category_id, author_id, short_desc, content, thumbnail_image, cover_image, publish_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [
           blogData.title,
           blogData.category_id,
@@ -98,10 +107,7 @@ export async function action({ request }) {
           blogData.content,
           blogData.thumbnail_image,
           blogData.cover_image,
-          blogData.publish_date,
-          blogData.status,
-          blogData.audience,
-          blogData.comments_enabled
+          blogData.publish_date
         ])
         return { success: true, message: 'Blog created successfully!' }
       } else {
@@ -109,8 +115,8 @@ export async function action({ request }) {
         const updateFields = []
         const updateValues = []
         
-        updateFields.push('title = ?', 'category_id = ?', 'short_desc = ?', 'content = ?', 'publish_date = ?', 'status = ?', 'audience = ?', 'comments_enabled = ?')
-        updateValues.push(blogData.title, blogData.category_id, blogData.short_desc, blogData.content, blogData.publish_date, blogData.status, blogData.audience, blogData.comments_enabled)
+        updateFields.push('title = ?', 'category_id = ?', 'short_desc = ?', 'content = ?', 'publish_date = ?')
+        updateValues.push(blogData.title, blogData.category_id, blogData.short_desc, blogData.content, blogData.publish_date)
         
         if (blogData.thumbnail_image) {
           updateFields.push('thumbnail_image = ?')
