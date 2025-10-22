@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react'
 
 import { query } from '@/lib/db'
-import { createSession, getUser } from '@/lib/auth'
+import { createSession, getUser, verifyLogin } from '@/lib/auth'
 
 import {
   Card,
@@ -27,15 +27,9 @@ export async function action({ request }) {
   const email = form.get('email')
   const password = form.get('password')
 
-  const users = await query(`SELECT * FROM users WHERE email = ?`, [email])
-  const user = users?.[0][0]
-
-  if (!user || !user.password_hash) {
-    return { error: 'Invalid credentials' }
-  }
-
-  const isValidPassword = await bcrypt.compare(password, user.password_hash)
-  if (!isValidPassword) {
+  const user = await verifyLogin(email, password)
+  
+  if (!user) {
     return { error: 'Invalid credentials' }
   }
 
