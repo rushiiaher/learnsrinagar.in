@@ -35,7 +35,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { PencilIcon, TrashIcon, PlusIcon, BuildingIcon } from 'lucide-react'
+import { PencilIcon, TrashIcon, PlusIcon } from 'lucide-react'
 
 import {
   flexRender,
