@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react'
 
 import { query } from '@/lib/db'
-import { createSession, getUser, verifyLogin } from '@/lib/auth'
+import { createSession, getUser } from '@/lib/auth'
 
 import {
   Card,
@@ -28,15 +28,33 @@ export async function action({ request }) {
     const email = form.get('email')
     const password = form.get('password')
 
-    console.log('Login attempt for:', email);
-
-    const user = await verifyLogin(email, password)
+    console.log('=== LOGIN DEBUG START ===');
+    console.log('Email:', email);
+    console.log('Password length:', password?.length);
     
-    if (!user) {
+    // Test direct database query
+    const [users] = await query('SELECT * FROM users WHERE email = ?', [email]);
+    console.log('Users found:', users.length);
+    
+    if (users.length > 0) {
+      const user = users[0];
+      console.log('User hash:', user.password_hash);
+      
+      const isValid = await bcrypt.compare(password, user.password_hash);
+      console.log('Password valid:', isValid);
+      
+      if (!isValid) {
+        console.log('=== LOGIN DEBUG END - INVALID PASSWORD ===');
+        return { error: 'Invalid credentials' }
+      }
+      
+      console.log('=== LOGIN DEBUG END - SUCCESS ===');
+    } else {
+      console.log('=== LOGIN DEBUG END - NO USER ===');
       return { error: 'Invalid credentials' }
     }
 
-    console.log('User authenticated:', user.name);
+    const user = users[0];
 
   const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
     user.role_id,
