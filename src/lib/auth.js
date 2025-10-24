@@ -1,6 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import bcrypt from 'bcryptjs';
-import { query } from './db.js';
+import { query } from './db';
 
 const sessionStorage = createCookieSessionStorage({
     cookie: {

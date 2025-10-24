@@ -23,15 +23,20 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
-  const form = await request.formData()
-  const email = form.get('email')
-  const password = form.get('password')
+  try {
+    const form = await request.formData()
+    const email = form.get('email')
+    const password = form.get('password')
 
-  const user = await verifyLogin(email, password)
-  
-  if (!user) {
-    return { error: 'Invalid credentials' }
-  }
+    console.log('Login attempt for:', email);
+
+    const user = await verifyLogin(email, password)
+    
+    if (!user) {
+      return { error: 'Invalid credentials' }
+    }
+
+    console.log('User authenticated:', user.name);
 
   const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
     user.role_id,
@@ -115,7 +120,11 @@ export async function action({ request }) {
     }
   }
 
-  return await createSession(request, sessionUser)
+    return await createSession(request, sessionUser)
+  } catch (error) {
+    console.error('Login error:', error);
+    return { error: 'Server error occurred' }
+  }
 }
 
 export default function Login() {
