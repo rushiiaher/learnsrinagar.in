@@ -25,6 +25,7 @@ export default defineConfig({
         return defineRoutes((route) => {
           route("/", "./pages/index.jsx", { index: true });
           route("/login", "./pages/login.jsx");
+          route("/test-login", "./pages/test-login.jsx");
           route("/blogs", "./pages/blogs.jsx");
           route("/blog/:id", "./pages/blog.$id.jsx");
           route("/.well-known/*", "./pages/.well-known.jsx");
