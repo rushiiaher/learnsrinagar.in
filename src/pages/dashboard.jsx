@@ -28,8 +28,6 @@ import {
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -65,7 +63,7 @@ export async function loader({ request }) {
   }
 
   // For super_admin, fetch all schools
-  const [schools] = await query(
+  const schools = await query(
     `SELECT s.id, s.name, COUNT(DISTINCT c.id) as class_count
      FROM schools s
      LEFT JOIN student_profiles sp ON s.id = sp.schools_id
@@ -75,7 +73,7 @@ export async function loader({ request }) {
   )
 
   // Get all classes
-  const [classes] = await query(
+  const classes = await query(
     `SELECT c.id, c.name, s.id as school_id, s.name as school_name
      FROM classes c
      JOIN student_profiles sp ON c.id = sp.class_id
@@ -85,7 +83,7 @@ export async function loader({ request }) {
   )
 
   // Get attendance data by date for the past 30 days
-  const [dailyAttendance] = await query(
+  const dailyAttendance = await query(
     `SELECT 
        sa.date, 
        s.id as school_id,
@@ -106,7 +104,7 @@ export async function loader({ request }) {
   )
 
   // Get feedback data aggregated by school and class
-  const [feedbackData] = await query(
+  const feedbackData = await query(
     `SELECT 
        s.id as school_id,
        s.name as school_name,

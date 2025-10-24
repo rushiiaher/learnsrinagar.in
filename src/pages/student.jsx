@@ -48,7 +48,6 @@ import {
   PencilIcon,
   TrashIcon,
   PlusIcon,
-  UserIcon,
 } from 'lucide-react'
 
 import {
