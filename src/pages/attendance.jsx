@@ -93,7 +93,7 @@ export async function loader({ request }) {
   // Add ORDER BY clause
   attendanceQuery += ` ORDER BY sa.date DESC, c.name, u.name`
 
-  const [attendance] = await query(attendanceQuery, attendanceQueryParams)
+  const attendance = await query(attendanceQuery, attendanceQueryParams)
 
   // Get all students with similar filtering
   let studentsQuery = `
@@ -128,7 +128,7 @@ export async function loader({ request }) {
 
   studentsQuery += ` ORDER BY c.name, u.name`
 
-  const [students] = await query(studentsQuery, studentsQueryParams)
+  const students = await query(studentsQuery, studentsQueryParams)
 
   // Get all classes or filter by user's class_ids if they exist
   let classesQuery = `SELECT id, name FROM classes`
@@ -141,7 +141,7 @@ export async function loader({ request }) {
 
   classesQuery += ` ORDER BY name`
 
-  const [classes] = await query(classesQuery, classQueryParams)
+  const classes = await query(classesQuery, classQueryParams)
 
   return {
     user,
@@ -172,7 +172,7 @@ export async function action({ request }) {
       const status = formData.get('status')
 
       // Check if attendance record already exists for this student, class, and date
-      const [existingRecord] = await query(
+      const existingRecord = await query(
         'SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?',
         [studentId, classId, date]
       )
@@ -202,7 +202,7 @@ export async function action({ request }) {
       const status = formData.get('status')
 
       // Check if attendance record already exists for this student, class, and date (excluding current record)
-      const [existingRecord] = await query(
+      const existingRecord = await query(
         'SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ? AND id != ?',
         [studentId, classId, date, id]
       )
@@ -242,44 +242,33 @@ export async function action({ request }) {
       const studentIds = formData.getAll('student_ids')
       const statuses = formData.getAll('statuses')
 
-      // Start a transaction to ensure all records are created or none are
-      const conn = await db.getConnection()
-      await conn.beginTransaction()
+      // Process each student attendance record
+      for (let i = 0; i < studentIds.length; i++) {
+        const studentId = studentIds[i]
+        const status = statuses[i]
 
-      try {
-        for (let i = 0; i < studentIds.length; i++) {
-          const studentId = studentIds[i]
-          const status = statuses[i]
+        // Check if attendance record already exists
+        const existingRecord = await query(
+          'SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?',
+          [studentId, classId, date]
+        )
 
-          // Check if attendance record already exists
-          const [existingRecord] = await conn.query(
-            'SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?',
-            [studentId, classId, date]
+        if (existingRecord.length > 0) {
+          // Update existing record
+          await query(
+            'UPDATE student_attendance SET status = ? WHERE student_id = ? AND class_id = ? AND date = ?',
+            [status, studentId, classId, date]
           )
-
-          if (existingRecord.length > 0) {
-            // Update existing record
-            await conn.query(
-              'UPDATE student_attendance SET status = ? WHERE student_id = ? AND class_id = ? AND date = ?',
-              [status, studentId, classId, date]
-            )
-          } else {
-            // Insert new record
-            await conn.query(
-              'INSERT INTO student_attendance (student_id, class_id, date, status) VALUES (?, ?, ?, ?)',
-              [studentId, classId, date, status]
-            )
-          }
+        } else {
+          // Insert new record
+          await query(
+            'INSERT INTO student_attendance (student_id, class_id, date, status) VALUES (?, ?, ?, ?)',
+            [studentId, classId, date, status]
+          )
         }
-
-        await conn.commit()
-        return { success: true, message: 'Attendance recorded successfully' }
-      } catch (error) {
-        await conn.rollback()
-        throw error
-      } finally {
-        conn.release()
       }
+
+      return { success: true, message: 'Attendance recorded successfully' }
     }
 
     return { success: false, message: 'Invalid action' }
