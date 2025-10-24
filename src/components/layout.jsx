@@ -69,6 +69,7 @@ const ALL_LINKS = [
   { title: 'Homework', icon: GraduationCap, url: '/homework' },
   { title: 'Student', icon: UserPlus, url: '/student' },
   { title: 'Manage Blogs', icon: FileText, url: '/manage-blogs' },
+  { title: 'Change Password', icon: UserCog, url: '/change-password' },
   // { title: 'Parent', icon: User, url: '/parent' },
   { title: 'Logout', icon: LogOut, url: '/logout' },
 ]
@@ -85,12 +86,13 @@ const ROLE_LINKS = {
     'Timetable',
     'Feedback',
     'Manage Blogs',
+    'Change Password',
   ],
-  school_admin: ['Class Admin', 'Manage Live Classes', 'Attendance', 'Timetable', 'Student', 'Parent'],
-  class_admin: ['Attendance', 'Timetable', 'Student', 'Parent'],
-  teacher: ['Manage Live Classes', 'Timetable', 'Homework'],
-  student: ['Live Classes', 'Attendance', 'Timetable', 'Homework'],
-  parent: ['Attendance', 'Timetable', 'Homework', 'Feedback'],
+  school_admin: ['Class Admin', 'Manage Live Classes', 'Attendance', 'Timetable', 'Student', 'Parent', 'Change Password'],
+  class_admin: ['Attendance', 'Timetable', 'Student', 'Parent', 'Change Password'],
+  teacher: ['Manage Live Classes', 'Timetable', 'Homework', 'Change Password'],
+  student: ['Live Classes', 'Attendance', 'Timetable', 'Homework', 'Change Password'],
+  parent: ['Attendance', 'Timetable', 'Homework', 'Feedback', 'Change Password'],
 }
 
 export default function Layout() {

@@ -28,33 +28,18 @@ export async function action({ request }) {
     const email = form.get('email')
     const password = form.get('password')
 
-    console.log('=== LOGIN DEBUG START ===');
-    console.log('Email:', email);
-    console.log('Password length:', password?.length);
-    
-    // Test direct database query
     const [users] = await query('SELECT * FROM users WHERE email = ?', [email]);
-    console.log('Users found:', users.length);
     
-    if (users.length > 0) {
-      const user = users[0];
-      console.log('User hash:', user.password_hash);
-      
-      const isValid = await bcrypt.compare(password, user.password_hash);
-      console.log('Password valid:', isValid);
-      
-      if (!isValid) {
-        console.log('=== LOGIN DEBUG END - INVALID PASSWORD ===');
-        return { error: 'Invalid credentials' }
-      }
-      
-      console.log('=== LOGIN DEBUG END - SUCCESS ===');
-    } else {
-      console.log('=== LOGIN DEBUG END - NO USER ===');
+    if (users.length === 0) {
       return { error: 'Invalid credentials' }
     }
 
     const user = users[0];
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    
+    if (!isValid) {
+      return { error: 'Invalid credentials' }
+    }
 
   const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
     user.role_id,
@@ -140,7 +125,6 @@ export async function action({ request }) {
 
     return await createSession(request, sessionUser)
   } catch (error) {
-    console.error('Login error:', error);
     return { error: 'Server error occurred' }
   }
 }

@@ -48,6 +48,7 @@ export default defineConfig({
               route("/homework", "./pages/homework.jsx"),
               route("/feedback", "./pages/feedback.jsx"),
               route("/student-live-classes", "./pages/student-live-classes.jsx"),
+              route("/change-password", "./pages/change-password.jsx"),
               route("/manage-blogs", "./pages/manage-blogs.jsx"),
             ];
           })

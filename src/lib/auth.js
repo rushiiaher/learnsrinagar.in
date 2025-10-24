@@ -46,29 +46,21 @@ export async function getUser(request) {
 }
 
 export async function verifyLogin(email, password) {
-    console.log('Attempting login for:', email);
-    
     const [users] = await query('SELECT * FROM users WHERE email = ?', [email]);
-    console.log('Users found:', users.length);
     
     if (users.length === 0) {
-        console.log('No user found with email:', email);
         return null;
     }
     
     const user = users[0];
     let passwordHash = user.password_hash;
-    console.log('Original hash:', passwordHash);
     
     // Fix bcrypt format if needed ($2b$ -> $2a$)
     if (passwordHash.startsWith('$2b$')) {
         passwordHash = passwordHash.replace('$2b$', '$2a$');
-        console.log('Fixed hash:', passwordHash);
     }
     
-    console.log('Comparing password with hash...');
     const isValid = await bcrypt.compare(password, passwordHash);
-    console.log('Password valid:', isValid);
     
     if (!isValid) {
         return null;
