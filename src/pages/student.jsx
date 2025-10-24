@@ -210,7 +210,7 @@ export async function action({ request }) {
 
       // Check for duplicate parent email if adding a new parent
       if (addParent && !existingParentId && parentEmail) {
-        const [dupParentEmail] = await query(
+        const dupParentEmail = await query(
           'SELECT id FROM users WHERE email = ?',
           [parentEmail]
         )
@@ -258,7 +258,7 @@ export async function action({ request }) {
           const salt = await bcrypt.genSalt(10)
           const parentPasswordHash = await bcrypt.hash(parentPassword, salt)
 
-          const [parentRes] = await query(
+          const parentRes = await query(
             `INSERT INTO users
              (name, email, password_hash, role_id)
              VALUES (?, ?, ?, 6)`,
@@ -327,7 +327,7 @@ export async function action({ request }) {
 
       // Check for duplicate parent email if adding a new parent
       if (addParent && !existingParentId && parentEmail) {
-        const [dupParentEmail] = await query(
+        const dupParentEmail = await query(
           'SELECT id FROM users WHERE email = ?',
           [parentEmail]
         )

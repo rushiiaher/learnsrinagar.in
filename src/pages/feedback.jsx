@@ -140,11 +140,11 @@ export async function loader({ request }) {
 
   feedbackQuery += ` ORDER BY f.created_at DESC`
 
-  const [feedback] = await query(feedbackQuery, queryParams)
+  const feedback = await query(feedbackQuery, queryParams)
 
   // Load feedback items for each feedback entry
   for (const item of feedback) {
-    const [feedbackItems] = await query(
+    const feedbackItems = await query(
       `SELECT * FROM parent_feedback_items WHERE feedback_id = ? ORDER BY section, statement_id`,
       [item.id]
     )
@@ -166,11 +166,11 @@ export async function loader({ request }) {
       ORDER BY name
     `
 
-    const [studentsResult] = await query(childrenQuery, studentIds)
+    const studentsResult = await query(childrenQuery, studentIds)
     children = studentsResult
   } else if (isSuperAdmin) {
     // If superadmin, get all students
-    const [studentsResult] = await query(`
+    const studentsResult = await query(`
       SELECT id, name 
       FROM users 
       WHERE role_id = '5'
@@ -202,7 +202,7 @@ export async function action({ request }) {
       const parent_id = user.id
 
       // Insert the main feedback record
-      const [result] = await query(
+      const result = await query(
         `INSERT INTO parent_feedback (title, student_id, parent_id)
          VALUES (?, ?, ?)`,
         [title, student_id, parent_id]

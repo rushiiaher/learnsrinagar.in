@@ -54,11 +54,11 @@ import {
 } from '@/components/ui/table'
 
 export async function loader() {
-  const [users] = await query(`SELECT id, name FROM users WHERE role_id = ?`, [
+  const users = await query(`SELECT id, name FROM users WHERE role_id = ?`, [
     2,
   ])
 
-  const [schools] = await query(
+  const schools = await query(
     `SELECT s.*, u.name as user_name FROM schools s JOIN users u ON s.users_id = u.id`
   )
 
@@ -78,7 +78,7 @@ export async function action({ request }) {
       const address = formData.get('address')
       const users_id = formData.get('users_id')
 
-      const [existingSchool] = await query(
+      const existingSchool = await query(
         `SELECT id FROM schools WHERE users_id = ?`,
         [users_id]
       )
@@ -105,7 +105,7 @@ export async function action({ request }) {
       const address = formData.get('address')
       const users_id = formData.get('users_id')
 
-      const [existingSchool] = await query(
+      const existingSchool = await query(
         `SELECT id FROM schools WHERE users_id = ? AND id != ?`,
         [users_id, id]
       )

@@ -107,14 +107,14 @@ export async function loader({ request }) {
   let schools = []
 
   if (user.role_name === 'super_admin') {
-    const [schoolsResult] = await query('SELECT * FROM schools ORDER BY name')
-    const [classesResult] = await query('SELECT * FROM classes ORDER BY name')
-    const [subjectsResult] = await query('SELECT * FROM subjects ORDER BY name')
-    const [teachersResult] = await query(
+    const schoolsResult = await query('SELECT * FROM schools ORDER BY name')
+    const classesResult = await query('SELECT * FROM classes ORDER BY name')
+    const subjectsResult = await query('SELECT * FROM subjects ORDER BY name')
+    const teachersResult = await query(
       'SELECT id, name FROM users WHERE role_id = 4 ORDER BY name'
     )
     
-    const [liveClassesResult] = await query(`
+    const liveClassesResult = await query(`
       SELECT 
         lc.*,
         s.name as subject_name,
@@ -142,16 +142,16 @@ export async function loader({ request }) {
     teachers = teachersResult
     liveClasses = liveClassesResult
   } else if (user.role_name === 'school_admin') {
-    const [schoolsResult] = await query('SELECT * FROM schools WHERE users_id = ?', [user.id])
+    const schoolsResult = await query('SELECT * FROM schools WHERE users_id = ?', [user.id])
     const schoolId = schoolsResult[0]?.id
     
     if (schoolId) {
-      const [classesResult] = await query('SELECT * FROM classes ORDER BY name')
-      const [subjectsResult] = await query('SELECT * FROM subjects ORDER BY name')
-      const [teachersResult] = await query(
+      const classesResult = await query('SELECT * FROM classes ORDER BY name')
+      const subjectsResult = await query('SELECT * FROM subjects ORDER BY name')
+      const teachersResult = await query(
         'SELECT id, name FROM users WHERE role_id = 4 ORDER BY name'
       )
-      const [liveClassesResult] = await query(`
+      const liveClassesResult = await query(`
         SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_names
         FROM live_classes lc
         LEFT JOIN subjects s ON lc.subject_id = s.id
@@ -169,7 +169,7 @@ export async function loader({ request }) {
       liveClasses = liveClassesResult.map(lc => ({ ...lc, school_count: 1, school_ids: schoolId.toString() }))
     }
   } else if (user.role_name === 'teacher') {
-    const [classesResult] = await query(`
+    const classesResult = await query(`
       SELECT DISTINCT c.id, c.name
       FROM classes c
       JOIN teacher_assignments ta ON c.id = ta.class_id
@@ -177,7 +177,7 @@ export async function loader({ request }) {
       ORDER BY c.name
     `, [user.id])
 
-    const [subjectsResult] = await query(`
+    const subjectsResult = await query(`
       SELECT DISTINCT s.id, s.name
       FROM subjects s
       JOIN teacher_assignments ta ON s.id = ta.subject_id
@@ -185,7 +185,7 @@ export async function loader({ request }) {
       ORDER BY s.name
     `, [user.id])
 
-    const [liveClassesResult] = await query(`
+    const liveClassesResult = await query(`
       SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_names
       FROM live_classes lc
       LEFT JOIN subjects s ON lc.subject_id = s.id
