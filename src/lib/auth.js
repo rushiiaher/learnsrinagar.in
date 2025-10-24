@@ -46,7 +46,7 @@ export async function getUser(request) {
 }
 
 export async function verifyLogin(email, password) {
-    const [users] = await query('SELECT * FROM users WHERE email = ?', [email]);
+    const users = await query('SELECT * FROM users WHERE email = ?', [email]);
     
     if (users.length === 0) {
         return null;

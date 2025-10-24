@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 export async function loader() {
     try {
         // Test database connection
-        const [users] = await query('SELECT id, name, email, password_hash FROM users WHERE email = ?', ['super_admin@gmail.com']);
+        const users = await query('SELECT id, name, email, password_hash FROM users WHERE email = ?', ['super_admin@gmail.com']);
         
         if (users.length === 0) {
             return json({ error: 'User not found' });

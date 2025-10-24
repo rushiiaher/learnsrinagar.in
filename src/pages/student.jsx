@@ -108,7 +108,7 @@ export async function loader({ request }) {
     studentsQuery += ` AND ${whereConditions.join(' AND ')}`
   }
 
-  const [students] = await query(studentsQuery, queryParams)
+  const students = await query(studentsQuery, queryParams)
 
   // Get all classes or filter by user's class_ids if they exist
   let classesQuery = `SELECT id, name FROM classes`
@@ -119,7 +119,7 @@ export async function loader({ request }) {
     classQueryParams.push(...user.class_ids)
   }
 
-  const [classes] = await query(classesQuery, classQueryParams)
+  const classes = await query(classesQuery, classQueryParams)
 
   // Get all schools or filter by user's school_id if they have one
   let schoolsQuery = `SELECT id, name FROM schools`
@@ -130,16 +130,16 @@ export async function loader({ request }) {
     schoolQueryParams.push(user.school_id)
   }
 
-  const [schools] = await query(schoolsQuery, schoolQueryParams)
+  const schools = await query(schoolsQuery, schoolQueryParams)
 
   // Get all parents
-  const [parents] = await query(
+  const parents = await query(
     `SELECT id, name, email FROM users WHERE role_id = ?`,
     [6]
   )
 
   // Get parent-student links
-  const [links] = await query(
+  const links = await query(
     `SELECT psl.id, psl.parent_id, psl.student_id, p.name AS parent_name, p.email AS parent_email
      FROM parent_student_links psl
      JOIN users p ON psl.parent_id = p.id`
@@ -184,7 +184,7 @@ export async function action({ request }) {
       const existingParentId = formData.get('existing_parent_id')
 
       // Check for duplicate student email
-      const [dupEmail] = await query('SELECT id FROM users WHERE email = ?', [
+      const dupEmail = await query('SELECT id FROM users WHERE email = ?', [
         email,
       ])
       if (dupEmail.length > 0) {
@@ -196,7 +196,7 @@ export async function action({ request }) {
       }
 
       // Check for duplicate enrollment number
-      const [dupEnroll] = await query(
+      const dupEnroll = await query(
         'SELECT id FROM student_profiles WHERE enrollment_no = ?',
         [enrollment_no]
       )
@@ -227,7 +227,7 @@ export async function action({ request }) {
       const password_hash = await bcrypt.hash(password, salt)
 
       // Insert the student user
-      const [userRes] = await query(
+      const userRes = await query(
         `INSERT INTO users
          (name, email, password_hash, role_id)
          VALUES (?, ?, ?, 5)`,
@@ -300,7 +300,7 @@ export async function action({ request }) {
       const existingParentId = formData.get('existing_parent_id')
 
       // Check for duplicate student email
-      const [dupEmail] = await query(
+      const dupEmail = await query(
         'SELECT id FROM users WHERE email = ? AND id != ?',
         [email, id]
       )
@@ -313,7 +313,7 @@ export async function action({ request }) {
       }
 
       // Check for duplicate enrollment number
-      const [dupEnroll] = await query(
+      const dupEnroll = await query(
         'SELECT id FROM student_profiles WHERE enrollment_no = ? AND id != ?',
         [enrollment_no, profile_id]
       )
@@ -388,7 +388,7 @@ export async function action({ request }) {
           // Create new parent if provided with details
           else if (parentName && parentEmail) {
             // Check if this parent already exists
-            const [existingParent] = await query(
+            const existingParent = await query(
               'SELECT id FROM users WHERE email = ? AND role_id = 6',
               [parentEmail]
             )
@@ -402,7 +402,7 @@ export async function action({ request }) {
                 ? await bcrypt.hash(parentPassword, salt)
                 : await bcrypt.hash('default123', salt)
 
-              const [parentRes] = await query(
+              const parentRes = await query(
                 `INSERT INTO users
                  (name, email, password_hash, role_id)
                  VALUES (?, ?, ?, 6)`,
@@ -415,7 +415,7 @@ export async function action({ request }) {
 
           // Link parent to student if we have a valid parent ID and it's not already linked
           if (parentId) {
-            const [existingLink] = await query(
+            const existingLink = await query(
               `SELECT id FROM parent_student_links WHERE parent_id = ? AND student_id = ?`,
               [parentId, id]
             )

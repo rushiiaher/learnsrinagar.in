@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button'
 export async function loader({ request }) {
   const user = await getUser(request)
 
-  const [liveClasses] = await query(`
+  const liveClasses = await query(`
     SELECT z.*,
            s.name AS subject_name,
            c.name AS class_name,

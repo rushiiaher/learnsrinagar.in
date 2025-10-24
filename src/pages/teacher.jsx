@@ -55,20 +55,20 @@ import {
 import { Badge } from '@/components/ui/badge'
 
 export async function loader() {
-  const [teachers] = await query(
+  const teachers = await query(
     `SELECT id, name, email, created_at FROM users WHERE role_id = ?`,
     [4]
   )
 
   // Fetch all classes
-  const [classes] = await query(
+  const classes = await query(
     `SELECT id, name 
      FROM classes 
      ORDER BY name`
   )
 
   // Fetch all subjects with their class information
-  const [subjects] = await query(
+  const subjects = await query(
     `SELECT s.id, s.name, sc.class_id, c.name AS class_name
      FROM subjects s
      JOIN subject_classes sc ON s.id = sc.subject_id
@@ -76,7 +76,7 @@ export async function loader() {
      ORDER BY c.name, s.name`
   )
 
-  const [assignments] = await query(
+  const assignments = await query(
     `SELECT ta.id, ta.teacher_id, ta.subject_id, ta.class_id, 
             s.name as subject_name, 
             c.name as class_name
@@ -114,7 +114,7 @@ export async function action({ request }) {
       const email = formData.get('email')
       const password = formData.get('password')
 
-      const [existing] = await query(`SELECT id FROM users WHERE email = ?`, [
+      const existing = await query(`SELECT id FROM users WHERE email = ?`, [
         email,
       ])
       if (existing.length > 0) {
@@ -139,7 +139,7 @@ export async function action({ request }) {
       const email = formData.get('email')
       const password = formData.get('password')
 
-      const [existing] = await query(
+      const existing = await query(
         `SELECT id FROM users WHERE email = ? AND id != ?`,
         [email, id]
       )
@@ -187,7 +187,7 @@ export async function action({ request }) {
         }
       }
 
-      const [existing] = await query(
+      const existing = await query(
         `SELECT id FROM teacher_assignments WHERE teacher_id = ? AND subject_id = ? AND class_id = ?`,
         [teacher_id, subject_id, class_id]
       )

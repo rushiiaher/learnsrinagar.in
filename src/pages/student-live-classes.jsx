@@ -69,7 +69,7 @@ export async function loader({ request }) {
   }
 
   // Get student's class information
-  const [studentProfile] = await query(`
+  const studentProfile = await query(`
     SELECT class_id, schools_id 
     FROM student_profiles 
     WHERE user_id = ?
@@ -83,7 +83,7 @@ export async function loader({ request }) {
   const schoolId = studentProfile[0].schools_id
 
   // Get live classes for student's class and school (including all-school classes)
-  const [liveClasses] = await query(`
+  const liveClasses = await query(`
     SELECT lc.*, 
            s.name as subject_name, 
            c.name as class_name, 
@@ -107,10 +107,10 @@ export async function loader({ request }) {
   `, [classId, schoolId])
 
   // Get all subjects for filter dropdown
-  const [subjects] = await query('SELECT * FROM subjects ORDER BY name')
+  const subjects = await query('SELECT * FROM subjects ORDER BY name')
 
   // Get student's school name
-  const [schoolInfo] = await query('SELECT name FROM schools WHERE id = ?', [schoolId])
+  const schoolInfo = await query('SELECT name FROM schools WHERE id = ?', [schoolId])
   const schoolName = schoolInfo[0]?.name || 'Unknown School'
 
   return { liveClasses, subjects, user, classId, schoolId, schoolName }

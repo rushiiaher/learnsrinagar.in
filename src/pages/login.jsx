@@ -28,7 +28,7 @@ export async function action({ request }) {
     const email = form.get('email')
     const password = form.get('password')
 
-    const [users] = await query('SELECT * FROM users WHERE email = ?', [email]);
+    const users = await query('SELECT * FROM users WHERE email = ?', [email]);
     
     if (users.length === 0) {
       return { error: 'Invalid credentials' }
@@ -44,7 +44,7 @@ export async function action({ request }) {
   const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
     user.role_id,
   ])
-  const role = roles?.[0][0]
+  const role = roles?.[0]
 
   const sessionUser = {
     id: user.id,
@@ -66,12 +66,12 @@ export async function action({ request }) {
         [user.id]
       )
 
-      if (studentProfiles?.[0]?.length > 0) {
-        sessionUser.class_ids = [studentProfiles[0][0].class_id]
-        sessionUser.school_id = studentProfiles[0][0].school_id
+      if (studentProfiles?.length > 0) {
+        sessionUser.class_ids = [studentProfiles[0].class_id]
+        sessionUser.school_id = studentProfiles[0].school_id
       }
     } else if (roleName === 'teacher') {
-      const [teacherSubjects] = await query(
+      const teacherSubjects = await query(
         `SELECT subject_id FROM teacher_assignments WHERE teacher_id = ?`,
         [user.id]
       )
@@ -80,7 +80,7 @@ export async function action({ request }) {
         sessionUser.subject_ids = teacherSubjects.map((item) => item.subject_id)
       }
 
-      const [teacherClasses] = await query(
+      const teacherClasses = await query(
         `SELECT DISTINCT c.id as class_id 
          FROM teacher_assignments ta
          JOIN subjects s ON ta.subject_id = s.id
@@ -93,7 +93,7 @@ export async function action({ request }) {
         sessionUser.class_ids = teacherClasses.map((item) => item.class_id)
       }
     } else if (roleName === 'parent') {
-      const [parentLinks] = await query(
+      const parentLinks = await query(
         `SELECT student_id FROM parent_student_links WHERE parent_id = ?`,
         [user.id]
       )
@@ -102,7 +102,7 @@ export async function action({ request }) {
         sessionUser.student_ids = parentLinks.map((link) => link.student_id)
       }
     } else if (roleName === 'class_admin') {
-      const [classAdmins] = await query(
+      const classAdmins = await query(
         `SELECT school_id, class_id FROM class_admins WHERE admin_id = ?`,
         [user.id]
       )
@@ -112,7 +112,7 @@ export async function action({ request }) {
         sessionUser.class_ids = classAdmins.map((item) => item.class_id)
       }
     } else if (roleName === 'school_admin') {
-      const [schools] = await query(
+      const schools = await query(
         `SELECT id as school_id FROM schools WHERE users_id = ? LIMIT 1`,
         [user.id]
       )

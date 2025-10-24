@@ -53,9 +53,9 @@ import {
 } from '@/components/ui/table'
 
 export async function loader() {
-  const [subjects] = await query(`SELECT * FROM subjects`)
-  const [classes] = await query(`SELECT * FROM classes`)
-  const [subjectClasses] = await query(`
+  const subjects = await query(`SELECT * FROM subjects`)
+  const classes = await query(`SELECT * FROM classes`)
+  const subjectClasses = await query(`
     SELECT sc.subject_id, sc.class_id, c.name as class_name
     FROM subject_classes sc
     JOIN classes c ON sc.class_id = c.id
@@ -107,7 +107,7 @@ export async function action({ request }) {
         }
       }
 
-      const [existingSubjects] = await query(
+      const existingSubjects = await query(
         `SELECT id FROM subjects WHERE name = ?`,
         [name]
       )
@@ -122,7 +122,7 @@ export async function action({ request }) {
 
       // Use the first selected class as the default class_id
       const defaultClassId = classIds[0]
-      const [result] = await query(
+      const result = await query(
         `INSERT INTO subjects (name, class_id) VALUES (?, ?)`,
         [name, defaultClassId]
       )
@@ -153,7 +153,7 @@ export async function action({ request }) {
         }
       }
 
-      const [existingSubjects] = await query(
+      const existingSubjects = await query(
         `SELECT id FROM subjects WHERE name = ? AND id != ?`,
         [name, id]
       )
