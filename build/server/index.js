@@ -7,27 +7,27 @@ import { renderToPipeableStream } from "react-dom/server";
 import { useTheme } from "next-themes";
 import { Toaster as Toaster$1, toast } from "sonner";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { School as School$1, MonitorPlay, Users, BookOpen, GraduationCap, LayoutGrid, Building2, MapPin, ChevronRight, XIcon, PanelLeftIcon, LayoutDashboard, ShieldCheck, RadioTower, UserCog, CalendarClock, UserCheck, UserPlus, LogOut, ChevronDownIcon, CheckIcon, ChevronUpIcon, ChevronLeft, CalendarIcon, PlusIcon, PencilIcon, TrashIcon, Plus, Search, Edit, Trash2, ExternalLink, Clock, CheckCircle, Play, VideoIcon, CheckCircleIcon, XCircleIcon, ClockIcon, BookOpenIcon, EyeIcon, MessageSquareIcon, StarIcon, Filter } from "lucide-react";
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { XIcon, GraduationCap, Users, Menu, Award, Zap, Globe, School as School$1, BookOpen, ChevronRight, MonitorPlay, Shield, Building2, LayoutGrid, MapPin, ChevronDownIcon, CheckIcon, ChevronUpIcon, Search, Filter, User, Calendar as Calendar$1, ArrowLeft, Share2, Download, PanelLeftIcon, LayoutDashboard, ShieldCheck, RadioTower, UserCog, CalendarClock, UserCheck, UserPlus, FileText, LogOut, ChevronLeft, CalendarIcon, BarChart3, MessageSquare, PlusIcon, PencilIcon, TrashIcon, Plus, Edit, Trash2, ExternalLink, Clock, CheckCircle, Play, VideoIcon, CheckCircleIcon, XCircleIcon, ClockIcon, BookOpenIcon, EyeIcon, MessageSquareIcon, StarIcon, KeyRound, EyeOff, Eye } from "lucide-react";
 import bcrypt from "bcryptjs";
 import mysql from "mysql2/promise";
 import * as LabelPrimitive from "@radix-ui/react-label";
-import * as SheetPrimitive from "@radix-ui/react-dialog";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { subDays, format, addDays, isSameDay } from "date-fns";
 import * as SelectPrimitive from "@radix-ui/react-select";
+import * as SeparatorPrimitive from "@radix-ui/react-separator";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { subDays, format, addDays, isSameDay } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip as Tooltip$1, Legend, Line } from "recharts";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { useReactTable, getPaginationRowModel, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import * as TabsPrimitive from "@radix-ui/react-tabs";
 async function check_db() {
   return { isValid: true, message: "API key validated successfully (bypassed for local development)" };
 }
@@ -163,7 +163,7 @@ const Toaster = ({
   );
 };
 function meta() {
-  return [{ title: "Hybrid School | learnsrinagar.in" }];
+  return [{ title: "Learn Srinagar | learnsrinagar.in" }];
 }
 function App() {
   return /* @__PURE__ */ jsxs("html", { lang: "en", children: [
@@ -293,6 +293,19 @@ function CardContent({
 }) {
   return /* @__PURE__ */ jsx("div", { "data-slot": "card-content", className: cn("px-6", className), ...props });
 }
+function CardFooter({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-footer",
+      className: cn("flex items-center px-6 [.border-t]:pt-6", className),
+      ...props
+    }
+  );
+}
 function Tabs({
   className,
   ...props
@@ -351,7 +364,88 @@ function TabsContent({
     }
   );
 }
+function Sheet({ ...props }) {
+  return /* @__PURE__ */ jsx(SheetPrimitive.Root, { "data-slot": "sheet", ...props });
+}
+function SheetTrigger({ ...props }) {
+  return /* @__PURE__ */ jsx(SheetPrimitive.Trigger, { "data-slot": "sheet-trigger", ...props });
+}
+function SheetPortal({ ...props }) {
+  return /* @__PURE__ */ jsx(SheetPrimitive.Portal, { "data-slot": "sheet-portal", ...props });
+}
+const SheetOverlay = React.forwardRef(function SheetOverlay2({ className, ...props }, ref) {
+  return /* @__PURE__ */ jsx(
+    SheetPrimitive.Overlay,
+    {
+      ref,
+      "data-slot": "sheet-overlay",
+      className: cn(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      ),
+      ...props
+    }
+  );
+});
+function SheetContent({ className, children, side = "right", ...props }) {
+  return /* @__PURE__ */ jsxs(SheetPortal, { children: [
+    /* @__PURE__ */ jsx(SheetOverlay, {}),
+    /* @__PURE__ */ jsxs(
+      SheetPrimitive.Content,
+      {
+        "data-slot": "sheet-content",
+        className: cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+          side === "right" && "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+          side === "left" && "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          side === "top" && "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
+          side === "bottom" && "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
+          className
+        ),
+        ...props,
+        children: [
+          children,
+          /* @__PURE__ */ jsxs(SheetPrimitive.Close, { className: "ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", children: [
+            /* @__PURE__ */ jsx(XIcon, { className: "size-4" }),
+            /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Close" })
+          ] })
+        ]
+      }
+    )
+  ] });
+}
+function SheetHeader({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "sheet-header",
+      className: cn("flex flex-col gap-1.5 p-4", className),
+      ...props
+    }
+  );
+}
+function SheetTitle({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    SheetPrimitive.Title,
+    {
+      "data-slot": "sheet-title",
+      className: cn("text-foreground font-semibold", className),
+      ...props
+    }
+  );
+}
+function SheetDescription({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    SheetPrimitive.Description,
+    {
+      "data-slot": "sheet-description",
+      className: cn("text-muted-foreground text-sm", className),
+      ...props
+    }
+  );
+}
 function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const schools = [
     {
       zone: "Srinagar",
@@ -426,154 +520,578 @@ function Home() {
       code: "01030901102"
     }
   ];
-  return /* @__PURE__ */ jsxs("div", { className: "flex min-h-screen flex-col", children: [
-    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto flex h-16 items-center justify-between px-4", children: [
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx(School$1, { className: "h-6 w-6" }),
-        /* @__PURE__ */ jsx("span", { className: "text-xl font-bold", children: "Hybrid School" })
+  return /* @__PURE__ */ jsxs("div", { className: "flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20", children: [
+    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto flex h-16 items-center justify-between px-4 lg:px-6", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-xl font-bold leading-none", children: "Learn Srinagar" }),
+          /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+        ] })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsx(Link, { to: "/login", children: /* @__PURE__ */ jsx(Button, { size: "sm", className: "hidden md:flex", children: "Login" }) }) })
+      /* @__PURE__ */ jsxs("nav", { className: "hidden md:flex items-center gap-8", children: [
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => {
+              var _a;
+              return (_a = document.getElementById("impact")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+            },
+            className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group",
+            children: [
+              "Impact",
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => {
+              var _a;
+              return (_a = document.getElementById("features")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+            },
+            className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group",
+            children: [
+              "Features",
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => {
+              var _a;
+              return (_a = document.getElementById("mission")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+            },
+            className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group",
+            children: [
+              "Mission",
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => {
+              var _a;
+              return (_a = document.getElementById("schools")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+            },
+            className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group",
+            children: [
+              "Schools",
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(Link, { to: "/blogs", className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group", children: [
+          "Blog",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx(Link, { to: "/login", className: "hidden sm:block", children: /* @__PURE__ */ jsxs(Button, { size: "sm", className: "shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105", children: [
+          /* @__PURE__ */ jsx(Users, { className: "mr-2 h-4 w-4" }),
+          "Login"
+        ] }) }),
+        /* @__PURE__ */ jsxs(Sheet, { open: mobileMenuOpen, onOpenChange: setMobileMenuOpen, children: [
+          /* @__PURE__ */ jsx(SheetTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", className: "md:hidden", children: /* @__PURE__ */ jsx(Menu, { className: "h-5 w-5" }) }) }),
+          /* @__PURE__ */ jsx(SheetContent, { side: "right", className: "w-80", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-6 mt-6", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 pb-4 border-b", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("span", { className: "text-lg font-bold", children: "Learn Srinagar" }),
+                /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("nav", { className: "flex flex-col gap-4", children: [
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    var _a;
+                    (_a = document.getElementById("impact")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+                    setMobileMenuOpen(false);
+                  },
+                  className: "flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors",
+                  children: [
+                    /* @__PURE__ */ jsx(Award, { className: "h-5 w-5 text-primary" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Impact" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    var _a;
+                    (_a = document.getElementById("features")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+                    setMobileMenuOpen(false);
+                  },
+                  className: "flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors",
+                  children: [
+                    /* @__PURE__ */ jsx(Zap, { className: "h-5 w-5 text-primary" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Features" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    var _a;
+                    (_a = document.getElementById("mission")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+                    setMobileMenuOpen(false);
+                  },
+                  className: "flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors",
+                  children: [
+                    /* @__PURE__ */ jsx(Globe, { className: "h-5 w-5 text-primary" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Mission" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    var _a;
+                    (_a = document.getElementById("schools")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+                    setMobileMenuOpen(false);
+                  },
+                  className: "flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors",
+                  children: [
+                    /* @__PURE__ */ jsx(School$1, { className: "h-5 w-5 text-primary" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Schools" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                Link,
+                {
+                  to: "/blogs",
+                  className: "flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors",
+                  onClick: () => setMobileMenuOpen(false),
+                  children: [
+                    /* @__PURE__ */ jsx(BookOpen, { className: "h-5 w-5 text-primary" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Blog" })
+                  ]
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsx("div", { className: "mt-auto pt-6 border-t", children: /* @__PURE__ */ jsx(Link, { to: "/login", onClick: () => setMobileMenuOpen(false), children: /* @__PURE__ */ jsxs(Button, { className: "w-full", children: [
+              /* @__PURE__ */ jsx(Users, { className: "mr-2 h-4 w-4" }),
+              "Login to Portal"
+            ] }) }) })
+          ] }) })
+        ] })
+      ] })
     ] }) }),
     /* @__PURE__ */ jsxs("main", { className: "flex-1", children: [
-      /* @__PURE__ */ jsx("section", { className: "w-full py-12", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 md:px-6", children: /* @__PURE__ */ jsxs("div", { className: "grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex flex-col justify-center space-y-4", children: /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("h1", { className: "text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none", children: "Connecting Classrooms Across Distances" }),
-          /* @__PURE__ */ jsx("p", { className: "max-w-[600px] text-muted-foreground md:text-xl", children: "Our Hybrid School project bridges the gap between schools with a central studio facilitating interactive class sessions for remote participating schools." })
-        ] }) }),
-        /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "relative w-full h-[400px] md:h-[550px] rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center shadow-lg", children: [
-          /* @__PURE__ */ jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/80 flex items-center justify-center animate-pulse", children: /* @__PURE__ */ jsx(School$1, { className: "h-12 w-12 md:h-16 md:w-16 text-white" }) }) }),
-          /* @__PURE__ */ jsx("div", { className: "absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-background/80 to-transparent" }),
-          /* @__PURE__ */ jsx("div", { className: "grid grid-cols-3 gap-3 p-4 opacity-50", children: Array.from({ length: 9 }).map((_, i) => /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: "aspect-video rounded-md bg-primary/30"
-            },
-            i
-          )) })
-        ] }) })
-      ] }) }) }),
-      /* @__PURE__ */ jsx("section", { id: "features", className: "w-full py-20 bg-muted/50", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center justify-center space-y-4 text-center", children: /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("div", { className: "inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground", children: "Features" }),
-          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-bold tracking-tighter md:text-4xl/tight", children: "Innovative Learning Environment" }),
-          /* @__PURE__ */ jsx("p", { className: "max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed", children: "Our hybrid learning system combines the best of in-person and remote education to create an engaging and effective learning experience for all students." })
-        ] }) }),
-        /* @__PURE__ */ jsxs("div", { className: "mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-10", children: [
-          /* @__PURE__ */ jsxs("div", { className: "grid gap-6", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(MonitorPlay, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Central Studio" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "State-of-the-art central studio equipped with advanced audio-visual technology for high-quality broadcasting of lessons to remote schools." })
+      /* @__PURE__ */ jsxs("section", { className: "relative w-full py-16 md:py-24 overflow-hidden", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" }),
+        /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 md:px-6 relative", children: /* @__PURE__ */ jsxs("div", { className: "grid gap-8 lg:grid-cols-2 lg:gap-16 items-center", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-col justify-center space-y-6 text-center lg:text-left", children: [
+            /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary", children: "Transforming Education in Kashmir" }),
+              /* @__PURE__ */ jsxs("h1", { className: "text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl", children: [
+                "Connecting",
+                /* @__PURE__ */ jsx("span", { className: "block text-primary", children: "Classrooms" }),
+                "Across Distances"
+              ] }),
+              /* @__PURE__ */ jsx("p", { className: "max-w-[600px] text-lg text-muted-foreground md:text-xl mx-auto lg:mx-0", children: "Learn Srinagar bridges educational gaps through innovative hybrid learning, connecting schools across Kashmir with expert teachers and interactive sessions." })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-4 justify-center lg:justify-start", children: [
+              /* @__PURE__ */ jsx(Link, { to: "/login", children: /* @__PURE__ */ jsxs(Button, { size: "lg", className: "group shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto", children: [
+                /* @__PURE__ */ jsx(Users, { className: "mr-2 h-5 w-5 group-hover:scale-110 transition-transform" }),
+                "Log In to Portal"
+              ] }) }),
+              /* @__PURE__ */ jsxs(Button, { variant: "outline", size: "lg", className: "shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto", onClick: () => {
+                var _a;
+                return (_a = document.getElementById("schools")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+              }, children: [
+                "Explore Schools",
+                /* @__PURE__ */ jsx(ChevronRight, { className: "ml-2 h-5 w-5" })
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(Users, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Interactive Sessions" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Two-way communication allows students from remote schools to actively participate in discussions and ask questions in real-time." })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(BookOpen, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Shared Resources" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Access to a wide range of educational resources, including digital libraries, interactive materials, and expert educators." })
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-8 justify-center lg:justify-start pt-4", children: [
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-primary", children: "12+" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Schools" })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-primary", children: "500+" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Students" })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-primary", children: "50+" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Teachers" })
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ jsxs("div", { className: "grid gap-6", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Expert Teachers" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Lessons delivered by specialized educators with expertise in their subject areas, benefiting students across all participating schools." })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(LayoutGrid, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Flexible Learning" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Adaptable system that can accommodate various teaching methods and learning styles, ensuring every student can benefit." })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(Building2, { className: "h-5 w-5" }) }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-                /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold", children: "Infrastructure Support" }),
-                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Technical assistance and infrastructure setup for all participating schools to ensure seamless connectivity and learning experience." })
+          /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center lg:justify-end", children: /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-lg", children: [
+            /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 rounded-3xl blur-3xl" }),
+            /* @__PURE__ */ jsxs("div", { className: "relative bg-background/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border", children: [
+              /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4 mb-6", children: [
+                /* @__PURE__ */ jsxs("div", { className: "bg-primary/10 rounded-2xl p-4 text-center", children: [
+                  /* @__PURE__ */ jsx(MonitorPlay, { className: "h-8 w-8 text-primary mx-auto mb-2" }),
+                  /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "Live Classes" })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "bg-primary/10 rounded-2xl p-4 text-center", children: [
+                  /* @__PURE__ */ jsx(Users, { className: "h-8 w-8 text-primary mx-auto mb-2" }),
+                  /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "Interactive" })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "bg-primary/10 rounded-2xl p-4 text-center", children: [
+                  /* @__PURE__ */ jsx(Globe, { className: "h-8 w-8 text-primary mx-auto mb-2" }),
+                  /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "Remote Access" })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "bg-primary/10 rounded-2xl p-4 text-center", children: [
+                  /* @__PURE__ */ jsx(Award, { className: "h-8 w-8 text-primary mx-auto mb-2" }),
+                  /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "Quality Education" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-8 w-8 text-white" }) }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Powered by Learn Srinagar" })
               ] })
             ] })
+          ] }) })
+        ] }) })
+      ] }),
+      /* @__PURE__ */ jsx("section", { id: "stats", className: "w-full py-16 bg-muted/30", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 md:px-6", children: /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-8", children: [
+        /* @__PURE__ */ jsxs("div", { className: "text-center group hover:scale-105 transition-transform duration-300", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors", children: /* @__PURE__ */ jsx(School$1, { className: "h-8 w-8 text-primary" }) }),
+          /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "12" }),
+          /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Partner Schools" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "text-center group hover:scale-105 transition-transform duration-300", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors", children: /* @__PURE__ */ jsx(Users, { className: "h-8 w-8 text-primary" }) }),
+          /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "500+" }),
+          /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Active Students" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "text-center group hover:scale-105 transition-transform duration-300", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors", children: /* @__PURE__ */ jsx(MonitorPlay, { className: "h-8 w-8 text-primary" }) }),
+          /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "1000+" }),
+          /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Live Sessions" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "text-center group hover:scale-105 transition-transform duration-300", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors", children: /* @__PURE__ */ jsx(Award, { className: "h-8 w-8 text-primary" }) }),
+          /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "95%" }),
+          /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Success Rate" })
+        ] })
+      ] }) }) }),
+      /* @__PURE__ */ jsxs("section", { id: "impact", className: "w-full py-20 bg-gradient-to-br from-primary/5 via-background to-primary/10 relative overflow-hidden", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-grid-pattern opacity-5" }),
+        /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6 relative", children: [
+          /* @__PURE__ */ jsxs("div", { className: "text-center mb-16", children: [
+            /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary mb-4", children: [
+              /* @__PURE__ */ jsx(Award, { className: "mr-2 h-4 w-4" }),
+              "Our Impact"
+            ] }),
+            /* @__PURE__ */ jsxs("h2", { className: "text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl mb-6", children: [
+              "Transforming Lives Through",
+              /* @__PURE__ */ jsx("span", { className: "block text-primary", children: "Quality Education" })
+            ] }),
+            /* @__PURE__ */ jsx("p", { className: "max-w-3xl mx-auto text-lg text-muted-foreground md:text-xl", children: "See how Learn Srinagar is making a real difference in the educational landscape of Kashmir" })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-16", children: [
+            /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 shadow-lg bg-gradient-to-br from-background to-muted/20", children: [
+              /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "w-20 h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg", children: /* @__PURE__ */ jsx(Users, { className: "h-10 w-10 text-white" }) }),
+                /* @__PURE__ */ jsx(CardTitle, { className: "text-2xl text-primary", children: "Student Success" })
+              ] }),
+              /* @__PURE__ */ jsxs(CardContent, { className: "text-center space-y-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-4xl font-bold text-primary", children: "95%" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Student satisfaction rate with improved learning outcomes and engagement in remote classes" }),
+                /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-4 text-sm", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "500+" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Active Students" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "85%" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Attendance Rate" })
+                  ] })
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 shadow-lg bg-gradient-to-br from-background to-muted/20", children: [
+              /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "w-20 h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-10 w-10 text-white" }) }),
+                /* @__PURE__ */ jsx(CardTitle, { className: "text-2xl text-primary", children: "Teacher Excellence" })
+              ] }),
+              /* @__PURE__ */ jsxs(CardContent, { className: "text-center space-y-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-4xl font-bold text-primary", children: "50+" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Expert teachers delivering high-quality education across multiple schools simultaneously" }),
+                /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-4 text-sm", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "100%" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Qualified" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "6" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Subjects" })
+                  ] })
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 shadow-lg bg-gradient-to-br from-background to-muted/20 md:col-span-2 lg:col-span-1", children: [
+              /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "w-20 h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg", children: /* @__PURE__ */ jsx(MonitorPlay, { className: "h-10 w-10 text-white" }) }),
+                /* @__PURE__ */ jsx(CardTitle, { className: "text-2xl text-primary", children: "Technology Impact" })
+              ] }),
+              /* @__PURE__ */ jsxs(CardContent, { className: "text-center space-y-4", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-4xl font-bold text-primary", children: "1000+" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Interactive live sessions conducted with seamless connectivity and engagement" }),
+                /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-4 text-sm", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "99.9%" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Uptime" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                    /* @__PURE__ */ jsx("div", { className: "font-semibold text-primary", children: "HD" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Quality" })
+                  ] })
+                ] })
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-3xl p-8 md:p-12 text-center", children: /* @__PURE__ */ jsxs("div", { className: "max-w-4xl mx-auto", children: [
+            /* @__PURE__ */ jsx("h3", { className: "text-2xl md:text-3xl font-bold mb-6", children: '"Learn Srinagar has revolutionized how we deliver education across Kashmir"' }),
+            /* @__PURE__ */ jsx("p", { className: "text-lg text-muted-foreground mb-8", children: "Our hybrid learning model has successfully bridged the educational gap, ensuring every student receives quality education regardless of their location." }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8", children: [
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "12" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Connected Schools" })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "3" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Grade Levels (6-8)" })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "100%" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: "Digital Coverage" })
+              ] })
+            ] })
+          ] }) })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("section", { id: "features", className: "w-full py-20", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center justify-center space-y-4 text-center mb-16", children: /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary", children: [
+            /* @__PURE__ */ jsx(Zap, { className: "mr-2 h-4 w-4" }),
+            "Innovative Features"
+          ] }),
+          /* @__PURE__ */ jsxs("h2", { className: "text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl", children: [
+            "Revolutionary Learning",
+            /* @__PURE__ */ jsx("span", { className: "block text-primary", children: "Environment" })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "max-w-3xl text-lg text-muted-foreground md:text-xl", children: "Learn Srinagar combines cutting-edge technology with proven educational methods to deliver exceptional learning experiences across Kashmir." })
+        ] }) }),
+        /* @__PURE__ */ jsxs("div", { className: "grid gap-8 md:grid-cols-2 lg:grid-cols-3", children: [
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(MonitorPlay, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Central Studio" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "State-of-the-art broadcasting studio with 4K cameras, professional audio, and interactive whiteboards for immersive learning experiences." }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(Users, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Interactive Sessions" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "Real-time two-way communication enabling students to participate actively, ask questions, and collaborate with peers across different schools." }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(BookOpen, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Digital Resources" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "Comprehensive digital library with interactive content, multimedia resources, and personalized learning materials tailored to each student's needs." }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Expert Educators" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "Highly qualified teachers with specialized expertise delivering lessons to multiple schools, ensuring consistent quality education for all." }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(Shield, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Secure Platform" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "Enterprise-grade security with encrypted communications, secure login systems, and comprehensive data protection for student privacy." }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg", children: [
+            /* @__PURE__ */ jsxs(CardHeader, { className: "text-center pb-4", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300", children: /* @__PURE__ */ jsx(Building2, { className: "h-8 w-8 text-white" }) }),
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-xl", children: "Infrastructure Support" })
+            ] }),
+            /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: "Complete technical setup and ongoing support for all participating schools, ensuring seamless connectivity and optimal learning conditions." }) })
           ] })
         ] })
       ] }) }),
-      /* @__PURE__ */ jsx("section", { id: "mission", className: "w-full py-20", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 md:px-6", children: /* @__PURE__ */ jsxs("div", { className: "grid gap-10 md:gap-16 lg:grid-cols-2", children: [
-        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsx("div", { className: "inline-block rounded-lg bg-muted px-3 py-1 text-sm", children: "Our Mission" }),
-          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl", children: "Bridging Educational Gaps" }),
-          /* @__PURE__ */ jsx("p", { className: "max-w-[600px] text-muted-foreground md:text-xl/relaxed", children: "Our mission is to provide equal access to quality education for all students, regardless of their geographical location or school resources. By connecting schools through our hybrid learning system, we aim to standardize educational quality and create opportunities for collaborative learning." }),
-          /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2 min-[400px]:flex-row", children: /* @__PURE__ */ jsx(Button, { children: "Join Our Mission" }) })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-start space-y-4", children: [
-          /* @__PURE__ */ jsx("div", { className: "inline-block rounded-lg bg-muted px-3 py-1 text-sm", children: "Our Goals" }),
-          /* @__PURE__ */ jsxs("ul", { className: "grid gap-4", children: [
-            /* @__PURE__ */ jsxs("li", { className: "flex items-start gap-2", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground", children: "1" }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-medium", children: "Equitable Education" }),
-                /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Ensure all students have access to the same quality of education regardless of their school's location." })
+      /* @__PURE__ */ jsx("section", { id: "mission", className: "w-full py-20 bg-gradient-to-br from-muted/30 to-muted/10", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 md:px-6", children: /* @__PURE__ */ jsxs("div", { className: "grid gap-12 lg:grid-cols-2 items-center", children: [
+        /* @__PURE__ */ jsx("div", { className: "space-y-6", children: /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary", children: [
+            /* @__PURE__ */ jsx(Globe, { className: "mr-2 h-4 w-4" }),
+            "Our Mission"
+          ] }),
+          /* @__PURE__ */ jsxs("h2", { className: "text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl", children: [
+            "Bridging Educational",
+            /* @__PURE__ */ jsx("span", { className: "block text-primary", children: "Gaps in Kashmir" })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-lg text-muted-foreground md:text-xl leading-relaxed", children: "Learn Srinagar is committed to democratizing quality education across Kashmir. We believe every student deserves access to excellent teachers and resources, regardless of their school's location or infrastructure limitations." })
+        ] }) }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-6", children: [
+          /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary", children: [
+            /* @__PURE__ */ jsx(Award, { className: "mr-2 h-4 w-4" }),
+            "Our Impact Goals"
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "grid gap-6", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-4 group", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300", children: /* @__PURE__ */ jsx(Users, { className: "h-6 w-6" }) }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-lg font-semibold", children: "Equitable Access" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Ensuring every student in Kashmir has access to the same quality of education, breaking down geographical and resource barriers." })
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("li", { className: "flex items-start gap-2", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground", children: "2" }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-medium", children: "Resource Optimization" }),
-                /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Maximize the use of available educational resources by sharing them across multiple schools." })
+            /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-4 group", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300", children: /* @__PURE__ */ jsx(LayoutGrid, { className: "h-6 w-6" }) }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-lg font-semibold", children: "Resource Optimization" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Maximizing educational impact by sharing expert teachers and premium resources across our entire network of schools." })
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("li", { className: "flex items-start gap-2", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground", children: "3" }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-medium", children: "Teacher Development" }),
-                /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Provide opportunities for teachers to specialize and share their expertise with a wider audience." })
+            /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-4 group", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-6 w-6" }) }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-lg font-semibold", children: "Teacher Excellence" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Empowering educators with professional development opportunities and platforms to share their expertise with a broader audience." })
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("li", { className: "flex items-start gap-2", children: [
-              /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground", children: "4" }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-medium", children: "Community Building" }),
-                /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Foster connections between different school communities, creating a larger educational ecosystem." })
+            /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-4 group", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300", children: /* @__PURE__ */ jsx(Building2, { className: "h-6 w-6" }) }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-lg font-semibold", children: "Community Building" }),
+                /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Creating a unified educational ecosystem that connects schools, students, and families across Kashmir's diverse communities." })
               ] })
             ] })
           ] })
         ] })
       ] }) }) }),
-      /* @__PURE__ */ jsx("section", { id: "schools", className: "w-full bg-muted/50 py-20", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center justify-center space-y-4 text-center mb-10", children: /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("div", { className: "inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground", children: "Participating Schools" }),
-          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-bold tracking-tighter md:text-4xl/tight", children: "Our Network of Schools" }),
-          /* @__PURE__ */ jsx("p", { className: "max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed", children: "The following schools are part of our Hybrid Learning System project in the Srinagar district." })
-        ] }) }),
-        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: schools.map((school, index) => /* @__PURE__ */ jsxs(Card, { children: [
-          /* @__PURE__ */ jsxs(CardHeader, { children: [
-            /* @__PURE__ */ jsx(CardTitle, { children: school.name }),
-            /* @__PURE__ */ jsxs(CardDescription, { children: [
-              "Zone: ",
-              school.zone
-            ] })
+      /* @__PURE__ */ jsx("section", { id: "schools", className: "w-full py-20", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center justify-center space-y-4 text-center mb-16", children: /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary", children: [
+            /* @__PURE__ */ jsx(School$1, { className: "mr-2 h-4 w-4" }),
+            "Partner Schools"
           ] }),
-          /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-2", children: [
-            /* @__PURE__ */ jsx(MapPin, { className: "h-4 w-4 text-muted-foreground" }),
-            /* @__PURE__ */ jsx("span", { className: "text-sm", children: school.constituency })
+          /* @__PURE__ */ jsxs("h2", { className: "text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl", children: [
+            "Our Growing Network",
+            /* @__PURE__ */ jsx("span", { className: "block text-primary", children: "Across Srinagar" })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "max-w-3xl text-lg text-muted-foreground md:text-xl", children: "These prestigious institutions are part of the Learn Srinagar ecosystem, working together to provide world-class education to students across Kashmir." })
+        ] }) }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: schools.map((school, index) => /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 shadow-lg overflow-hidden", children: [
+          /* @__PURE__ */ jsx("div", { className: "h-2 bg-gradient-to-r from-primary to-primary/80" }),
+          /* @__PURE__ */ jsx(CardHeader, { className: "pb-4", children: /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
+              /* @__PURE__ */ jsx(CardTitle, { className: "text-lg leading-tight mb-2 group-hover:text-primary transition-colors", children: school.name }),
+              /* @__PURE__ */ jsxs(CardDescription, { className: "text-sm font-medium text-primary/80", children: [
+                "Zone: ",
+                school.zone
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx("div", { className: "w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors", children: /* @__PURE__ */ jsx(School$1, { className: "h-5 w-5 text-primary" }) })
+          ] }) }),
+          /* @__PURE__ */ jsx(CardContent, { className: "pt-0", children: /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-8 h-8 bg-muted rounded-lg flex items-center justify-center", children: /* @__PURE__ */ jsx(MapPin, { className: "h-4 w-4 text-muted-foreground" }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "Constituency" }),
+                /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: school.constituency })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-8 h-8 bg-muted rounded-lg flex items-center justify-center", children: /* @__PURE__ */ jsx(Building2, { className: "h-4 w-4 text-muted-foreground" }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("div", { className: "text-sm font-medium", children: "School Code" }),
+                /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground font-mono", children: school.code })
+              ] })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ jsx(CardFooter, { className: "pt-4 border-t bg-muted/20", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between w-full", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-2 h-2 bg-green-500 rounded-full animate-pulse" }),
+              /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: "Active Network" })
+            ] }),
+            /* @__PURE__ */ jsxs(Button, { variant: "ghost", size: "sm", className: "text-xs hover:bg-primary/10", children: [
+              "View Details",
+              /* @__PURE__ */ jsx(ChevronRight, { className: "ml-1 h-3 w-3" })
+            ] })
           ] }) })
-        ] }, index)) })
+        ] }, index)) }),
+        /* @__PURE__ */ jsx("div", { className: "text-center mt-12", children: /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center gap-2 text-sm text-muted-foreground", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-2 h-2 bg-primary rounded-full animate-pulse" }),
+          "More schools joining our network every month"
+        ] }) })
       ] }) })
     ] }),
-    /* @__PURE__ */ jsx("footer", { className: "w-full border-t py-6 md:py-0", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto flex flex-col items-center justify-center gap-4 md:h-14 md:flex-row px-4", children: /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
-      "© ",
-      (/* @__PURE__ */ new Date()).getFullYear(),
-      " Hybrid School Project. All rights reserved."
-    ] }) }) }) })
+    /* @__PURE__ */ jsx("footer", { className: "w-full border-t bg-muted/30 py-12", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
+      /* @__PURE__ */ jsxs("div", { className: "grid gap-8 md:grid-cols-2 lg:grid-cols-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("div", { className: "font-bold text-lg", children: "Learn Srinagar" }),
+              /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground max-w-xs", children: "Transforming education across Kashmir through innovative hybrid learning solutions." })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Quick Links" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm", children: [
+            /* @__PURE__ */ jsx(Link, { to: "#features", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Features" }),
+            /* @__PURE__ */ jsx(Link, { to: "#mission", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Our Mission" }),
+            /* @__PURE__ */ jsx(Link, { to: "/blogs", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Blog" }),
+            /* @__PURE__ */ jsx(Link, { to: "#schools", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Partner Schools" }),
+            /* @__PURE__ */ jsx(Link, { to: "/login", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Login Portal" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Education" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Classes 6-8" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Live Interactive Sessions" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Digital Resources" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Expert Teachers" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Contact Info" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm text-muted-foreground", children: [
+            /* @__PURE__ */ jsx("div", { children: "Srinagar, Kashmir" }),
+            /* @__PURE__ */ jsx("div", { children: "Education Department" }),
+            /* @__PURE__ */ jsx("div", { children: "learnsrinagar.in" })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
+          "© ",
+          (/* @__PURE__ */ new Date()).getFullYear(),
+          " Learn Srinagar. All rights reserved."
+        ] }) }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-sm text-muted-foreground", children: [
+          /* @__PURE__ */ jsx("span", { children: "Empowering Kashmir's Future" }),
+          /* @__PURE__ */ jsx("div", { className: "w-2 h-2 bg-primary rounded-full animate-pulse" })
+        ] })
+      ] })
+    ] }) })
   ] });
 }
 const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -581,23 +1099,31 @@ const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: Home
 }, Symbol.toStringTag, { value: "Module" }));
 const pool = mysql.createPool({
-  host: "69.62.84.118",
-  user: "learnsrinagar",
-  database: "learnsrinagar",
-  password: "e3iWzvZnZifgN38OiM2Q",
+  host: process.env.DB_HOST || "69.62.84.118",
+  user: process.env.DB_USER || "learnsrinagar",
+  database: process.env.DB_NAME || "learnsrinagar",
+  password: process.env.DB_PASSWORD || "e3iWzvZnZifgN38OiM2Q",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  acquireTimeout: 6e4,
+  timeout: 6e4
 });
 async function query(sql, params = []) {
-  const connection = await pool.getConnection();
   try {
-    const [results] = await connection.query(sql, params);
-    return [results];
-  } finally {
-    connection.release();
+    const connection = await pool.getConnection();
+    try {
+      const [results] = await connection.query(sql, params);
+      return results;
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    console.error("Database query error:", error);
+    throw error;
   }
 }
+const db = { query };
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
@@ -605,7 +1131,7 @@ const sessionStorage = createCookieSessionStorage({
     sameSite: "lax",
     path: "/",
     httpOnly: true,
-    secure: true
+    secure: process.env.NODE_ENV === "production"
   }
 });
 const { commitSession, destroySession, getSession } = sessionStorage;
@@ -616,7 +1142,7 @@ async function createSession(request, user) {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7
       })
@@ -672,96 +1198,99 @@ function Label({
     }
   );
 }
-async function loader$i({ request }) {
+async function loader$n({ request }) {
   const user = await getUser(request);
   return user ? redirect$1("/dashboard") : null;
 }
-async function action$d({ request }) {
-  var _a;
-  const form = await request.formData();
-  const email = form.get("email");
-  const password = form.get("password");
-  const users = await query(`SELECT * FROM users WHERE email = ?`, [email]);
-  const user = users == null ? void 0 : users[0][0];
-  if (!user || !user.password_hash) {
-    return { error: "Invalid credentials" };
-  }
-  const isValidPassword = await bcrypt.compare(password, user.password_hash);
-  if (!isValidPassword) {
-    return { error: "Invalid credentials" };
-  }
-  const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
-    user.role_id
-  ]);
-  const role = roles == null ? void 0 : roles[0][0];
-  const sessionUser = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role_name: role.name,
-    school_id: null,
-    class_ids: [],
-    student_ids: [],
-    subject_ids: []
-  };
-  if (role) {
-    const roleName = role.name;
-    if (roleName === "student") {
-      const studentProfiles = await query(
-        `SELECT class_id, schools_id as school_id FROM student_profiles WHERE user_id = ?`,
-        [user.id]
-      );
-      if (((_a = studentProfiles == null ? void 0 : studentProfiles[0]) == null ? void 0 : _a.length) > 0) {
-        sessionUser.class_ids = [studentProfiles[0][0].class_id];
-        sessionUser.school_id = studentProfiles[0][0].school_id;
-      }
-    } else if (roleName === "teacher") {
-      const [teacherSubjects] = await query(
-        `SELECT subject_id FROM teacher_assignments WHERE teacher_id = ?`,
-        [user.id]
-      );
-      if ((teacherSubjects == null ? void 0 : teacherSubjects.length) > 0) {
-        sessionUser.subject_ids = teacherSubjects.map((item) => item.subject_id);
-      }
-      const [teacherClasses] = await query(
-        `SELECT DISTINCT c.id as class_id 
+async function action$f({ request }) {
+  try {
+    const form = await request.formData();
+    const email = form.get("email");
+    const password = form.get("password");
+    const users = await query("SELECT * FROM users WHERE email = ?", [email]);
+    if (users.length === 0) {
+      return { error: "Invalid credentials" };
+    }
+    const user = users[0];
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    if (!isValid) {
+      return { error: "Invalid credentials" };
+    }
+    const roles = await query(`SELECT name FROM roles WHERE id = ?`, [
+      user.role_id
+    ]);
+    const role = roles == null ? void 0 : roles[0];
+    const sessionUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role_name: role.name,
+      school_id: null,
+      class_ids: [],
+      student_ids: [],
+      subject_ids: []
+    };
+    if (role) {
+      const roleName = role.name;
+      if (roleName === "student") {
+        const studentProfiles = await query(
+          `SELECT class_id, schools_id as school_id FROM student_profiles WHERE user_id = ?`,
+          [user.id]
+        );
+        if ((studentProfiles == null ? void 0 : studentProfiles.length) > 0) {
+          sessionUser.class_ids = [studentProfiles[0].class_id];
+          sessionUser.school_id = studentProfiles[0].school_id;
+        }
+      } else if (roleName === "teacher") {
+        const teacherSubjects = await query(
+          `SELECT subject_id FROM teacher_assignments WHERE teacher_id = ?`,
+          [user.id]
+        );
+        if ((teacherSubjects == null ? void 0 : teacherSubjects.length) > 0) {
+          sessionUser.subject_ids = teacherSubjects.map((item) => item.subject_id);
+        }
+        const teacherClasses = await query(
+          `SELECT DISTINCT c.id as class_id 
          FROM teacher_assignments ta
          JOIN subjects s ON ta.subject_id = s.id
          JOIN classes c ON s.class_id = c.id
          WHERE ta.teacher_id = ?`,
-        [user.id]
-      );
-      if ((teacherClasses == null ? void 0 : teacherClasses.length) > 0) {
-        sessionUser.class_ids = teacherClasses.map((item) => item.class_id);
-      }
-    } else if (roleName === "parent") {
-      const [parentLinks] = await query(
-        `SELECT student_id FROM parent_student_links WHERE parent_id = ?`,
-        [user.id]
-      );
-      if ((parentLinks == null ? void 0 : parentLinks.length) > 0) {
-        sessionUser.student_ids = parentLinks.map((link) => link.student_id);
-      }
-    } else if (roleName === "class_admin") {
-      const [classAdmins] = await query(
-        `SELECT school_id, class_id FROM class_admins WHERE admin_id = ?`,
-        [user.id]
-      );
-      if ((classAdmins == null ? void 0 : classAdmins.length) > 0) {
-        sessionUser.school_id = classAdmins[0].school_id;
-        sessionUser.class_ids = classAdmins.map((item) => item.class_id);
-      }
-    } else if (roleName === "school_admin") {
-      const [schools] = await query(
-        `SELECT id as school_id FROM schools WHERE users_id = ? LIMIT 1`,
-        [user.id]
-      );
-      if ((schools == null ? void 0 : schools.length) > 0) {
-        sessionUser.school_id = schools[0].school_id;
+          [user.id]
+        );
+        if ((teacherClasses == null ? void 0 : teacherClasses.length) > 0) {
+          sessionUser.class_ids = teacherClasses.map((item) => item.class_id);
+        }
+      } else if (roleName === "parent") {
+        const parentLinks = await query(
+          `SELECT student_id FROM parent_student_links WHERE parent_id = ?`,
+          [user.id]
+        );
+        if ((parentLinks == null ? void 0 : parentLinks.length) > 0) {
+          sessionUser.student_ids = parentLinks.map((link) => link.student_id);
+        }
+      } else if (roleName === "class_admin") {
+        const classAdmins = await query(
+          `SELECT school_id, class_id FROM class_admins WHERE admin_id = ?`,
+          [user.id]
+        );
+        if ((classAdmins == null ? void 0 : classAdmins.length) > 0) {
+          sessionUser.school_id = classAdmins[0].school_id;
+          sessionUser.class_ids = classAdmins.map((item) => item.class_id);
+        }
+      } else if (roleName === "school_admin") {
+        const schools = await query(
+          `SELECT id as school_id FROM schools WHERE users_id = ? LIMIT 1`,
+          [user.id]
+        );
+        if ((schools == null ? void 0 : schools.length) > 0) {
+          sessionUser.school_id = schools[0].school_id;
+        }
       }
     }
+    return await createSession(request, sessionUser);
+  } catch (error) {
+    return { error: "Server error occurred" };
   }
-  return await createSession(request, sessionUser);
 }
 function Login() {
   const actionData = useActionData();
@@ -820,9 +1349,636 @@ function Login() {
 }
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$d,
+  action: action$f,
   default: Login,
-  loader: loader$i
+  loader: loader$n
+}, Symbol.toStringTag, { value: "Module" }));
+function Select({
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(SelectPrimitive.Root, { "data-slot": "select", ...props });
+}
+function SelectValue({
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(SelectPrimitive.Value, { "data-slot": "select-value", ...props });
+}
+function SelectTrigger({
+  className,
+  size = "default",
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs(
+    SelectPrimitive.Trigger,
+    {
+      "data-slot": "select-trigger",
+      "data-size": size,
+      className: cn(
+        "border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-fit items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      ),
+      ...props,
+      children: [
+        children,
+        /* @__PURE__ */ jsx(SelectPrimitive.Icon, { asChild: true, children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4 opacity-50" }) })
+      ]
+    }
+  );
+}
+function SelectContent({
+  className,
+  children,
+  position = "popper",
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsxs(
+    SelectPrimitive.Content,
+    {
+      "data-slot": "select-content",
+      className: cn(
+        "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md",
+        position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className
+      ),
+      position,
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx(SelectScrollUpButton, {}),
+        /* @__PURE__ */ jsx(
+          SelectPrimitive.Viewport,
+          {
+            className: cn("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"),
+            children
+          }
+        ),
+        /* @__PURE__ */ jsx(SelectScrollDownButton, {})
+      ]
+    }
+  ) });
+}
+function SelectItem({
+  className,
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs(
+    SelectPrimitive.Item,
+    {
+      "data-slot": "select-item",
+      className: cn(
+        "focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        className
+      ),
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx("span", { className: "absolute right-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-4" }) }) }),
+        /* @__PURE__ */ jsx(SelectPrimitive.ItemText, { children })
+      ]
+    }
+  );
+}
+function SelectScrollUpButton({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    SelectPrimitive.ScrollUpButton,
+    {
+      "data-slot": "select-scroll-up-button",
+      className: cn("flex cursor-default items-center justify-center py-1", className),
+      ...props,
+      children: /* @__PURE__ */ jsx(ChevronUpIcon, { className: "size-4" })
+    }
+  );
+}
+function SelectScrollDownButton({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    SelectPrimitive.ScrollDownButton,
+    {
+      "data-slot": "select-scroll-down-button",
+      className: cn("flex cursor-default items-center justify-center py-1", className),
+      ...props,
+      children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4" })
+    }
+  );
+}
+const badgeVariants = cva(
+  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  {
+    variants: {
+      variant: {
+        default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+        secondary: "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+        destructive: "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline: "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground"
+      }
+    },
+    defaultVariants: {
+      variant: "default"
+    }
+  }
+);
+function Badge({
+  className,
+  variant,
+  asChild = false,
+  ...props
+}) {
+  const Comp = asChild ? Slot : "span";
+  return /* @__PURE__ */ jsx(
+    Comp,
+    {
+      "data-slot": "badge",
+      className: cn(badgeVariants({ variant }), className),
+      ...props
+    }
+  );
+}
+async function loader$m() {
+  try {
+    const blogs = await db.query(`
+      SELECT 
+        b.id, b.title, b.short_desc, b.thumbnail_image, b.publish_date,
+        bc.name as category_name,
+        u.name as author_name
+      FROM blogs b
+      JOIN blog_categories bc ON b.category_id = bc.id
+      JOIN users u ON b.author_id = u.id
+      ORDER BY b.publish_date DESC, b.created_at DESC
+    `);
+    const blogsWithImages = blogs.map((blog) => {
+      let thumbnailImage = null;
+      if (blog.thumbnail_image && Buffer.isBuffer(blog.thumbnail_image)) {
+        thumbnailImage = `data:image/jpeg;base64,${blog.thumbnail_image.toString("base64")}`;
+      }
+      return {
+        ...blog,
+        thumbnail_image: thumbnailImage
+      };
+    });
+    const categories = await db.query("SELECT * FROM blog_categories ORDER BY name");
+    console.log("Public blogs loaded:", blogsWithImages.length);
+    console.log("Categories loaded:", categories.length);
+    return new Response(JSON.stringify({ blogs: blogsWithImages, categories }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    });
+  } catch (error) {
+    console.error("Error loading blogs:", error);
+    return new Response(JSON.stringify({ blogs: [], categories: [] }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store"
+      }
+    });
+  }
+}
+function Blogs() {
+  const { blogs, categories } = useLoaderData();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const filteredBlogs = blogs.filter((blog) => {
+    var _a;
+    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) || ((_a = blog.short_desc) == null ? void 0 : _a.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === "all" || blog.category_name === selectedCategory;
+    return matchesSearch && matchesCategory;
+  }).sort((a, b) => {
+    if (sortBy === "newest") return new Date(b.publish_date) - new Date(a.publish_date);
+    if (sortBy === "oldest") return new Date(a.publish_date) - new Date(b.publish_date);
+    if (sortBy === "popular") return b.views - a.views;
+    return 0;
+  });
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20", children: [
+    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto flex h-16 items-center justify-between px-4 lg:px-6", children: [
+      /* @__PURE__ */ jsxs(Link, { to: "/", className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-xl font-bold leading-none", children: "Learn Srinagar" }),
+          /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("nav", { className: "hidden md:flex items-center gap-8", children: [
+        /* @__PURE__ */ jsxs(Link, { to: "/#impact", className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group", children: [
+          "Impact",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+        ] }),
+        /* @__PURE__ */ jsxs(Link, { to: "/#features", className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group", children: [
+          "Features",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+        ] }),
+        /* @__PURE__ */ jsxs(Link, { to: "/#mission", className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group", children: [
+          "Mission",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+        ] }),
+        /* @__PURE__ */ jsxs(Link, { to: "/#schools", className: "relative text-base font-semibold text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 group", children: [
+          "Schools",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" })
+        ] }),
+        /* @__PURE__ */ jsxs(Link, { to: "/blogs", className: "relative text-base font-semibold text-primary transition-all duration-300 hover:scale-110 group", children: [
+          "Blog",
+          /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 left-0 w-full h-0.5 bg-primary" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx(Link, { to: "/login", className: "hidden sm:block", children: /* @__PURE__ */ jsxs(Button, { size: "sm", className: "shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105", children: [
+          /* @__PURE__ */ jsx(Users, { className: "mr-2 h-4 w-4" }),
+          "Login"
+        ] }) }),
+        /* @__PURE__ */ jsxs(Sheet, { open: mobileMenuOpen, onOpenChange: setMobileMenuOpen, children: [
+          /* @__PURE__ */ jsx(SheetTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", className: "md:hidden", children: /* @__PURE__ */ jsx(Menu, { className: "h-5 w-5" }) }) }),
+          /* @__PURE__ */ jsx(SheetContent, { side: "right", className: "w-80", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-6 mt-6", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 pb-4 border-b", children: [
+              /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("span", { className: "text-lg font-bold", children: "Learn Srinagar" }),
+                /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("nav", { className: "flex flex-col gap-4", children: [
+              /* @__PURE__ */ jsxs(Link, { to: "/#impact", className: "flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors", onClick: () => setMobileMenuOpen(false), children: [
+                /* @__PURE__ */ jsx(Award, { className: "h-5 w-5 text-primary" }),
+                /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Impact" })
+              ] }),
+              /* @__PURE__ */ jsxs(Link, { to: "/#features", className: "flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors", onClick: () => setMobileMenuOpen(false), children: [
+                /* @__PURE__ */ jsx(Zap, { className: "h-5 w-5 text-primary" }),
+                /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Features" })
+              ] }),
+              /* @__PURE__ */ jsxs(Link, { to: "/#mission", className: "flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors", onClick: () => setMobileMenuOpen(false), children: [
+                /* @__PURE__ */ jsx(Globe, { className: "h-5 w-5 text-primary" }),
+                /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Mission" })
+              ] }),
+              /* @__PURE__ */ jsxs(Link, { to: "/#schools", className: "flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors", onClick: () => setMobileMenuOpen(false), children: [
+                /* @__PURE__ */ jsx(School$1, { className: "h-5 w-5 text-primary" }),
+                /* @__PURE__ */ jsx("span", { className: "font-medium", children: "Schools" })
+              ] }),
+              /* @__PURE__ */ jsxs(Link, { to: "/blogs", className: "flex items-center gap-3 p-3 rounded-lg bg-primary/10 transition-colors", onClick: () => setMobileMenuOpen(false), children: [
+                /* @__PURE__ */ jsx(BookOpen, { className: "h-5 w-5 text-primary" }),
+                /* @__PURE__ */ jsx("span", { className: "font-medium text-primary", children: "Blog" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx("div", { className: "mt-auto pt-6 border-t", children: /* @__PURE__ */ jsx(Link, { to: "/login", onClick: () => setMobileMenuOpen(false), children: /* @__PURE__ */ jsxs(Button, { className: "w-full", children: [
+              /* @__PURE__ */ jsx(Users, { className: "mr-2 h-4 w-4" }),
+              "Login to Portal"
+            ] }) }) })
+          ] }) })
+        ] })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsx("main", { className: "flex-1", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 py-8", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-center mb-12", children: [
+        /* @__PURE__ */ jsx("h1", { className: "text-4xl font-bold mb-4", children: "Learn Srinagar Blog" }),
+        /* @__PURE__ */ jsx("p", { className: "text-lg text-muted-foreground max-w-2xl mx-auto", children: "Stay updated with the latest news, achievements, and educational content from our school network" })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row gap-4 mb-8 p-6 bg-muted/30 rounded-lg", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex-1", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+          /* @__PURE__ */ jsx(Search, { className: "absolute left-3 top-3 h-4 w-4 text-muted-foreground" }),
+          /* @__PURE__ */ jsx(
+            Input,
+            {
+              placeholder: "Search blogs...",
+              value: searchTerm,
+              onChange: (e) => setSearchTerm(e.target.value),
+              className: "pl-10"
+            }
+          )
+        ] }) }),
+        /* @__PURE__ */ jsxs(Select, { value: selectedCategory, onValueChange: setSelectedCategory, children: [
+          /* @__PURE__ */ jsxs(SelectTrigger, { className: "w-full md:w-48", children: [
+            /* @__PURE__ */ jsx(Filter, { className: "h-4 w-4 mr-2" }),
+            /* @__PURE__ */ jsx(SelectValue, { placeholder: "Category" })
+          ] }),
+          /* @__PURE__ */ jsxs(SelectContent, { children: [
+            /* @__PURE__ */ jsx(SelectItem, { value: "all", children: "All Categories" }),
+            categories.map((category) => /* @__PURE__ */ jsx(SelectItem, { value: category.name, children: category.name }, category.id))
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Select, { value: sortBy, onValueChange: setSortBy, children: [
+          /* @__PURE__ */ jsx(SelectTrigger, { className: "w-full md:w-40", children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Sort by" }) }),
+          /* @__PURE__ */ jsxs(SelectContent, { children: [
+            /* @__PURE__ */ jsx(SelectItem, { value: "newest", children: "Newest First" }),
+            /* @__PURE__ */ jsx(SelectItem, { value: "oldest", children: "Oldest First" }),
+            /* @__PURE__ */ jsx(SelectItem, { value: "popular", children: "Most Popular" })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "mb-6", children: /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
+        "Showing ",
+        filteredBlogs.length,
+        " of ",
+        blogs.length,
+        " blog posts"
+      ] }) }),
+      filteredBlogs.length > 0 ? /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: filteredBlogs.map((blog) => /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1", children: [
+        blog.thumbnail_image && /* @__PURE__ */ jsx("div", { className: "aspect-video overflow-hidden rounded-t-lg", children: /* @__PURE__ */ jsx(
+          "img",
+          {
+            src: blog.thumbnail_image,
+            alt: blog.title,
+            className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          }
+        ) }),
+        /* @__PURE__ */ jsxs(CardHeader, { className: "pb-3", children: [
+          /* @__PURE__ */ jsx("div", { className: "mb-2", children: /* @__PURE__ */ jsx(Badge, { variant: "secondary", className: "text-xs", children: blog.category_name }) }),
+          /* @__PURE__ */ jsx(CardTitle, { className: "text-lg leading-tight group-hover:text-primary transition-colors", children: blog.title })
+        ] }),
+        /* @__PURE__ */ jsx(CardContent, { className: "pb-3", children: /* @__PURE__ */ jsx(CardDescription, { className: "text-sm line-clamp-3", children: blog.short_desc }) }),
+        /* @__PURE__ */ jsxs(CardFooter, { className: "flex items-center justify-between pt-3 border-t", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-xs text-muted-foreground", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsx(User, { className: "h-3 w-3" }),
+              blog.author_name
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsx(Calendar$1, { className: "h-3 w-3" }),
+              formatDate(blog.publish_date)
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx(Link, { to: `/blog/${blog.id}`, children: /* @__PURE__ */ jsxs(Button, { variant: "ghost", size: "sm", className: "text-xs", children: [
+            "Read More",
+            /* @__PURE__ */ jsx(ChevronRight, { className: "h-3 w-3 ml-1" })
+          ] }) })
+        ] })
+      ] }, blog.id)) }) : /* @__PURE__ */ jsx("div", { className: "text-center py-12", children: /* @__PURE__ */ jsxs("div", { className: "text-muted-foreground mb-4", children: [
+        /* @__PURE__ */ jsx(Search, { className: "h-12 w-12 mx-auto mb-4 opacity-50" }),
+        /* @__PURE__ */ jsx("p", { className: "text-lg", children: "No blog posts found" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm", children: "Try adjusting your search or filter criteria" })
+      ] }) }),
+      filteredBlogs.length > 0 && /* @__PURE__ */ jsx("div", { className: "text-center mt-12", children: /* @__PURE__ */ jsx(Button, { variant: "outline", size: "lg", children: "Load More Posts" }) })
+    ] }) }),
+    /* @__PURE__ */ jsx("footer", { className: "w-full border-t bg-muted/30 py-12", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 md:px-6", children: [
+      /* @__PURE__ */ jsxs("div", { className: "grid gap-8 md:grid-cols-2 lg:grid-cols-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground", children: /* @__PURE__ */ jsx(GraduationCap, { className: "h-5 w-5" }) }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("div", { className: "font-bold text-lg", children: "Learn Srinagar" }),
+              /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Transforming Education" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground max-w-xs", children: "Transforming education across Kashmir through innovative hybrid learning solutions." })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Quick Links" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm", children: [
+            /* @__PURE__ */ jsx(Link, { to: "/#features", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Features" }),
+            /* @__PURE__ */ jsx(Link, { to: "/#mission", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Our Mission" }),
+            /* @__PURE__ */ jsx(Link, { to: "/blogs", className: "block text-primary font-medium transition-colors", children: "Blog" }),
+            /* @__PURE__ */ jsx(Link, { to: "/#schools", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Partner Schools" }),
+            /* @__PURE__ */ jsx(Link, { to: "/login", className: "block text-muted-foreground hover:text-primary transition-colors", children: "Login Portal" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Education" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Classes 6-8" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Live Interactive Sessions" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Digital Resources" }),
+            /* @__PURE__ */ jsx("div", { className: "text-muted-foreground", children: "Expert Teachers" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold", children: "Contact Info" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2 text-sm text-muted-foreground", children: [
+            /* @__PURE__ */ jsx("div", { children: "Srinagar, Kashmir" }),
+            /* @__PURE__ */ jsx("div", { children: "Education Department" }),
+            /* @__PURE__ */ jsx("div", { children: "learnsrinagar.in" })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
+          "© ",
+          (/* @__PURE__ */ new Date()).getFullYear(),
+          " Learn Srinagar. All rights reserved."
+        ] }) }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-sm text-muted-foreground", children: [
+          /* @__PURE__ */ jsx("span", { children: "Empowering Kashmir's Future" }),
+          /* @__PURE__ */ jsx("div", { className: "w-2 h-2 bg-primary rounded-full animate-pulse" })
+        ] })
+      ] })
+    ] }) })
+  ] });
+}
+const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Blogs,
+  loader: loader$m
+}, Symbol.toStringTag, { value: "Module" }));
+function Separator({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    SeparatorPrimitive.Root,
+    {
+      "data-slot": "separator-root",
+      decorative,
+      orientation,
+      className: cn(
+        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
+        className
+      ),
+      ...props
+    }
+  );
+}
+async function loader$l({ params }) {
+  try {
+    const blogId = params.id;
+    const [blog] = await db.query(`
+      SELECT 
+        b.*,
+        bc.name as category_name,
+        u.name as author_name,
+        u.email as author_email
+      FROM blogs b
+      JOIN blog_categories bc ON b.category_id = bc.id
+      JOIN users u ON b.author_id = u.id
+      WHERE b.id = ?
+    `, [blogId]);
+    if (blog) {
+      if (blog.thumbnail_image && Buffer.isBuffer(blog.thumbnail_image)) {
+        blog.thumbnail_image = `data:image/jpeg;base64,${blog.thumbnail_image.toString("base64")}`;
+      } else {
+        blog.thumbnail_image = null;
+      }
+      if (blog.cover_image && Buffer.isBuffer(blog.cover_image)) {
+        blog.cover_image = `data:image/jpeg;base64,${blog.cover_image.toString("base64")}`;
+      } else {
+        blog.cover_image = null;
+      }
+    }
+    if (!blog) {
+      throw new Response("Blog not found", { status: 404 });
+    }
+    const relatedBlogs = await db.query(`
+      SELECT 
+        b.id, b.title, b.short_desc, b.thumbnail_image, b.publish_date,
+        bc.name as category_name,
+        u.name as author_name
+      FROM blogs b
+      JOIN blog_categories bc ON b.category_id = bc.id
+      JOIN users u ON b.author_id = u.id
+      WHERE b.category_id = ? AND b.id != ?
+      ORDER BY b.publish_date DESC
+      LIMIT 3
+    `, [blog.category_id, blogId]);
+    const relatedBlogsWithImages = relatedBlogs.map((relatedBlog) => {
+      let thumbnailImage = null;
+      if (relatedBlog.thumbnail_image && Buffer.isBuffer(relatedBlog.thumbnail_image)) {
+        thumbnailImage = `data:image/jpeg;base64,${relatedBlog.thumbnail_image.toString("base64")}`;
+      }
+      return {
+        ...relatedBlog,
+        thumbnail_image: thumbnailImage
+      };
+    });
+    return new Response(JSON.stringify({ blog, relatedBlogs: relatedBlogsWithImages }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    });
+  } catch (error) {
+    console.error("Error loading blog:", error);
+    throw new Response("Blog not found", { status: 404 });
+  }
+}
+function BlogDetail() {
+  const { blog, relatedBlogs } = useLoaderData();
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  };
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: blog.title,
+        text: blog.short_desc,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
+  const attachments = blog.attachments ? JSON.parse(blog.attachments) : [];
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 py-8 max-w-4xl", children: [
+    /* @__PURE__ */ jsx("div", { className: "mb-6", children: /* @__PURE__ */ jsx(Link, { to: "/blogs", children: /* @__PURE__ */ jsxs(Button, { variant: "ghost", size: "sm", children: [
+      /* @__PURE__ */ jsx(ArrowLeft, { className: "h-4 w-4 mr-2" }),
+      "Back to Blogs"
+    ] }) }) }),
+    /* @__PURE__ */ jsxs("div", { className: "mb-8", children: [
+      blog.cover_image && /* @__PURE__ */ jsx("div", { className: "aspect-video overflow-hidden rounded-lg mb-6", children: /* @__PURE__ */ jsx(
+        "img",
+        {
+          src: blog.cover_image,
+          alt: blog.title,
+          className: "w-full h-full object-cover"
+        }
+      ) }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsx(Badge, { variant: "secondary", className: "text-sm", children: blog.category_name }),
+        /* @__PURE__ */ jsx("h1", { className: "text-3xl md:text-4xl font-bold leading-tight", children: blog.title }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-6 text-sm text-muted-foreground", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(User, { className: "h-4 w-4" }),
+            /* @__PURE__ */ jsxs("span", { children: [
+              "By ",
+              blog.author_name
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(Calendar$1, { className: "h-4 w-4" }),
+            /* @__PURE__ */ jsx("span", { children: formatDate(blog.publish_date) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxs(Button, { variant: "outline", size: "sm", onClick: handleShare, children: [
+          /* @__PURE__ */ jsx(Share2, { className: "h-4 w-4 mr-2" }),
+          "Share"
+        ] }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx(Separator, { className: "mb-8" }),
+    /* @__PURE__ */ jsx(Card, { className: "mb-8", children: /* @__PURE__ */ jsx(CardContent, { className: "p-8", children: /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "prose prose-lg max-w-none",
+        dangerouslySetInnerHTML: { __html: blog.content }
+      }
+    ) }) }),
+    attachments.length > 0 && /* @__PURE__ */ jsxs(Card, { className: "mb-8", children: [
+      /* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx("h3", { className: "text-lg font-semibold", children: "Downloads & Attachments" }) }),
+      /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("div", { className: "grid gap-3", children: attachments.map((attachment, index) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between p-3 border rounded-lg", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsx(Download, { className: "h-5 w-5 text-muted-foreground" }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("p", { className: "font-medium", children: attachment.name }),
+            /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: attachment.size })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(Button, { variant: "outline", size: "sm", asChild: true, children: /* @__PURE__ */ jsx("a", { href: attachment.url, download: true, children: "Download" }) })
+      ] }, index)) }) })
+    ] }),
+    relatedBlogs.length > 0 && /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx("h3", { className: "text-2xl font-bold mb-6", children: "Related Articles" }),
+      /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: relatedBlogs.map((relatedBlog) => /* @__PURE__ */ jsxs(Card, { className: "group hover:shadow-lg transition-all duration-300", children: [
+        relatedBlog.thumbnail_image && /* @__PURE__ */ jsx("div", { className: "aspect-video overflow-hidden rounded-t-lg", children: /* @__PURE__ */ jsx(
+          "img",
+          {
+            src: relatedBlog.thumbnail_image,
+            alt: relatedBlog.title,
+            className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          }
+        ) }),
+        /* @__PURE__ */ jsxs(CardContent, { className: "p-4", children: [
+          /* @__PURE__ */ jsx(Badge, { variant: "secondary", className: "text-xs mb-2", children: relatedBlog.category_name }),
+          /* @__PURE__ */ jsx("h4", { className: "font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors", children: relatedBlog.title }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground line-clamp-2 mb-3", children: relatedBlog.short_desc }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-xs text-muted-foreground", children: [
+            /* @__PURE__ */ jsx("span", { children: relatedBlog.author_name }),
+            /* @__PURE__ */ jsx("span", { children: formatDate(relatedBlog.publish_date) })
+          ] }),
+          /* @__PURE__ */ jsx(Link, { to: `/blog/${relatedBlog.id}`, className: "absolute inset-0" })
+        ] })
+      ] }, relatedBlog.id)) })
+    ] })
+  ] });
+}
+const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: BlogDetail,
+  loader: loader$l
+}, Symbol.toStringTag, { value: "Module" }));
+function loader$k() {
+  return new Response(null, { status: 404 });
+}
+const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  loader: loader$k
 }, Symbol.toStringTag, { value: "Module" }));
 function Breadcrumb({
   ...props
@@ -919,103 +2075,6 @@ function useIsMobile() {
     return () => mql.removeEventListener("change", onChange);
   }, []);
   return !!isMobile;
-}
-function Separator({
-  className,
-  orientation = "horizontal",
-  decorative = true,
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(
-    SeparatorPrimitive.Root,
-    {
-      "data-slot": "separator-root",
-      decorative,
-      orientation,
-      className: cn(
-        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
-        className
-      ),
-      ...props
-    }
-  );
-}
-function Sheet({ ...props }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Root, { "data-slot": "sheet", ...props });
-}
-function SheetPortal({ ...props }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Portal, { "data-slot": "sheet-portal", ...props });
-}
-const SheetOverlay = React.forwardRef(function SheetOverlay2({ className, ...props }, ref) {
-  return /* @__PURE__ */ jsx(
-    SheetPrimitive.Overlay,
-    {
-      ref,
-      "data-slot": "sheet-overlay",
-      className: cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className
-      ),
-      ...props
-    }
-  );
-});
-function SheetContent({ className, children, side = "right", ...props }) {
-  return /* @__PURE__ */ jsxs(SheetPortal, { children: [
-    /* @__PURE__ */ jsx(SheetOverlay, {}),
-    /* @__PURE__ */ jsxs(
-      SheetPrimitive.Content,
-      {
-        "data-slot": "sheet-content",
-        className: cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
-          side === "right" && "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
-          side === "left" && "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
-          side === "top" && "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
-          side === "bottom" && "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
-          className
-        ),
-        ...props,
-        children: [
-          children,
-          /* @__PURE__ */ jsxs(SheetPrimitive.Close, { className: "ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", children: [
-            /* @__PURE__ */ jsx(XIcon, { className: "size-4" }),
-            /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Close" })
-          ] })
-        ]
-      }
-    )
-  ] });
-}
-function SheetHeader({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      "data-slot": "sheet-header",
-      className: cn("flex flex-col gap-1.5 p-4", className),
-      ...props
-    }
-  );
-}
-function SheetTitle({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
-    SheetPrimitive.Title,
-    {
-      "data-slot": "sheet-title",
-      className: cn("text-foreground font-semibold", className),
-      ...props
-    }
-  );
-}
-function SheetDescription({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
-    SheetPrimitive.Description,
-    {
-      "data-slot": "sheet-description",
-      className: cn("text-muted-foreground text-sm", className),
-      ...props
-    }
-  );
 }
 function TooltipProvider({
   delayDuration = 0,
@@ -1438,7 +2497,7 @@ function SidebarMenuButton({
     )
   ] });
 }
-async function loader$h({ request }) {
+async function loader$j({ request }) {
   const user = await getUser(request);
   return user ? user : redirect$1("/login");
 }
@@ -1458,6 +2517,8 @@ const ALL_LINKS = [
   { title: "Feedback", icon: BookOpen, url: "/feedback" },
   { title: "Homework", icon: GraduationCap, url: "/homework" },
   { title: "Student", icon: UserPlus, url: "/student" },
+  { title: "Manage Blogs", icon: FileText, url: "/manage-blogs" },
+  { title: "Change Password", icon: UserCog, url: "/change-password" },
   // { title: 'Parent', icon: User, url: '/parent' },
   { title: "Logout", icon: LogOut, url: "/logout" }
 ];
@@ -1471,13 +2532,15 @@ const ROLE_LINKS = {
     "Subject",
     "Manage Live Classes",
     "Timetable",
-    "Feedback"
+    "Feedback",
+    "Manage Blogs",
+    "Change Password"
   ],
-  school_admin: ["Class Admin", "Manage Live Classes", "Attendance", "Timetable", "Student", "Parent"],
-  class_admin: ["Attendance", "Timetable", "Student", "Parent"],
-  teacher: ["Manage Live Classes", "Timetable", "Homework"],
-  student: ["Live Classes", "Attendance", "Timetable", "Homework"],
-  parent: ["Attendance", "Timetable", "Homework", "Feedback"]
+  school_admin: ["Class Admin", "Manage Live Classes", "Attendance", "Timetable", "Student", "Parent", "Change Password"],
+  class_admin: ["Attendance", "Timetable", "Student", "Parent", "Change Password"],
+  teacher: ["Manage Live Classes", "Timetable", "Homework", "Change Password"],
+  student: ["Live Classes", "Attendance", "Timetable", "Homework", "Change Password"],
+  parent: ["Attendance", "Timetable", "Homework", "Feedback", "Change Password"]
 };
 function Layout() {
   const user = useLoaderData();
@@ -1500,8 +2563,8 @@ function Layout() {
           children: [
             /* @__PURE__ */ jsx("div", { className: "flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground", children: /* @__PURE__ */ jsx(BookOpen, { className: "size-4" }) }),
             /* @__PURE__ */ jsxs("div", { className: "grid flex-1 text-left text-sm leading-tight", children: [
-              /* @__PURE__ */ jsx("span", { className: "truncate font-semibold", children: "Hybrid School" }),
-              /* @__PURE__ */ jsx("span", { className: "truncate text-xs", children: "Powered by Cano Solutions" })
+              /* @__PURE__ */ jsx("span", { className: "truncate font-semibold", children: "Learn Srinagar" }),
+              /* @__PURE__ */ jsx("span", { className: "truncate text-xs", children: "Transforming Education" })
             ] })
           ]
         }
@@ -1531,144 +2594,31 @@ function Layout() {
         /* @__PURE__ */ jsx(SidebarTrigger, {}),
         /* @__PURE__ */ jsx(Separator, { orientation: "vertical", className: "mr-2 h-4" }),
         /* @__PURE__ */ jsx(Breadcrumb, { children: /* @__PURE__ */ jsxs(BreadcrumbList, { children: [
-          /* @__PURE__ */ jsx(BreadcrumbItem, { className: "hidden md:block", children: /* @__PURE__ */ jsx(BreadcrumbLink, { children: "Hybrid School" }) }),
+          /* @__PURE__ */ jsx(BreadcrumbItem, { className: "hidden md:block", children: /* @__PURE__ */ jsx(BreadcrumbLink, { children: "Learn Srinagar" }) }),
           /* @__PURE__ */ jsx(BreadcrumbSeparator, { className: "hidden md:block" }),
           /* @__PURE__ */ jsx(BreadcrumbItem, { children: /* @__PURE__ */ jsx(BreadcrumbPage, { children: /* @__PURE__ */ jsx(Link, { to: location.pathname, children: formatPathName(location.pathname) }) }) })
         ] }) })
       ] }) }),
-      /* @__PURE__ */ jsx("div", { className: "p-4 pt-0", children: /* @__PURE__ */ jsx(Outlet, {}) })
+      /* @__PURE__ */ jsx("div", { className: "p-2 sm:p-4 pt-0", children: /* @__PURE__ */ jsx(Outlet, {}) })
     ] })
   ] });
 }
-const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Layout,
-  loader: loader$h
+  loader: loader$j
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$g({ request }) {
+async function loader$i({ request }) {
   return await deleteSession(request);
 }
 function Logout() {
   return null;
 }
-const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Logout,
-  loader: loader$g
+  loader: loader$i
 }, Symbol.toStringTag, { value: "Module" }));
-function Select({
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Root, { "data-slot": "select", ...props });
-}
-function SelectValue({
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Value, { "data-slot": "select-value", ...props });
-}
-function SelectTrigger({
-  className,
-  size = "default",
-  children,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxs(
-    SelectPrimitive.Trigger,
-    {
-      "data-slot": "select-trigger",
-      "data-size": size,
-      className: cn(
-        "border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-fit items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
-      ),
-      ...props,
-      children: [
-        children,
-        /* @__PURE__ */ jsx(SelectPrimitive.Icon, { asChild: true, children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4 opacity-50" }) })
-      ]
-    }
-  );
-}
-function SelectContent({
-  className,
-  children,
-  position = "popper",
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsxs(
-    SelectPrimitive.Content,
-    {
-      "data-slot": "select-content",
-      className: cn(
-        "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md",
-        position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-        className
-      ),
-      position,
-      ...props,
-      children: [
-        /* @__PURE__ */ jsx(SelectScrollUpButton, {}),
-        /* @__PURE__ */ jsx(
-          SelectPrimitive.Viewport,
-          {
-            className: cn("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"),
-            children
-          }
-        ),
-        /* @__PURE__ */ jsx(SelectScrollDownButton, {})
-      ]
-    }
-  ) });
-}
-function SelectItem({
-  className,
-  children,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxs(
-    SelectPrimitive.Item,
-    {
-      "data-slot": "select-item",
-      className: cn(
-        "focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
-        className
-      ),
-      ...props,
-      children: [
-        /* @__PURE__ */ jsx("span", { className: "absolute right-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-4" }) }) }),
-        /* @__PURE__ */ jsx(SelectPrimitive.ItemText, { children })
-      ]
-    }
-  );
-}
-function SelectScrollUpButton({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(
-    SelectPrimitive.ScrollUpButton,
-    {
-      "data-slot": "select-scroll-up-button",
-      className: cn("flex cursor-default items-center justify-center py-1", className),
-      ...props,
-      children: /* @__PURE__ */ jsx(ChevronUpIcon, { className: "size-4" })
-    }
-  );
-}
-function SelectScrollDownButton({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsx(
-    SelectPrimitive.ScrollDownButton,
-    {
-      "data-slot": "select-scroll-down-button",
-      className: cn("flex cursor-default items-center justify-center py-1", className),
-      ...props,
-      children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4" })
-    }
-  );
-}
 function Calendar({
   className,
   classNames,
@@ -1760,7 +2710,7 @@ const PopoverAnchor = React.forwardRef((props, ref) => {
   return /* @__PURE__ */ jsx(PopoverPrimitive.Anchor, { "data-slot": "popover-anchor", ref, ...props });
 });
 PopoverAnchor.displayName = "PopoverAnchor";
-async function loader$f({ request }) {
+async function loader$h({ request }) {
   const user = await getUser(request);
   const role = user.role_name;
   if (role !== "super_admin") {
@@ -1776,7 +2726,7 @@ async function loader$f({ request }) {
       return redirect("/attendance");
     }
   }
-  const [schools] = await query(
+  const schools = await query(
     `SELECT s.id, s.name, COUNT(DISTINCT c.id) as class_count
      FROM schools s
      LEFT JOIN student_profiles sp ON s.id = sp.schools_id
@@ -1784,7 +2734,7 @@ async function loader$f({ request }) {
      GROUP BY s.id, s.name
      ORDER BY s.name`
   );
-  const [classes] = await query(
+  const classes = await query(
     `SELECT c.id, c.name, s.id as school_id, s.name as school_name
      FROM classes c
      JOIN student_profiles sp ON c.id = sp.class_id
@@ -1792,7 +2742,7 @@ async function loader$f({ request }) {
      GROUP BY c.id, c.name, s.id, s.name
      ORDER BY s.name, c.name`
   );
-  const [dailyAttendance] = await query(
+  const dailyAttendance = await query(
     `SELECT 
        sa.date, 
        s.id as school_id,
@@ -1811,7 +2761,7 @@ async function loader$f({ request }) {
      GROUP BY sa.date, s.id, s.name, c.id, c.name
      ORDER BY sa.date DESC, s.name, c.name`
   );
-  const [feedbackData] = await query(
+  const feedbackData = await query(
     `SELECT 
        s.id as school_id,
        s.name as school_name,
@@ -1851,8 +2801,15 @@ function Dashboard() {
     from: subDays(/* @__PURE__ */ new Date(), 14),
     to: /* @__PURE__ */ new Date()
   });
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   const calculateAverageRating = (section) => {
-    if (!feedbackData || feedbackData.length === 0) return 0;
+    if (!feedbackData || !Array.isArray(feedbackData) || feedbackData.length === 0) return 0;
     const relevantFeedback = feedbackData.filter((item) => {
       var _a, _b;
       const isMatchingSchool = selectedSchool === "all" || ((_a = item.school_id) == null ? void 0 : _a.toString()) === selectedSchool;
@@ -1867,7 +2824,7 @@ function Dashboard() {
     return sum / relevantFeedback.length;
   };
   const getFeedbackCount = (section) => {
-    if (!feedbackData || feedbackData.length === 0) return 0;
+    if (!feedbackData || !Array.isArray(feedbackData) || feedbackData.length === 0) return 0;
     const relevantFeedback = feedbackData.filter((item) => {
       var _a, _b;
       const isMatchingSchool = selectedSchool === "all" || ((_a = item.school_id) == null ? void 0 : _a.toString()) === selectedSchool;
@@ -1925,199 +2882,280 @@ function Dashboard() {
       setDateRange(range);
     }
   };
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Dashboard" }),
-      /* @__PURE__ */ jsxs("div", { className: "flex flex-col justify-end md:flex-row gap-4 mt-4", children: [
-        /* @__PURE__ */ jsxs(
-          Select,
-          {
-            value: selectedSchool,
-            onValueChange: (value) => {
-              setSelectedSchool(value);
-              if (value !== selectedSchool) {
-                setSelectedClass("all");
-              }
-            },
-            defaultValue: "all",
-            children: [
-              /* @__PURE__ */ jsx(SelectTrigger, { children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a school" }) }),
-              /* @__PURE__ */ jsxs(SelectContent, { children: [
-                /* @__PURE__ */ jsx(SelectItem, { value: "all", children: "All Schools" }),
-                Array.isArray(schools) && schools.map((school) => /* @__PURE__ */ jsxs(
-                  SelectItem,
-                  {
-                    value: school.id ? school.id.toString() : "",
-                    children: [
-                      school.name,
-                      " (",
-                      school.class_count || 0,
-                      " classes)"
-                    ]
-                  },
-                  school.id
-                ))
-              ] })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxs(
-          Select,
-          {
-            value: selectedClass,
-            onValueChange: setSelectedClass,
-            defaultValue: "all",
-            children: [
-              /* @__PURE__ */ jsx(SelectTrigger, { children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a class" }) }),
-              /* @__PURE__ */ jsxs(SelectContent, { children: [
-                /* @__PURE__ */ jsx(SelectItem, { value: "all", children: "All Classes" }),
-                Array.isArray(filteredClasses) && filteredClasses.map((cls) => /* @__PURE__ */ jsx(
-                  SelectItem,
-                  {
-                    value: cls.id ? cls.id.toString() : "",
-                    children: cls.name
-                  },
-                  cls.id
-                ))
-              ] })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsx("div", { className: "w-full ", children: /* @__PURE__ */ jsxs(Popover, { children: [
-          /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(
-            Button,
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mb-6", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [
+        /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Dashboard" }),
+        /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground", children: selectedSchool !== "all" && filteredClasses.length > 0 && /* @__PURE__ */ jsx("span", { children: "Showing data for selected filters" }) })
+      ] }),
+      /* @__PURE__ */ jsx(Card, { className: "p-4", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
+        /* @__PURE__ */ jsx("div", { className: "text-sm font-medium text-muted-foreground", children: "Filters" }),
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-3", children: [
+          /* @__PURE__ */ jsxs(
+            Select,
             {
-              id: "date",
-              variant: "outline",
-              className: "w-full justify-start text-left font-normal",
+              value: selectedSchool,
+              onValueChange: (value) => {
+                setSelectedSchool(value);
+                if (value !== selectedSchool) {
+                  setSelectedClass("all");
+                }
+              },
+              defaultValue: "all",
               children: [
-                /* @__PURE__ */ jsx(CalendarIcon, { className: "mr-2 h-4 w-4" }),
-                dateRange.from ? dateRange.to ? /* @__PURE__ */ jsxs(Fragment, { children: [
-                  format(dateRange.from, "LLL dd, y"),
-                  " -",
-                  " ",
-                  format(dateRange.to, "LLL dd, y")
-                ] }) : format(dateRange.from, "LLL dd, y") : /* @__PURE__ */ jsx("span", { children: "Pick a date range" })
+                /* @__PURE__ */ jsx(SelectTrigger, { className: "w-full", children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a school" }) }),
+                /* @__PURE__ */ jsxs(SelectContent, { children: [
+                  /* @__PURE__ */ jsx(SelectItem, { value: "all", children: "All Schools" }),
+                  Array.isArray(schools) && schools.map((school) => /* @__PURE__ */ jsxs(
+                    SelectItem,
+                    {
+                      value: school.id ? school.id.toString() : "",
+                      children: [
+                        school.name,
+                        " (",
+                        school.class_count || 0,
+                        ")"
+                      ]
+                    },
+                    school.id
+                  ))
+                ] })
               ]
             }
-          ) }),
-          /* @__PURE__ */ jsx(PopoverContent, { className: "w-auto p-0", align: "start", children: /* @__PURE__ */ jsx(
-            Calendar,
+          ),
+          /* @__PURE__ */ jsxs(
+            Select,
             {
-              initialFocus: true,
-              mode: "range",
-              defaultMonth: dateRange.from,
-              selected: dateRange,
-              onSelect: onDateRangeChange,
-              numberOfMonths: 2,
-              disabled: (date) => date > /* @__PURE__ */ new Date()
+              value: selectedClass,
+              onValueChange: setSelectedClass,
+              defaultValue: "all",
+              children: [
+                /* @__PURE__ */ jsx(SelectTrigger, { className: "w-full", children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a class" }) }),
+                /* @__PURE__ */ jsxs(SelectContent, { children: [
+                  /* @__PURE__ */ jsx(SelectItem, { value: "all", children: "All Classes" }),
+                  Array.isArray(filteredClasses) && filteredClasses.map((cls) => /* @__PURE__ */ jsxs(
+                    SelectItem,
+                    {
+                      value: cls.id ? cls.id.toString() : "",
+                      children: [
+                        "Class ",
+                        cls.name
+                      ]
+                    },
+                    cls.id
+                  ))
+                ] })
+              ]
             }
-          ) })
+          ),
+          /* @__PURE__ */ jsxs(Popover, { children: [
+            /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(
+              Button,
+              {
+                id: "date",
+                variant: "outline",
+                className: "w-full justify-start text-left font-normal",
+                children: [
+                  /* @__PURE__ */ jsx(CalendarIcon, { className: "mr-2 h-4 w-4 flex-shrink-0" }),
+                  /* @__PURE__ */ jsx("span", { className: "truncate text-xs sm:text-sm", children: dateRange.from ? dateRange.to ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                    format(dateRange.from, "MMM dd"),
+                    " - ",
+                    format(dateRange.to, "MMM dd")
+                  ] }) : format(dateRange.from, "MMM dd") : "Date range" })
+                ]
+              }
+            ) }),
+            /* @__PURE__ */ jsx(PopoverContent, { className: "w-auto p-0", align: "end", children: /* @__PURE__ */ jsx(
+              Calendar,
+              {
+                initialFocus: true,
+                mode: "range",
+                defaultMonth: dateRange.from,
+                selected: dateRange,
+                onSelect: onDateRangeChange,
+                numberOfMonths: isMobile ? 1 : 2,
+                disabled: (date) => date > /* @__PURE__ */ new Date()
+              }
+            ) })
+          ] })
+        ] })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxs(Tabs, { defaultValue: "overview", className: "w-full", children: [
+      /* @__PURE__ */ jsxs(TabsList, { className: "grid w-full grid-cols-3 mb-6", children: [
+        /* @__PURE__ */ jsxs(TabsTrigger, { value: "overview", className: "flex items-center gap-2 text-xs sm:text-sm", children: [
+          /* @__PURE__ */ jsx(BarChart3, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Overview" }),
+          /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "Stats" })
+        ] }),
+        /* @__PURE__ */ jsxs(TabsTrigger, { value: "feedback", className: "flex items-center gap-2 text-xs sm:text-sm", children: [
+          /* @__PURE__ */ jsx(MessageSquare, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Feedback" }),
+          /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "Reviews" })
+        ] }),
+        /* @__PURE__ */ jsxs(TabsTrigger, { value: "attendance", className: "flex items-center gap-2 text-xs sm:text-sm", children: [
+          /* @__PURE__ */ jsx(Users, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Attendance" }),
+          /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "Present" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx(TabsContent, { value: "overview", className: "space-y-6", children: /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4", children: [
+        /* @__PURE__ */ jsxs(Card, { children: [
+          /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Academic Feedback" }) }),
+          /* @__PURE__ */ jsxs(CardContent, { children: [
+            /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
+              calculateAverageRating("academic").toFixed(1),
+              "/5.0"
+            ] }),
+            /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
+              getFeedbackCount("academic"),
+              " ratings from parents"
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Card, { children: [
+          /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Behavioral Feedback" }) }),
+          /* @__PURE__ */ jsxs(CardContent, { children: [
+            /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
+              calculateAverageRating("behavioral").toFixed(1),
+              "/5.0"
+            ] }),
+            /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
+              getFeedbackCount("behavioral"),
+              " ratings from parents"
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Card, { children: [
+          /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Overall Satisfaction" }) }),
+          /* @__PURE__ */ jsxs(CardContent, { children: [
+            /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
+              calculateAverageRating("satisfaction").toFixed(1),
+              "/5.0"
+            ] }),
+            /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
+              getFeedbackCount("satisfaction"),
+              " ratings from parents"
+            ] })
+          ] })
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsx(TabsContent, { value: "feedback", className: "space-y-6", children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 gap-6", children: /* @__PURE__ */ jsxs(Card, { children: [
+        /* @__PURE__ */ jsxs(CardHeader, { children: [
+          /* @__PURE__ */ jsx(CardTitle, { className: "text-lg", children: "Parent Feedback Summary" }),
+          /* @__PURE__ */ jsx(CardDescription, { children: "Detailed breakdown of parent feedback across different categories" })
+        ] }),
+        /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "text-center p-4 bg-blue-50 rounded-lg", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-blue-600", children: calculateAverageRating("academic").toFixed(1) }),
+            /* @__PURE__ */ jsx("div", { className: "text-sm text-blue-600 font-medium", children: "Academic" }),
+            /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground", children: [
+              getFeedbackCount("academic"),
+              " reviews"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "text-center p-4 bg-green-50 rounded-lg", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-green-600", children: calculateAverageRating("behavioral").toFixed(1) }),
+            /* @__PURE__ */ jsx("div", { className: "text-sm text-green-600 font-medium", children: "Behavioral" }),
+            /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground", children: [
+              getFeedbackCount("behavioral"),
+              " reviews"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "text-center p-4 bg-purple-50 rounded-lg", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-2xl font-bold text-purple-600", children: calculateAverageRating("satisfaction").toFixed(1) }),
+            /* @__PURE__ */ jsx("div", { className: "text-sm text-purple-600 font-medium", children: "Satisfaction" }),
+            /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground", children: [
+              getFeedbackCount("satisfaction"),
+              " reviews"
+            ] })
+          ] })
         ] }) })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx("h2", { className: "mt-8 mb-4 text-xl font-semibold", children: "Parent's Feedback" }),
-    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 mb-6", children: [
-      /* @__PURE__ */ jsxs(Card, { children: [
-        /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Academic Feedback" }) }),
+      ] }) }) }),
+      /* @__PURE__ */ jsx(TabsContent, { value: "attendance", className: "space-y-6", children: /* @__PURE__ */ jsxs(Card, { children: [
+        /* @__PURE__ */ jsxs(CardHeader, { children: [
+          /* @__PURE__ */ jsx(CardTitle, { className: "text-lg", children: "Student Attendance Trends" }),
+          /* @__PURE__ */ jsx(CardDescription, { children: "Daily attendance tracking across selected date range" })
+        ] }),
         /* @__PURE__ */ jsxs(CardContent, { children: [
-          /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
-            calculateAverageRating("academic").toFixed(1),
-            "/5.0"
-          ] }),
-          /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
-            getFeedbackCount("academic"),
-            " ratings from parents"
-          ] })
+          /* @__PURE__ */ jsx("div", { className: "w-full h-[300px] sm:h-[400px]", children: /* @__PURE__ */ jsx(ResponsiveContainer, { width: "100%", height: "100%", children: /* @__PURE__ */ jsxs(
+            LineChart,
+            {
+              data: chartData,
+              margin: {
+                top: 5,
+                right: 10,
+                left: 10,
+                bottom: 5
+              },
+              children: [
+                /* @__PURE__ */ jsx(CartesianGrid, { strokeDasharray: "3 3" }),
+                /* @__PURE__ */ jsx(
+                  XAxis,
+                  {
+                    dataKey: "date",
+                    fontSize: 12,
+                    tick: { fontSize: 12 }
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  YAxis,
+                  {
+                    fontSize: 12,
+                    tick: { fontSize: 12 }
+                  }
+                ),
+                /* @__PURE__ */ jsx(Tooltip$1, {}),
+                /* @__PURE__ */ jsx(
+                  Legend,
+                  {
+                    wrapperStyle: { fontSize: "12px" }
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  Line,
+                  {
+                    type: "monotone",
+                    dataKey: "present",
+                    stroke: "#10b981",
+                    activeDot: { r: 6 },
+                    strokeWidth: 2,
+                    name: "Present"
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  Line,
+                  {
+                    type: "monotone",
+                    dataKey: "absent",
+                    stroke: "#ef4444",
+                    strokeWidth: 2,
+                    name: "Absent"
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  Line,
+                  {
+                    type: "monotone",
+                    dataKey: "late",
+                    stroke: "#f59e0b",
+                    strokeWidth: 2,
+                    name: "Late"
+                  }
+                )
+              ]
+            }
+          ) }) }),
+          chartData.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-center text-muted-foreground py-4", children: "No attendance data available for the selected criteria. Please adjust your filters." })
         ] })
-      ] }),
-      /* @__PURE__ */ jsxs(Card, { children: [
-        /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Behavioral Feedback" }) }),
-        /* @__PURE__ */ jsxs(CardContent, { children: [
-          /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
-            calculateAverageRating("behavioral").toFixed(1),
-            "/5.0"
-          ] }),
-          /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
-            getFeedbackCount("behavioral"),
-            " ratings from parents"
-          ] })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxs(Card, { children: [
-        /* @__PURE__ */ jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsx(CardTitle, { className: "text-sm font-medium text-muted-foreground", children: "Overall Satisfaction" }) }),
-        /* @__PURE__ */ jsxs(CardContent, { children: [
-          /* @__PURE__ */ jsxs("div", { className: "text-2xl font-bold", children: [
-            calculateAverageRating("satisfaction").toFixed(1),
-            "/5.0"
-          ] }),
-          /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
-            getFeedbackCount("satisfaction"),
-            " ratings from parents"
-          ] })
-        ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx("h2", { className: "mt-8 mb-4 text-xl font-semibold", children: "Student's Attendance" }),
-    /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsxs(CardContent, { className: "pt-6", children: [
-      /* @__PURE__ */ jsx("div", { style: { width: "100%", height: 400 }, children: /* @__PURE__ */ jsx(ResponsiveContainer, { width: "100%", height: "100%", children: /* @__PURE__ */ jsxs(
-        LineChart,
-        {
-          data: chartData,
-          margin: {
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5
-          },
-          children: [
-            /* @__PURE__ */ jsx(CartesianGrid, { strokeDasharray: "3 3" }),
-            /* @__PURE__ */ jsx(XAxis, { dataKey: "date" }),
-            /* @__PURE__ */ jsx(YAxis, {}),
-            /* @__PURE__ */ jsx(Tooltip$1, {}),
-            /* @__PURE__ */ jsx(Legend, {}),
-            /* @__PURE__ */ jsx(
-              Line,
-              {
-                type: "monotone",
-                dataKey: "present",
-                stroke: "#10b981",
-                activeDot: { r: 8 },
-                strokeWidth: 2,
-                name: "Present"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              Line,
-              {
-                type: "monotone",
-                dataKey: "absent",
-                stroke: "#ef4444",
-                strokeWidth: 2,
-                name: "Absent"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              Line,
-              {
-                type: "monotone",
-                dataKey: "late",
-                stroke: "#f59e0b",
-                strokeWidth: 2,
-                name: "Late"
-              }
-            )
-          ]
-        }
-      ) }) }),
-      chartData.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-center text-muted-foreground py-4", children: "No attendance data available for the selected criteria. Please adjust your filters." })
-    ] }) })
+      ] }) })
+    ] })
   ] });
 }
-const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Dashboard,
-  loader: loader$f
+  loader: loader$h
 }, Symbol.toStringTag, { value: "Module" }));
 function Textarea({
   className,
@@ -2150,13 +3188,14 @@ function DialogPortal({
 }) {
   return /* @__PURE__ */ jsx(SheetPrimitive.Portal, { "data-slot": "dialog-portal", ...props });
 }
-function DialogOverlay({
+const DialogOverlay = React.forwardRef(function DialogOverlay2({
   className,
   ...props
-}) {
+}, ref) {
   return /* @__PURE__ */ jsx(
     SheetPrimitive.Overlay,
     {
+      ref,
       "data-slot": "dialog-overlay",
       className: cn(
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
@@ -2165,7 +3204,7 @@ function DialogOverlay({
       ...props
     }
   );
-}
+});
 function DialogContent({
   className,
   children,
@@ -2458,11 +3497,11 @@ function TableCell({
     }
   );
 }
-async function loader$e() {
-  const [users] = await query(`SELECT id, name FROM users WHERE role_id = ?`, [
+async function loader$g() {
+  const users = await query(`SELECT id, name FROM users WHERE role_id = ?`, [
     2
   ]);
-  const [schools] = await query(
+  const schools = await query(
     `SELECT s.*, u.name as user_name FROM schools s JOIN users u ON s.users_id = u.id`
   );
   return {
@@ -2470,7 +3509,7 @@ async function loader$e() {
     schools
   };
 }
-async function action$c({ request }) {
+async function action$e({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -2478,7 +3517,7 @@ async function action$c({ request }) {
       const name = formData.get("name");
       const address = formData.get("address");
       const users_id = formData.get("users_id");
-      const [existingSchool] = await query(
+      const existingSchool = await query(
         `SELECT id FROM schools WHERE users_id = ?`,
         [users_id]
       );
@@ -2499,7 +3538,7 @@ async function action$c({ request }) {
       const name = formData.get("name");
       const address = formData.get("address");
       const users_id = formData.get("users_id");
-      const [existingSchool] = await query(
+      const existingSchool = await query(
         `SELECT id FROM schools WHERE users_id = ? AND id != ?`,
         [users_id, id]
       );
@@ -2603,23 +3642,31 @@ function School() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditSchool(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -2637,15 +3684,15 @@ function School() {
     }
   });
   const dialogTitle = dialogType === "create" ? "Create New School" : "Edit School";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Schools" }),
-      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateSchool, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Schools" }),
+      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateSchool, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add School" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((headerGroup) => /* @__PURE__ */ jsx(TableRow, { children: headerGroup.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -2669,27 +3716,35 @@ function School() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -2776,62 +3831,30 @@ function School() {
     ] }) })
   ] });
 }
-const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$c,
+  action: action$e,
   default: School,
-  loader: loader$e
+  loader: loader$g
 }, Symbol.toStringTag, { value: "Module" }));
-const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
-  {
-    variants: {
-      variant: {
-        default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
-        secondary: "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
-        destructive: "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline: "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground"
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-);
-function Badge({
-  className,
-  variant,
-  asChild = false,
-  ...props
-}) {
-  const Comp = asChild ? Slot : "span";
-  return /* @__PURE__ */ jsx(
-    Comp,
-    {
-      "data-slot": "badge",
-      className: cn(badgeVariants({ variant }), className),
-      ...props
-    }
-  );
-}
-async function loader$d() {
-  const [teachers] = await query(
+async function loader$f() {
+  const teachers = await query(
     `SELECT id, name, email, created_at FROM users WHERE role_id = ?`,
     [4]
   );
-  const [classes] = await query(
+  const classes = await query(
     `SELECT id, name 
      FROM classes 
      ORDER BY name`
   );
-  const [subjects] = await query(
+  const subjects = await query(
     `SELECT s.id, s.name, sc.class_id, c.name AS class_name
      FROM subjects s
      JOIN subject_classes sc ON s.id = sc.subject_id
      JOIN classes c ON sc.class_id = c.id
      ORDER BY c.name, s.name`
   );
-  const [assignments] = await query(
+  const assignments = await query(
     `SELECT ta.id, ta.teacher_id, ta.subject_id, ta.class_id, 
             s.name as subject_name, 
             c.name as class_name
@@ -2855,7 +3878,7 @@ async function loader$d() {
   });
   return { teachers, classes, subjects, teacherAssignments };
 }
-async function action$b({ request }) {
+async function action$d({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -2863,7 +3886,7 @@ async function action$b({ request }) {
       const name = formData.get("name");
       const email = formData.get("email");
       const password = formData.get("password");
-      const [existing] = await query(`SELECT id FROM users WHERE email = ?`, [
+      const existing = await query(`SELECT id FROM users WHERE email = ?`, [
         email
       ]);
       if (existing.length > 0) {
@@ -2885,7 +3908,7 @@ async function action$b({ request }) {
       const name = formData.get("name");
       const email = formData.get("email");
       const password = formData.get("password");
-      const [existing] = await query(
+      const existing = await query(
         `SELECT id FROM users WHERE email = ? AND id != ?`,
         [email, id]
       );
@@ -2927,7 +3950,7 @@ async function action$b({ request }) {
           message: "Teacher, subject, and class are all required."
         };
       }
-      const [existing] = await query(
+      const existing = await query(
         `SELECT id FROM teacher_assignments WHERE teacher_id = ? AND subject_id = ? AND class_id = ?`,
         [teacher_id, subject_id, class_id]
       );
@@ -3073,17 +4096,25 @@ function Teacher() {
       cell: ({ row }) => {
         const id = row.original.id;
         const assigned = teacherAssignments[id] || [];
-        return /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-1 justify-center", children: [
-          assigned.length > 0 ? assigned.map((a) => /* @__PURE__ */ jsxs(
+        return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 items-center max-w-xs", children: [
+          assigned.length > 0 ? /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1 justify-center", children: assigned.map((a) => /* @__PURE__ */ jsxs(
             Badge,
             {
               variant: "secondary",
-              className: "flex items-center gap-1",
+              className: "flex items-center gap-1 text-xs",
               children: [
-                a.subject_name,
-                " (Class ",
-                a.class_name,
-                ")",
+                /* @__PURE__ */ jsxs("span", { className: "hidden sm:inline", children: [
+                  a.subject_name,
+                  " (Class ",
+                  a.class_name,
+                  ")"
+                ] }),
+                /* @__PURE__ */ jsxs("span", { className: "sm:hidden", children: [
+                  a.subject_name,
+                  " (",
+                  a.class_name,
+                  ")"
+                ] }),
                 /* @__PURE__ */ jsx(
                   "button",
                   {
@@ -3095,15 +4126,18 @@ function Teacher() {
               ]
             },
             a.id
-          )) : /* @__PURE__ */ jsx("span", { className: "text-muted-foreground text-sm", children: "No subjects assigned" }),
-          /* @__PURE__ */ jsx(
+          )) }) : /* @__PURE__ */ jsx("span", { className: "text-muted-foreground text-xs sm:text-sm", children: "No subjects assigned" }),
+          /* @__PURE__ */ jsxs(
             Button,
             {
               variant: "outline",
               size: "sm",
               onClick: () => handleAssignSubject(id),
-              className: "mt-1 h-6",
-              children: /* @__PURE__ */ jsx(PlusIcon, { className: "h-3 w-3" })
+              className: "mt-1 h-6 text-xs",
+              children: [
+                /* @__PURE__ */ jsx(PlusIcon, { className: "h-3 w-3" }),
+                /* @__PURE__ */ jsx("span", { className: "hidden sm:inline ml-1", children: "Assign" })
+              ]
             }
           )
         ] });
@@ -3117,23 +4151,31 @@ function Teacher() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditTeacher(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -3149,15 +4191,15 @@ function Teacher() {
     }
   });
   const dialogTitle = dialogType === "create" ? "Create New Teacher" : "Edit Teacher";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Teachers" }),
-      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateTeacher, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Teachers" }),
+      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateTeacher, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add Teacher" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -3181,27 +4223,35 @@ function Teacher() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -3340,11 +4390,11 @@ function Teacher() {
     ] }) })
   ] });
 }
-const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$b,
+  action: action$d,
   default: Teacher,
-  loader: loader$d
+  loader: loader$f
 }, Symbol.toStringTag, { value: "Module" }));
 const getStatusBadge$2 = (status) => {
   const statusConfig = {
@@ -3360,98 +4410,103 @@ const getStatusBadge$2 = (status) => {
     config.text
   ] });
 };
-async function loader$c({ request }) {
+async function loader$e({ request }) {
   var _a;
-  const user = await getUser(request);
-  if (!user) return redirect$1("/login");
-  const authorizedRoles = ["super_admin", "school_admin", "teacher"];
-  if (!authorizedRoles.includes(user.role_name)) {
-    throw new Response("Access denied", { status: 403 });
-  }
-  let classes = [];
-  let subjects = [];
-  let teachers = [];
-  let liveClasses = [];
-  let schools = [];
-  if (user.role_name === "super_admin") {
-    const [schoolsResult] = await query("SELECT * FROM schools ORDER BY name");
-    const [classesResult] = await query("SELECT * FROM classes ORDER BY name");
-    const [subjectsResult] = await query("SELECT * FROM subjects ORDER BY name");
-    const [teachersResult] = await query(
-      "SELECT id, name FROM users WHERE role_id = 4 ORDER BY name"
-    );
-    const [liveClassesResult] = await query(`
-      SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
-      FROM live_classes lc
-      LEFT JOIN subjects s ON lc.subject_id = s.id
-      JOIN classes c ON lc.class_id = c.id
-      JOIN users u ON lc.teacher_id = u.id
-      JOIN schools sch ON lc.school_id = sch.id
-      ORDER BY lc.created_at DESC
-    `);
-    schools = schoolsResult;
-    classes = classesResult;
-    subjects = subjectsResult;
-    teachers = teachersResult;
-    liveClasses = liveClassesResult;
-  } else if (user.role_name === "school_admin") {
-    const [schoolsResult] = await query("SELECT * FROM schools WHERE users_id = ?", [user.id]);
-    const schoolId = (_a = schoolsResult[0]) == null ? void 0 : _a.id;
-    if (schoolId) {
+  try {
+    const user = await getUser(request);
+    if (!user) return redirect$1("/login");
+    const authorizedRoles = ["super_admin", "school_admin", "teacher"];
+    if (!authorizedRoles.includes(user.role_name)) {
+      throw new Response("Access denied", { status: 403 });
+    }
+    let classes = [];
+    let subjects = [];
+    let teachers = [];
+    let liveClasses = [];
+    let schools = [];
+    if (user.role_name === "super_admin") {
+      const [schoolsResult] = await query("SELECT * FROM schools ORDER BY name");
       const [classesResult] = await query("SELECT * FROM classes ORDER BY name");
       const [subjectsResult] = await query("SELECT * FROM subjects ORDER BY name");
       const [teachersResult] = await query(
         "SELECT id, name FROM users WHERE role_id = 4 ORDER BY name"
       );
       const [liveClassesResult] = await query(`
-        SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
-        FROM live_classes lc
-        LEFT JOIN subjects s ON lc.subject_id = s.id
-        JOIN classes c ON lc.class_id = c.id
-        JOIN users u ON lc.teacher_id = u.id
-        JOIN schools sch ON lc.school_id = sch.id
-        WHERE lc.school_id = ?
-        ORDER BY lc.created_at DESC
-      `, [schoolId]);
+      SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
+      FROM live_classes lc
+      LEFT JOIN subjects s ON lc.subject_id = s.id
+      LEFT JOIN classes c ON lc.class_id = c.id
+      LEFT JOIN users u ON lc.teacher_id = u.id
+      LEFT JOIN schools sch ON lc.school_id = sch.id
+      ORDER BY lc.created_at DESC
+    `);
       schools = schoolsResult;
       classes = classesResult;
       subjects = subjectsResult;
       teachers = teachersResult;
       liveClasses = liveClassesResult;
-    }
-  } else if (user.role_name === "teacher") {
-    const [classesResult] = await query(`
+    } else if (user.role_name === "school_admin") {
+      const [schoolsResult] = await query("SELECT * FROM schools WHERE users_id = ?", [user.id]);
+      const schoolId = (_a = schoolsResult[0]) == null ? void 0 : _a.id;
+      if (schoolId) {
+        const [classesResult] = await query("SELECT * FROM classes ORDER BY name");
+        const [subjectsResult] = await query("SELECT * FROM subjects ORDER BY name");
+        const [teachersResult] = await query(
+          "SELECT id, name FROM users WHERE role_id = 4 ORDER BY name"
+        );
+        const [liveClassesResult] = await query(`
+        SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
+        FROM live_classes lc
+        LEFT JOIN subjects s ON lc.subject_id = s.id
+        LEFT JOIN classes c ON lc.class_id = c.id
+        LEFT JOIN users u ON lc.teacher_id = u.id
+        LEFT JOIN schools sch ON lc.school_id = sch.id
+        WHERE lc.school_id = ?
+        ORDER BY lc.created_at DESC
+      `, [schoolId]);
+        schools = schoolsResult;
+        classes = classesResult;
+        subjects = subjectsResult;
+        teachers = teachersResult;
+        liveClasses = liveClassesResult;
+      }
+    } else if (user.role_name === "teacher") {
+      const [classesResult] = await query(`
       SELECT DISTINCT c.id, c.name
       FROM classes c
       JOIN teacher_assignments ta ON c.id = ta.class_id
       WHERE ta.teacher_id = ?
       ORDER BY c.name
     `, [user.id]);
-    const [subjectsResult] = await query(`
+      const [subjectsResult] = await query(`
       SELECT DISTINCT s.id, s.name
       FROM subjects s
       JOIN teacher_assignments ta ON s.id = ta.subject_id
       WHERE ta.teacher_id = ?
       ORDER BY s.name
     `, [user.id]);
-    const [liveClassesResult] = await query(`
+      const [liveClassesResult] = await query(`
       SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_name
       FROM live_classes lc
       LEFT JOIN subjects s ON lc.subject_id = s.id
       JOIN classes c ON lc.class_id = c.id
       JOIN users u ON lc.teacher_id = u.id
-      JOIN schools sch ON lc.school_id = sch.id
+      LEFT JOIN schools sch ON lc.school_id = sch.id
       WHERE lc.teacher_id = ?
       ORDER BY lc.created_at DESC
     `, [user.id]);
-    classes = classesResult;
-    subjects = subjectsResult;
-    teachers = [{ id: user.id, name: user.name }];
-    liveClasses = liveClassesResult;
+      classes = classesResult;
+      subjects = subjectsResult;
+      teachers = [{ id: user.id, name: user.name }];
+      liveClasses = liveClassesResult;
+    }
+    return { classes, subjects, teachers, liveClasses, schools, user };
+  } catch (error) {
+    console.error("Live class loader error:", error);
+    throw new Response("Database error: " + error.message, { status: 500 });
   }
-  return { classes, subjects, teachers, liveClasses, schools, user };
 }
-async function action$a({ request }) {
+async function action$c({ request }) {
   const user = await getUser(request);
   if (!user) return redirect$1("/login");
   const formData = await request.formData();
@@ -3966,11 +5021,11 @@ function LiveClass() {
     ] }) }) })
   ] }) });
 }
-const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$a,
+  action: action$c,
   default: LiveClass,
-  loader: loader$c
+  loader: loader$e
 }, Symbol.toStringTag, { value: "Module" }));
 const getStatusBadge$1 = (status) => {
   const statusConfig = {
@@ -3996,7 +5051,7 @@ const calculateStatus = (startTime, endTime) => {
   if (now >= start && (!end || now <= end)) return "live";
   return "upcoming";
 };
-async function loader$b({ request }) {
+async function loader$d({ request }) {
   var _a;
   const user = await getUser(request);
   if (!user) return redirect$1("/login");
@@ -4010,13 +5065,13 @@ async function loader$b({ request }) {
   let liveClasses = [];
   let schools = [];
   if (user.role_name === "super_admin") {
-    const [schoolsResult] = await query("SELECT * FROM schools ORDER BY name");
-    const [classesResult] = await query("SELECT * FROM classes ORDER BY name");
-    const [subjectsResult] = await query("SELECT * FROM subjects ORDER BY name");
-    const [teachersResult] = await query(
+    const schoolsResult = await query("SELECT * FROM schools ORDER BY name");
+    const classesResult = await query("SELECT * FROM classes ORDER BY name");
+    const subjectsResult = await query("SELECT * FROM subjects ORDER BY name");
+    const teachersResult = await query(
       "SELECT id, name FROM users WHERE role_id = 4 ORDER BY name"
     );
-    const [liveClassesResult] = await query(`
+    const liveClassesResult = await query(`
       SELECT 
         lc.*,
         s.name as subject_name,
@@ -4043,15 +5098,15 @@ async function loader$b({ request }) {
     teachers = teachersResult;
     liveClasses = liveClassesResult;
   } else if (user.role_name === "school_admin") {
-    const [schoolsResult] = await query("SELECT * FROM schools WHERE users_id = ?", [user.id]);
+    const schoolsResult = await query("SELECT * FROM schools WHERE users_id = ?", [user.id]);
     const schoolId = (_a = schoolsResult[0]) == null ? void 0 : _a.id;
     if (schoolId) {
-      const [classesResult] = await query("SELECT * FROM classes ORDER BY name");
-      const [subjectsResult] = await query("SELECT * FROM subjects ORDER BY name");
-      const [teachersResult] = await query(
+      const classesResult = await query("SELECT * FROM classes ORDER BY name");
+      const subjectsResult = await query("SELECT * FROM subjects ORDER BY name");
+      const teachersResult = await query(
         "SELECT id, name FROM users WHERE role_id = 4 ORDER BY name"
       );
-      const [liveClassesResult] = await query(`
+      const liveClassesResult = await query(`
         SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_names
         FROM live_classes lc
         LEFT JOIN subjects s ON lc.subject_id = s.id
@@ -4068,21 +5123,21 @@ async function loader$b({ request }) {
       liveClasses = liveClassesResult.map((lc) => ({ ...lc, school_count: 1, school_ids: schoolId.toString() }));
     }
   } else if (user.role_name === "teacher") {
-    const [classesResult] = await query(`
+    const classesResult = await query(`
       SELECT DISTINCT c.id, c.name
       FROM classes c
       JOIN teacher_assignments ta ON c.id = ta.class_id
       WHERE ta.teacher_id = ?
       ORDER BY c.name
     `, [user.id]);
-    const [subjectsResult] = await query(`
+    const subjectsResult = await query(`
       SELECT DISTINCT s.id, s.name
       FROM subjects s
       JOIN teacher_assignments ta ON s.id = ta.subject_id
       WHERE ta.teacher_id = ?
       ORDER BY s.name
     `, [user.id]);
-    const [liveClassesResult] = await query(`
+    const liveClassesResult = await query(`
       SELECT lc.*, s.name as subject_name, c.name as class_name, u.name as teacher_name, sch.name as school_names
       FROM live_classes lc
       LEFT JOIN subjects s ON lc.subject_id = s.id
@@ -4102,7 +5157,7 @@ async function loader$b({ request }) {
   }
   return { classes, subjects, teachers, liveClasses, schools, user };
 }
-async function action$9({ request }) {
+async function action$b({ request }) {
   const user = await getUser(request);
   if (!user) return redirect$1("/login");
   const formData = await request.formData();
@@ -4505,11 +5560,11 @@ function ManageLiveClasses() {
     ] }) }) })
   ] }) });
 }
-const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$9,
+  action: action$b,
   default: ManageLiveClasses,
-  loader: loader$b
+  loader: loader$d
 }, Symbol.toStringTag, { value: "Module" }));
 function Checkbox({
   className,
@@ -4535,10 +5590,10 @@ function Checkbox({
     }
   );
 }
-async function loader$a() {
-  const [subjects] = await query(`SELECT * FROM subjects`);
-  const [classes] = await query(`SELECT * FROM classes`);
-  const [subjectClasses] = await query(`
+async function loader$c() {
+  const subjects = await query(`SELECT * FROM subjects`);
+  const classes = await query(`SELECT * FROM classes`);
+  const subjectClasses = await query(`
     SELECT sc.subject_id, sc.class_id, c.name as class_name
     FROM subject_classes sc
     JOIN classes c ON sc.class_id = c.id
@@ -4560,7 +5615,7 @@ async function loader$a() {
   }));
   return { subjects: subjectsWithClasses, classes };
 }
-async function action$8({ request }) {
+async function action$a({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -4579,7 +5634,7 @@ async function action$8({ request }) {
           message: "Please select at least one class."
         };
       }
-      const [existingSubjects] = await query(
+      const existingSubjects = await query(
         `SELECT id FROM subjects WHERE name = ?`,
         [name]
       );
@@ -4590,7 +5645,7 @@ async function action$8({ request }) {
         };
       }
       const defaultClassId = classIds[0];
-      const [result] = await query(
+      const result = await query(
         `INSERT INTO subjects (name, class_id) VALUES (?, ?)`,
         [name, defaultClassId]
       );
@@ -4613,7 +5668,7 @@ async function action$8({ request }) {
           message: "Subject name and at least one class are required."
         };
       }
-      const [existingSubjects] = await query(
+      const existingSubjects = await query(
         `SELECT id FROM subjects WHERE name = ? AND id != ?`,
         [name, id]
       );
@@ -4739,23 +5794,31 @@ function Subject() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditSubject(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -4769,15 +5832,15 @@ function Subject() {
     initialState: { pagination: { pageSize: 10 } }
   });
   const dialogTitle = dialogType === "create" ? "Create New Subject" : "Edit Subject";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Subjects" }),
-      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateSubject, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Subjects" }),
+      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateSubject, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add Subject" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -4801,27 +5864,35 @@ function Subject() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -4906,17 +5977,17 @@ function Subject() {
     ] }) })
   ] });
 }
-const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$8,
+  action: action$a,
   default: Subject,
-  loader: loader$a
+  loader: loader$c
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$9() {
+async function loader$b() {
   const [classes] = await query(`SELECT * FROM classes`);
   return { classes };
 }
-async function action$7({ request }) {
+async function action$9({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -5036,23 +6107,31 @@ function ClassManagement() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditClass(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -5066,15 +6145,15 @@ function ClassManagement() {
     initialState: { pagination: { pageSize: 10 } }
   });
   const dialogTitle = dialogType === "create" ? "Create New Class" : "Edit Class";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Classes" }),
-      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateClass, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Classes" }),
+      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateClass, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add Class" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -5098,27 +6177,35 @@ function ClassManagement() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -5179,15 +6266,15 @@ function ClassManagement() {
     ] }) })
   ] });
 }
-const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$7,
+  action: action$9,
   default: ClassManagement,
-  loader: loader$9
+  loader: loader$b
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$8({ request }) {
+async function loader$a({ request }) {
   const user = await getUser(request);
-  const [liveClasses] = await query(`
+  const liveClasses = await query(`
     SELECT z.*,
            s.name AS subject_name,
            c.name AS class_name,
@@ -5336,11 +6423,11 @@ function Timetable() {
     });
     setClassTimeTable(timetable);
   }, [liveClasses, selectedDate, user, isTeacher, selectedTeacher]);
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6", children: [
-      /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsx("h1", { className: "ml-2 pt-2 text-xl font-semibold", children: "Class Schedule" }) }),
-      /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-4", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Class Schedule" }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-3", children: [
+        /* @__PURE__ */ jsx(
           Input,
           {
             type: "date",
@@ -5348,7 +6435,7 @@ function Timetable() {
             onChange: (e) => setSelectedDate(e.target.value),
             className: "w-full sm:w-[200px]"
           }
-        ) }),
+        ),
         !isTeacher && teachersData.length > 0 && /* @__PURE__ */ jsxs(
           Select,
           {
@@ -5365,26 +6452,32 @@ function Timetable() {
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "mb-4 p-3 bg-gray-50 rounded-lg", children: /* @__PURE__ */ jsxs("span", { className: "font-medium text-gray-700", children: [
-      "Showing schedule for: ",
+    /* @__PURE__ */ jsx("div", { className: "mb-4 p-3 bg-gray-50 rounded-lg", children: /* @__PURE__ */ jsxs("span", { className: "font-medium text-gray-700 text-sm sm:text-base", children: [
+      "Schedule: ",
       format(new Date(selectedDate), "dd/MM/yyyy")
     ] }) }),
-    timeSlots.length > 0 && classesData.length > 0 ? /* @__PURE__ */ jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxs("table", { className: "w-full border-collapse", children: [
+    timeSlots.length > 0 && classesData.length > 0 ? /* @__PURE__ */ jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxs("table", { className: "w-full border-collapse min-w-[600px]", children: [
       /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
-        /* @__PURE__ */ jsx("th", { className: "border border-gray-300 bg-gray-100 p-2 text-center font-medium text-sm", children: "Class" }),
-        timeSlots.map((slot) => /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx("th", { className: "border border-gray-300 bg-gray-100 p-2 text-center font-medium text-xs sm:text-sm min-w-[80px]", children: "Class" }),
+        timeSlots.map((slot) => /* @__PURE__ */ jsxs(
           "th",
           {
-            className: "border border-gray-300 bg-gray-100 p-2 text-center font-medium text-sm",
-            children: slot.formattedTime
+            className: "border border-gray-300 bg-gray-100 p-2 text-center font-medium text-xs sm:text-sm min-w-[120px]",
+            children: [
+              /* @__PURE__ */ jsx("div", { className: "hidden sm:block", children: slot.formattedTime }),
+              /* @__PURE__ */ jsx("div", { className: "sm:hidden text-xs", children: slot.formattedTime.replace(" - ", "-") })
+            ]
           },
           slot.key
         ))
       ] }) }),
       /* @__PURE__ */ jsx("tbody", { children: classesData.map((cls) => /* @__PURE__ */ jsxs("tr", { children: [
-        /* @__PURE__ */ jsxs("td", { className: "border border-gray-300 bg-gray-50 p-3 text-center font-medium", children: [
-          "Class ",
-          cls.name
+        /* @__PURE__ */ jsxs("td", { className: "border border-gray-300 bg-gray-50 p-2 sm:p-3 text-center font-medium text-xs sm:text-sm", children: [
+          /* @__PURE__ */ jsxs("div", { className: "hidden sm:block", children: [
+            "Class ",
+            cls.name
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "sm:hidden", children: cls.name })
         ] }),
         timeSlots.map((slot) => {
           var _a;
@@ -5393,7 +6486,7 @@ function Timetable() {
             return /* @__PURE__ */ jsx(
               "td",
               {
-                className: "border border-gray-300 p-4 text-center text-gray-400",
+                className: "border border-gray-300 p-2 sm:p-4 text-center text-gray-400 text-xs sm:text-sm",
                 children: "-"
               },
               slot.key
@@ -5402,25 +6495,33 @@ function Timetable() {
           return /* @__PURE__ */ jsxs(
             "td",
             {
-              className: "border border-gray-300 p-4 text-center",
+              className: "border border-gray-300 p-2 sm:p-4 text-center",
               children: [
-                /* @__PURE__ */ jsx("div", { className: "font-medium", children: classInfo.subject }),
-                /* @__PURE__ */ jsxs("div", { className: "text-sm mt-1", children: [
-                  "(",
-                  classInfo.teacher,
-                  ")"
+                /* @__PURE__ */ jsx("div", { className: "font-medium text-xs sm:text-sm", children: classInfo.subject }),
+                /* @__PURE__ */ jsxs("div", { className: "text-xs mt-1", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "hidden sm:inline", children: [
+                    "(",
+                    classInfo.teacher,
+                    ")"
+                  ] }),
+                  /* @__PURE__ */ jsxs("span", { className: "sm:hidden", children: [
+                    "(",
+                    classInfo.teacher.split(" ")[0],
+                    ")"
+                  ] })
                 ] }),
-                classInfo.description && /* @__PURE__ */ jsx("div", { className: "text-xs text-gray-600 mt-1 italic", children: classInfo.description }),
-                canJoinClass && /* @__PURE__ */ jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsxs(
+                classInfo.description && /* @__PURE__ */ jsx("div", { className: "text-xs text-gray-600 mt-1 italic hidden sm:block", children: classInfo.description }),
+                canJoinClass && /* @__PURE__ */ jsx("div", { className: "mt-2 sm:mt-3", children: /* @__PURE__ */ jsxs(
                   "a",
                   {
                     href: classInfo.joinUrl,
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    className: "inline-flex items-center justify-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+                    className: "inline-flex items-center justify-center rounded-md bg-primary px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90",
                     children: [
-                      /* @__PURE__ */ jsx(VideoIcon, { className: "h-3.5 w-3.5 mr-1.5" }),
-                      "Join Class"
+                      /* @__PURE__ */ jsx(VideoIcon, { className: "h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 sm:mr-1.5" }),
+                      /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Join Class" }),
+                      /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "Join" })
                     ]
                   }
                 ) })
@@ -5439,12 +6540,12 @@ function Timetable() {
     )}.` })
   ] });
 }
-const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Timetable,
-  loader: loader$8
+  loader: loader$a
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$7() {
+async function loader$9() {
   const [roles] = await query(`SELECT * FROM roles`);
   const [admins] = await query(
     `
@@ -5457,7 +6558,7 @@ async function loader$7() {
   );
   return { roles, admins };
 }
-async function action$6({ request }) {
+async function action$8({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -5583,23 +6684,31 @@ function Admins() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditAdmin(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -5613,15 +6722,15 @@ function Admins() {
     initialState: { pagination: { pageSize: 10 } }
   });
   const dialogTitle = dialogType === "create" ? "Create New Admin" : "Edit Admin";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Admins" }),
-      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateAdmin, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Admins" }),
+      /* @__PURE__ */ jsxs(Button, { onClick: handleCreateAdmin, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add Admin" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -5645,27 +6754,35 @@ function Admins() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -5752,13 +6869,13 @@ function Admins() {
     ] }) })
   ] });
 }
-const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$6,
+  action: action$8,
   default: Admins,
-  loader: loader$7
+  loader: loader$9
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$6({ request }) {
+async function loader$8({ request }) {
   const user = await getUser(request);
   const [users] = await query("SELECT id, name FROM users WHERE role_id = ?", [
     3
@@ -5782,7 +6899,7 @@ async function loader$6({ request }) {
   `);
   return { users, schools, classes, classAdmins, user };
 }
-async function action$5({ request }) {
+async function action$7({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   const user = await getUser(request);
@@ -6200,13 +7317,13 @@ function ClassAdmin() {
     ] }) })
   ] });
 }
-const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$5,
+  action: action$7,
   default: ClassAdmin,
-  loader: loader$6
+  loader: loader$8
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$5({ request }) {
+async function loader$7({ request }) {
   const user = await getUser(request);
   let attendanceQuery = `
     SELECT sa.id, sa.student_id, sa.class_id, sa.date, sa.status, sa.created_at,
@@ -6232,7 +7349,7 @@ async function loader$5({ request }) {
     attendanceQuery += ` WHERE ${attendanceWhereConditions.join(" AND ")}`;
   }
   attendanceQuery += ` ORDER BY sa.date DESC, c.name, u.name`;
-  const [attendance] = await query(attendanceQuery, attendanceQueryParams);
+  const attendance = await query(attendanceQuery, attendanceQueryParams);
   let studentsQuery = `
     SELECT u.id, u.name, sp.class_id, c.name as class_name
     FROM users u
@@ -6256,7 +7373,7 @@ async function loader$5({ request }) {
     studentsQuery += ` AND ${studentsWhereConditions.join(" AND ")}`;
   }
   studentsQuery += ` ORDER BY c.name, u.name`;
-  const [students] = await query(studentsQuery, studentsQueryParams);
+  const students = await query(studentsQuery, studentsQueryParams);
   let classesQuery = `SELECT id, name FROM classes`;
   const classQueryParams = [];
   if (user.class_ids && user.class_ids.length > 0) {
@@ -6264,7 +7381,7 @@ async function loader$5({ request }) {
     classQueryParams.push(...user.class_ids);
   }
   classesQuery += ` ORDER BY name`;
-  const [classes] = await query(classesQuery, classQueryParams);
+  const classes = await query(classesQuery, classQueryParams);
   return {
     user,
     attendance,
@@ -6272,7 +7389,7 @@ async function loader$5({ request }) {
     classes
   };
 }
-async function action$4({ request }) {
+async function action$6({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   const user = await getUser(request);
@@ -6288,7 +7405,7 @@ async function action$4({ request }) {
       const classId = formData.get("class_id");
       const date = formData.get("date");
       const status = formData.get("status");
-      const [existingRecord] = await query(
+      const existingRecord = await query(
         "SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?",
         [studentId, classId, date]
       );
@@ -6310,7 +7427,7 @@ async function action$4({ request }) {
       const classId = formData.get("class_id");
       const date = formData.get("date");
       const status = formData.get("status");
-      const [existingRecord] = await query(
+      const existingRecord = await query(
         "SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ? AND id != ?",
         [studentId, classId, date, id]
       );
@@ -6339,36 +7456,26 @@ async function action$4({ request }) {
       const date = formData.get("date");
       const studentIds = formData.getAll("student_ids");
       const statuses = formData.getAll("statuses");
-      const conn = await db.getConnection();
-      await conn.beginTransaction();
-      try {
-        for (let i = 0; i < studentIds.length; i++) {
-          const studentId = studentIds[i];
-          const status = statuses[i];
-          const [existingRecord] = await conn.query(
-            "SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?",
-            [studentId, classId, date]
+      for (let i = 0; i < studentIds.length; i++) {
+        const studentId = studentIds[i];
+        const status = statuses[i];
+        const existingRecord = await query(
+          "SELECT id FROM student_attendance WHERE student_id = ? AND class_id = ? AND date = ?",
+          [studentId, classId, date]
+        );
+        if (existingRecord.length > 0) {
+          await query(
+            "UPDATE student_attendance SET status = ? WHERE student_id = ? AND class_id = ? AND date = ?",
+            [status, studentId, classId, date]
           );
-          if (existingRecord.length > 0) {
-            await conn.query(
-              "UPDATE student_attendance SET status = ? WHERE student_id = ? AND class_id = ? AND date = ?",
-              [status, studentId, classId, date]
-            );
-          } else {
-            await conn.query(
-              "INSERT INTO student_attendance (student_id, class_id, date, status) VALUES (?, ?, ?, ?)",
-              [studentId, classId, date, status]
-            );
-          }
+        } else {
+          await query(
+            "INSERT INTO student_attendance (student_id, class_id, date, status) VALUES (?, ?, ?, ?)",
+            [studentId, classId, date, status]
+          );
         }
-        await conn.commit();
-        return { success: true, message: "Attendance recorded successfully" };
-      } catch (error) {
-        await conn.rollback();
-        throw error;
-      } finally {
-        conn.release();
       }
+      return { success: true, message: "Attendance recorded successfully" };
     }
     return { success: false, message: "Invalid action" };
   } catch (error) {
@@ -6540,16 +7647,18 @@ function Attendance() {
     {
       id: "markAttendance",
       header: "Mark Attendance",
-      cell: ({ row }) => /* @__PURE__ */ jsx("div", { className: "flex justify-center space-x-2", children: user.role_name === "class_admin" ? /* @__PURE__ */ jsxs(Fragment, { children: [
+      cell: ({ row }) => /* @__PURE__ */ jsx("div", { className: "flex flex-col sm:flex-row justify-center gap-1 sm:gap-2", children: user.role_name === "class_admin" ? /* @__PURE__ */ jsxs(Fragment, { children: [
         /* @__PURE__ */ jsxs(
           Button,
           {
             variant: row.original.attendanceStatus === "present" ? "default" : "outline",
             size: "sm",
             onClick: () => markAttendance(row.original.id, "present"),
+            className: "text-xs sm:text-sm",
             children: [
-              /* @__PURE__ */ jsx(CheckCircleIcon, { className: "mr-1 size-4" }),
-              "Present"
+              /* @__PURE__ */ jsx(CheckCircleIcon, { className: "mr-1 size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Present" }),
+              /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "P" })
             ]
           }
         ),
@@ -6559,9 +7668,11 @@ function Attendance() {
             variant: row.original.attendanceStatus === "absent" ? "default" : "outline",
             size: "sm",
             onClick: () => markAttendance(row.original.id, "absent"),
+            className: "text-xs sm:text-sm",
             children: [
-              /* @__PURE__ */ jsx(XCircleIcon, { className: "mr-1 size-4" }),
-              "Absent"
+              /* @__PURE__ */ jsx(XCircleIcon, { className: "mr-1 size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Absent" }),
+              /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "A" })
             ]
           }
         ),
@@ -6571,13 +7682,15 @@ function Attendance() {
             variant: row.original.attendanceStatus === "late" ? "default" : "outline",
             size: "sm",
             onClick: () => markAttendance(row.original.id, "late"),
+            className: "text-xs sm:text-sm",
             children: [
-              /* @__PURE__ */ jsx(ClockIcon, { className: "mr-1 size-4" }),
-              "Late"
+              /* @__PURE__ */ jsx(ClockIcon, { className: "mr-1 size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Late" }),
+              /* @__PURE__ */ jsx("span", { className: "sm:hidden", children: "L" })
             ]
           }
         )
-      ] }) : /* @__PURE__ */ jsx("span", { className: "text-sm text-gray-500 italic", children: "Only class admins can mark attendance" }) })
+      ] }) : /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm text-gray-500 italic", children: "Only class admins can mark attendance" }) })
     },
     {
       id: "actions",
@@ -6601,40 +7714,43 @@ function Attendance() {
     getPaginationRowModel: getPaginationRowModel(),
     initialState: { pagination: { pageSize: 10 } }
   });
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsx("div", { className: "flex flex-col space-y-4 md:flex-row md:items-center md:justify-end mb-6", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row gap-4", children: [
-      /* @__PURE__ */ jsx("div", { className: "w-full", children: /* @__PURE__ */ jsxs(Select, { value: selectedClass, onValueChange: setSelectedClass, children: [
-        /* @__PURE__ */ jsx(SelectTrigger, { children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a class" }) }),
-        /* @__PURE__ */ jsx(SelectContent, { children: classes.map((cls) => /* @__PURE__ */ jsxs(SelectItem, { value: cls.id.toString(), children: [
-          "Class ",
-          cls.name
-        ] }, cls.id)) })
-      ] }) }),
-      /* @__PURE__ */ jsx("div", { className: "w-full", children: /* @__PURE__ */ jsxs(Popover, { children: [
-        /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(
-          Button,
-          {
-            variant: "outline",
-            className: "w-full justify-start text-left font-normal",
-            children: [
-              /* @__PURE__ */ jsx(CalendarIcon, { className: "mr-2 h-4 w-4" }),
-              selectedDate ? format(selectedDate, "PPP") : "Select date"
-            ]
-          }
-        ) }),
-        /* @__PURE__ */ jsx(PopoverContent, { className: "w-auto p-0", children: /* @__PURE__ */ jsx(
-          Calendar,
-          {
-            mode: "single",
-            selected: selectedDate,
-            onSelect: setSelectedDate,
-            initialFocus: true
-          }
-        ) })
-      ] }) })
-    ] }) }),
-    tableData.length > 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
-      /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((headerGroup) => /* @__PURE__ */ jsx(TableRow, { children: headerGroup.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Attendance" }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-3", children: [
+        /* @__PURE__ */ jsxs(Select, { value: selectedClass, onValueChange: setSelectedClass, children: [
+          /* @__PURE__ */ jsx(SelectTrigger, { className: "w-full sm:w-[200px]", children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select a class" }) }),
+          /* @__PURE__ */ jsx(SelectContent, { children: classes.map((cls) => /* @__PURE__ */ jsxs(SelectItem, { value: cls.id.toString(), children: [
+            "Class ",
+            cls.name
+          ] }, cls.id)) })
+        ] }),
+        /* @__PURE__ */ jsxs(Popover, { children: [
+          /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(
+            Button,
+            {
+              variant: "outline",
+              className: "w-full sm:w-auto justify-start text-left font-normal",
+              children: [
+                /* @__PURE__ */ jsx(CalendarIcon, { className: "mr-2 h-4 w-4 flex-shrink-0" }),
+                /* @__PURE__ */ jsx("span", { className: "truncate", children: selectedDate ? format(selectedDate, "MMM dd, yyyy") : "Select date" })
+              ]
+            }
+          ) }),
+          /* @__PURE__ */ jsx(PopoverContent, { className: "w-auto p-0", align: "end", children: /* @__PURE__ */ jsx(
+            Calendar,
+            {
+              mode: "single",
+              selected: selectedDate,
+              onSelect: setSelectedDate,
+              initialFocus: true
+            }
+          ) })
+        ] })
+      ] })
+    ] }),
+    tableData.length > 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
+      /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((headerGroup) => /* @__PURE__ */ jsx(TableRow, { children: headerGroup.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center whitespace-nowrap", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
       ) }, header.id)) }, headerGroup.id)) }),
@@ -6706,13 +7822,13 @@ function Attendance() {
     ] }) })
   ] });
 }
-const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route18 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$4,
+  action: action$6,
   default: Attendance,
-  loader: loader$5
+  loader: loader$7
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$4({ request }) {
+async function loader$6({ request }) {
   const user = await getUser(request);
   let studentsQuery = `
     SELECT u.id, u.name, u.email, u.created_at,
@@ -6742,26 +7858,26 @@ async function loader$4({ request }) {
   if (whereConditions.length > 0) {
     studentsQuery += ` AND ${whereConditions.join(" AND ")}`;
   }
-  const [students] = await query(studentsQuery, queryParams);
+  const students = await query(studentsQuery, queryParams);
   let classesQuery = `SELECT id, name FROM classes`;
   const classQueryParams = [];
   if (user.class_ids && user.class_ids.length > 0) {
     classesQuery += ` WHERE id IN (${user.class_ids.map(() => "?").join(",")})`;
     classQueryParams.push(...user.class_ids);
   }
-  const [classes] = await query(classesQuery, classQueryParams);
+  const classes = await query(classesQuery, classQueryParams);
   let schoolsQuery = `SELECT id, name FROM schools`;
   const schoolQueryParams = [];
   if (user.school_id) {
     schoolsQuery += ` WHERE id = ?`;
     schoolQueryParams.push(user.school_id);
   }
-  const [schools] = await query(schoolsQuery, schoolQueryParams);
-  const [parents] = await query(
+  const schools = await query(schoolsQuery, schoolQueryParams);
+  const parents = await query(
     `SELECT id, name, email FROM users WHERE role_id = ?`,
     [6]
   );
-  const [links] = await query(
+  const links = await query(
     `SELECT psl.id, psl.parent_id, psl.student_id, p.name AS parent_name, p.email AS parent_email
      FROM parent_student_links psl
      JOIN users p ON psl.parent_id = p.id`
@@ -6779,7 +7895,7 @@ async function loader$4({ request }) {
   });
   return { user, students, classes, schools, parents, studentParentLinks };
 }
-async function action$3({ request }) {
+async function action$5({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   const user = await getUser(request);
@@ -6797,7 +7913,7 @@ async function action$3({ request }) {
       const parentEmail = formData.get("parent_email");
       const parentPassword = formData.get("parent_password");
       const existingParentId = formData.get("existing_parent_id");
-      const [dupEmail] = await query("SELECT id FROM users WHERE email = ?", [
+      const dupEmail = await query("SELECT id FROM users WHERE email = ?", [
         email
       ]);
       if (dupEmail.length > 0) {
@@ -6806,7 +7922,7 @@ async function action$3({ request }) {
           message: "A user with this email already exists. Please use a different email."
         };
       }
-      const [dupEnroll] = await query(
+      const dupEnroll = await query(
         "SELECT id FROM student_profiles WHERE enrollment_no = ?",
         [enrollment_no]
       );
@@ -6817,7 +7933,7 @@ async function action$3({ request }) {
         };
       }
       if (addParent && !existingParentId && parentEmail) {
-        const [dupParentEmail] = await query(
+        const dupParentEmail = await query(
           "SELECT id FROM users WHERE email = ?",
           [parentEmail]
         );
@@ -6830,7 +7946,7 @@ async function action$3({ request }) {
       }
       const salt = await bcrypt.genSalt(10);
       const password_hash = await bcrypt.hash(password, salt);
-      const [userRes] = await query(
+      const userRes = await query(
         `INSERT INTO users
          (name, email, password_hash, role_id)
          VALUES (?, ?, ?, 5)`,
@@ -6850,7 +7966,7 @@ async function action$3({ request }) {
         } else if (parentName && parentEmail && parentPassword) {
           const salt2 = await bcrypt.genSalt(10);
           const parentPasswordHash = await bcrypt.hash(parentPassword, salt2);
-          const [parentRes] = await query(
+          const parentRes = await query(
             `INSERT INTO users
              (name, email, password_hash, role_id)
              VALUES (?, ?, ?, 6)`,
@@ -6882,7 +7998,7 @@ async function action$3({ request }) {
       const parentEmail = formData.get("parent_email");
       const parentPassword = formData.get("parent_password");
       const existingParentId = formData.get("existing_parent_id");
-      const [dupEmail] = await query(
+      const dupEmail = await query(
         "SELECT id FROM users WHERE email = ? AND id != ?",
         [email, id]
       );
@@ -6892,7 +8008,7 @@ async function action$3({ request }) {
           message: "A user with this email already exists. Please use a different email."
         };
       }
-      const [dupEnroll] = await query(
+      const dupEnroll = await query(
         "SELECT id FROM student_profiles WHERE enrollment_no = ? AND id != ?",
         [enrollment_no, profile_id]
       );
@@ -6903,7 +8019,7 @@ async function action$3({ request }) {
         };
       }
       if (addParent && !existingParentId && parentEmail) {
-        const [dupParentEmail] = await query(
+        const dupParentEmail = await query(
           "SELECT id FROM users WHERE email = ?",
           [parentEmail]
         );
@@ -6952,7 +8068,7 @@ async function action$3({ request }) {
           if (existingParentId) {
             parentId = existingParentId;
           } else if (parentName && parentEmail) {
-            const [existingParent] = await query(
+            const existingParent = await query(
               "SELECT id FROM users WHERE email = ? AND role_id = 6",
               [parentEmail]
             );
@@ -6961,7 +8077,7 @@ async function action$3({ request }) {
             } else {
               const salt = await bcrypt.genSalt(10);
               const parentPasswordHash = parentPassword ? await bcrypt.hash(parentPassword, salt) : await bcrypt.hash("default123", salt);
-              const [parentRes] = await query(
+              const parentRes = await query(
                 `INSERT INTO users
                  (name, email, password_hash, role_id)
                  VALUES (?, ?, ?, 6)`,
@@ -6971,7 +8087,7 @@ async function action$3({ request }) {
             }
           }
           if (parentId) {
-            const [existingLink] = await query(
+            const existingLink = await query(
               `SELECT id FROM parent_student_links WHERE parent_id = ? AND student_id = ?`,
               [parentId, id]
             );
@@ -7139,23 +8255,31 @@ function Student() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleEditStudent(row.original),
-            children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => openDeleteDialog(row.original),
-            children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+            ]
           }
         )
       ] })
@@ -7493,13 +8617,13 @@ function Student() {
     ] }) })
   ] });
 }
-const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$3,
+  action: action$5,
   default: Student,
-  loader: loader$4
+  loader: loader$6
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$3() {
+async function loader$5() {
   const [parents] = await query(
     `SELECT id, name, email, created_at FROM users WHERE role_id = ?`,
     [6]
@@ -7525,7 +8649,7 @@ async function loader$3() {
   });
   return { parents, students, parentStudentLinks };
 }
-async function action$2({ request }) {
+async function action$4({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   try {
@@ -7938,13 +9062,13 @@ function Parent() {
     ] }) })
   ] });
 }
-const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route20 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$2,
+  action: action$4,
   default: Parent,
-  loader: loader$3
+  loader: loader$5
 }, Symbol.toStringTag, { value: "Module" }));
-async function loader$2({ request }) {
+async function loader$4({ request }) {
   const user = await getUser(request);
   let homeworkQuery = `
     SELECT h.id, h.title, h.description, h.created_at,
@@ -8008,7 +9132,7 @@ async function loader$2({ request }) {
   const [subjects] = await query(subjectsQuery, subjectParams);
   return { user, homework, subjects };
 }
-async function action$1({ request }) {
+async function action$3({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   const user = await getUser(request);
@@ -8150,33 +9274,45 @@ function Homework() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleViewHomework(row.original),
-            children: /* @__PURE__ */ jsx(EyeIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(EyeIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "View" })
+            ]
           }
         ),
         canModify(row.original) && /* @__PURE__ */ jsxs(Fragment, { children: [
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsxs(
             Button,
             {
               variant: "outline",
               size: "sm",
               onClick: () => handleEditHomework(row.original),
-              children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+              className: "p-2",
+              children: [
+                /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+                /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+              ]
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsxs(
             Button,
             {
               variant: "outline",
               size: "sm",
               onClick: () => openDeleteDialog(row.original),
-              children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+              className: "p-2",
+              children: [
+                /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+                /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+              ]
             }
           )
         ] })
@@ -8191,15 +9327,15 @@ function Homework() {
     initialState: { pagination: { pageSize: 10 } }
   });
   const dialogTitle = dialogType === "create" ? "Create New Homework" : "Edit Homework";
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Manage Homework" }),
-      isTeacher && /* @__PURE__ */ jsxs(Button, { onClick: handleCreateHomework, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Manage Homework" }),
+      isTeacher && /* @__PURE__ */ jsxs(Button, { onClick: handleCreateHomework, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Add Homework" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -8216,27 +9352,35 @@ function Homework() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     isTeacher && /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { className: "max-w-2xl", children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -8405,11 +9549,11 @@ function Homework() {
     ] }) })
   ] });
 }
-const route18 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route21 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action: action$1,
+  action: action$3,
   default: Homework,
-  loader: loader$2
+  loader: loader$4
 }, Symbol.toStringTag, { value: "Module" }));
 const feedbackStatements = {
   academic: [
@@ -8444,7 +9588,7 @@ const ratingLabels = {
   4: "Agree",
   5: "Strongly Agree"
 };
-async function loader$1({ request }) {
+async function loader$3({ request }) {
   const user = await getUser(request);
   const isParent = user.role_name === "parent";
   const isSuperAdmin = user.role_name === "super_admin";
@@ -8475,9 +9619,9 @@ async function loader$1({ request }) {
     feedbackQuery += ` WHERE ${whereConditions.join(" AND ")}`;
   }
   feedbackQuery += ` ORDER BY f.created_at DESC`;
-  const [feedback] = await query(feedbackQuery, queryParams);
+  const feedback = await query(feedbackQuery, queryParams);
   for (const item of feedback) {
-    const [feedbackItems] = await query(
+    const feedbackItems = await query(
       `SELECT * FROM parent_feedback_items WHERE feedback_id = ? ORDER BY section, statement_id`,
       [item.id]
     );
@@ -8493,10 +9637,10 @@ async function loader$1({ request }) {
       WHERE id IN (${studentPlaceholders})
       ORDER BY name
     `;
-    const [studentsResult] = await query(childrenQuery, studentIds);
+    const studentsResult = await query(childrenQuery, studentIds);
     children = studentsResult;
   } else if (isSuperAdmin) {
-    const [studentsResult] = await query(`
+    const studentsResult = await query(`
       SELECT id, name 
       FROM users 
       WHERE role_id = '5'
@@ -8506,7 +9650,7 @@ async function loader$1({ request }) {
   }
   return { user, feedback, children };
 }
-async function action({ request }) {
+async function action$2({ request }) {
   const formData = await request.formData();
   const action2 = formData.get("_action");
   const user = await getUser(request);
@@ -8521,7 +9665,7 @@ async function action({ request }) {
       const title = formData.get("title");
       const student_id = formData.get("student_id");
       const parent_id = user.id;
-      const [result] = await query(
+      const result = await query(
         `INSERT INTO parent_feedback (title, student_id, parent_id)
          VALUES (?, ?, ?)`,
         [title, student_id, parent_id]
@@ -8777,33 +9921,45 @@ function Feedback() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-2", children: [
-        /* @__PURE__ */ jsx(
+      cell: ({ row }) => /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 sm:gap-2", children: [
+        /* @__PURE__ */ jsxs(
           Button,
           {
             variant: "outline",
             size: "sm",
             onClick: () => handleViewFeedback(row.original),
-            children: /* @__PURE__ */ jsx(EyeIcon, { className: "size-4" })
+            className: "p-2",
+            children: [
+              /* @__PURE__ */ jsx(EyeIcon, { className: "size-3 sm:size-4" }),
+              /* @__PURE__ */ jsx("span", { className: "sr-only", children: "View" })
+            ]
           }
         ),
         canModify(row.original) && /* @__PURE__ */ jsxs(Fragment, { children: [
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsxs(
             Button,
             {
               variant: "outline",
               size: "sm",
               onClick: () => handleEditFeedback(row.original),
-              children: /* @__PURE__ */ jsx(PencilIcon, { className: "size-4" })
+              className: "p-2",
+              children: [
+                /* @__PURE__ */ jsx(PencilIcon, { className: "size-3 sm:size-4" }),
+                /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Edit" })
+              ]
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsxs(
             Button,
             {
               variant: "outline",
               size: "sm",
               onClick: () => openDeleteDialog(row.original),
-              children: /* @__PURE__ */ jsx(TrashIcon, { className: "size-4" })
+              className: "p-2",
+              children: [
+                /* @__PURE__ */ jsx(TrashIcon, { className: "size-3 sm:size-4" }),
+                /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Delete" })
+              ]
             }
           )
         ] })
@@ -8860,15 +10016,15 @@ function Feedback() {
       );
     }) });
   };
-  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto pb-10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-6", children: [
-      /* @__PURE__ */ jsx("span", { className: "ml-2 pt-2 text-xl font-semibold", children: "Parent Feedback" }),
-      isParent && /* @__PURE__ */ jsxs(Button, { onClick: handleCreateFeedback, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold", children: "Parent Feedback" }),
+      isParent && /* @__PURE__ */ jsxs(Button, { onClick: handleCreateFeedback, className: "w-full sm:w-auto", children: [
         /* @__PURE__ */ jsx(PlusIcon, { className: "mr-2 h-4 w-4" }),
         /* @__PURE__ */ jsx("span", { children: "Submit Feedback" })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "rounded-md border", children: /* @__PURE__ */ jsxs(Table, { children: [
+    /* @__PURE__ */ jsx("div", { className: "rounded-md border overflow-x-auto", children: /* @__PURE__ */ jsxs(Table, { children: [
       /* @__PURE__ */ jsx(TableHeader, { children: table.getHeaderGroups().map((hg) => /* @__PURE__ */ jsx(TableRow, { children: hg.headers.map((header) => /* @__PURE__ */ jsx(TableHead, { className: "text-center", children: header.isPlaceholder ? null : flexRender(
         header.column.columnDef.header,
         header.getContext()
@@ -8885,27 +10041,35 @@ function Feedback() {
         }
       ) }) })
     ] }) }),
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end space-x-2 py-4", children: [
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.previousPage(),
-          disabled: !table.getCanPreviousPage(),
-          children: "Previous"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "outline",
-          size: "sm",
-          onClick: () => table.nextPage(),
-          disabled: !table.getCanNextPage(),
-          children: "Next"
-        }
-      )
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between py-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "text-sm text-muted-foreground", children: [
+        "Page ",
+        table.getState().pagination.pageIndex + 1,
+        " of ",
+        table.getPageCount()
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex space-x-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.previousPage(),
+            disabled: !table.getCanPreviousPage(),
+            children: "Previous"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: () => table.nextPage(),
+            disabled: !table.getCanNextPage(),
+            children: "Next"
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsx(Dialog, { open: openDialog, onOpenChange: setOpenDialog, children: /* @__PURE__ */ jsxs(DialogContent, { className: "max-w-4xl max-h-[90vh] overflow-y-auto", children: [
       /* @__PURE__ */ jsxs(DialogHeader, { children: [
@@ -9086,11 +10250,11 @@ function Feedback() {
     ] }) })
   ] });
 }
-const route19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route22 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  action,
+  action: action$2,
   default: Feedback,
-  loader: loader$1
+  loader: loader$3
 }, Symbol.toStringTag, { value: "Module" }));
 const getStatusBadge = (status) => {
   const statusConfig = {
@@ -9115,14 +10279,14 @@ const getYouTubeThumbnail = (url) => {
   const videoId = extractYouTubeVideoId(url);
   return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDMyMCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMTgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMzAgMTIwTDE3MCA5MEwxMzAgNjBWMTIwWiIgZmlsbD0iI0VGNDQ0NCIvPgo8L3N2Zz4K";
 };
-async function loader({ request }) {
+async function loader$2({ request }) {
   var _a;
   const user = await getUser(request);
   if (!user) return redirect$1("/login");
   if (user.role_name !== "student") {
     throw new Response("Access denied. Only students can view live classes.", { status: 403 });
   }
-  const [studentProfile] = await query(`
+  const studentProfile = await query(`
     SELECT class_id, schools_id 
     FROM student_profiles 
     WHERE user_id = ?
@@ -9132,7 +10296,7 @@ async function loader({ request }) {
   }
   const classId = studentProfile[0].class_id;
   const schoolId = studentProfile[0].schools_id;
-  const [liveClasses] = await query(`
+  const liveClasses = await query(`
     SELECT lc.*, 
            s.name as subject_name, 
            c.name as class_name, 
@@ -9154,8 +10318,8 @@ async function loader({ request }) {
       lc.start_time ASC,
       lc.created_at DESC
   `, [classId, schoolId]);
-  const [subjects] = await query("SELECT * FROM subjects ORDER BY name");
-  const [schoolInfo] = await query("SELECT name FROM schools WHERE id = ?", [schoolId]);
+  const subjects = await query("SELECT * FROM subjects ORDER BY name");
+  const schoolInfo = await query("SELECT name FROM schools WHERE id = ?", [schoolId]);
   const schoolName = ((_a = schoolInfo[0]) == null ? void 0 : _a.name) || "Unknown School";
   return { liveClasses, subjects, user, classId, schoolId, schoolName };
 }
@@ -9464,12 +10628,686 @@ function StudentLiveClasses() {
     ] }) })
   ] });
 }
-const route20 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route23 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: StudentLiveClasses,
+  loader: loader$2
+}, Symbol.toStringTag, { value: "Module" }));
+async function loader$1({ request }) {
+  const user = await getUser(request);
+  if (!user) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  return { user };
+}
+async function action$1({ request }) {
+  const user = await getUser(request);
+  if (!user) {
+    return { success: false, message: "Unauthorized" };
+  }
+  try {
+    const formData = await request.formData();
+    const currentPassword = formData.get("currentPassword");
+    const newPassword = formData.get("newPassword");
+    const confirmPassword = formData.get("confirmPassword");
+    if (newPassword !== confirmPassword) {
+      return { success: false, message: "New passwords do not match" };
+    }
+    if (newPassword.length < 6) {
+      return { success: false, message: "Password must be at least 6 characters" };
+    }
+    const users = await query("SELECT password_hash FROM users WHERE id = ?", [user.id]);
+    if (users.length === 0) {
+      return { success: false, message: "User not found" };
+    }
+    const isCurrentValid = await bcrypt.compare(currentPassword, users[0].password_hash);
+    if (!isCurrentValid) {
+      return { success: false, message: "Current password is incorrect" };
+    }
+    const salt = await bcrypt.genSalt(10);
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+    await query("UPDATE users SET password_hash = ? WHERE id = ?", [newPasswordHash, user.id]);
+    return { success: true, message: "Password changed successfully" };
+  } catch (error) {
+    return { success: false, message: "An error occurred while changing password" };
+  }
+}
+function ChangePassword() {
+  const { user } = useLoaderData();
+  const actionData = useActionData();
+  const submit = useSubmit();
+  const [formData, setFormData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
+  });
+  useEffect(() => {
+    if (actionData) {
+      if (actionData.success) {
+        toast.success(actionData.message);
+        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        toast.error(actionData.message);
+      }
+    }
+  }, [actionData]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    submit(fd, { method: "post" });
+  };
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 pb-10 max-w-2xl", children: [
+    /* @__PURE__ */ jsxs("div", { className: "mb-6", children: [
+      /* @__PURE__ */ jsxs("h1", { className: "text-2xl font-bold flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx(KeyRound, { className: "h-6 w-6" }),
+        "Change Password"
+      ] }),
+      /* @__PURE__ */ jsx("p", { className: "text-muted-foreground mt-1", children: "Update your password to keep your account secure" })
+    ] }),
+    /* @__PURE__ */ jsxs(Card, { className: "shadow-lg", children: [
+      /* @__PURE__ */ jsx(CardHeader, { className: "pb-4", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx("div", { className: "p-2 bg-primary/10 rounded-lg", children: /* @__PURE__ */ jsx(Shield, { className: "h-5 w-5 text-primary" }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx(CardTitle, { className: "text-lg", children: "Security Settings" }),
+          /* @__PURE__ */ jsxs(CardDescription, { children: [
+            "Change password for ",
+            user == null ? void 0 : user.name,
+            " (",
+            user == null ? void 0 : user.email,
+            ")"
+          ] })
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsx(CardContent, { className: "space-y-6", children: /* @__PURE__ */ jsxs("form", { onSubmit: handleSubmit, className: "space-y-5", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "currentPassword", className: "text-sm font-medium", children: "Current Password" }),
+          /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                id: "currentPassword",
+                name: "currentPassword",
+                type: showPasswords.current ? "text" : "password",
+                value: formData.currentPassword,
+                onChange: handleChange,
+                className: "pr-10",
+                placeholder: "Enter your current password",
+                required: true
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Button,
+              {
+                type: "button",
+                variant: "ghost",
+                size: "sm",
+                className: "absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent",
+                onClick: () => togglePasswordVisibility("current"),
+                children: showPasswords.current ? /* @__PURE__ */ jsx(EyeOff, { className: "h-4 w-4 text-muted-foreground" }) : /* @__PURE__ */ jsx(Eye, { className: "h-4 w-4 text-muted-foreground" })
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "newPassword", className: "text-sm font-medium", children: "New Password" }),
+          /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                id: "newPassword",
+                name: "newPassword",
+                type: showPasswords.new ? "text" : "password",
+                value: formData.newPassword,
+                onChange: handleChange,
+                className: "pr-10",
+                placeholder: "Enter your new password",
+                minLength: 6,
+                required: true
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Button,
+              {
+                type: "button",
+                variant: "ghost",
+                size: "sm",
+                className: "absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent",
+                onClick: () => togglePasswordVisibility("new"),
+                children: showPasswords.new ? /* @__PURE__ */ jsx(EyeOff, { className: "h-4 w-4 text-muted-foreground" }) : /* @__PURE__ */ jsx(Eye, { className: "h-4 w-4 text-muted-foreground" })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Password must be at least 6 characters long" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "confirmPassword", className: "text-sm font-medium", children: "Confirm New Password" }),
+          /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                id: "confirmPassword",
+                name: "confirmPassword",
+                type: showPasswords.confirm ? "text" : "password",
+                value: formData.confirmPassword,
+                onChange: handleChange,
+                className: "pr-10",
+                placeholder: "Confirm your new password",
+                minLength: 6,
+                required: true
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Button,
+              {
+                type: "button",
+                variant: "ghost",
+                size: "sm",
+                className: "absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent",
+                onClick: () => togglePasswordVisibility("confirm"),
+                children: showPasswords.confirm ? /* @__PURE__ */ jsx(EyeOff, { className: "h-4 w-4 text-muted-foreground" }) : /* @__PURE__ */ jsx(Eye, { className: "h-4 w-4 text-muted-foreground" })
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "pt-4", children: /* @__PURE__ */ jsxs(Button, { type: "submit", className: "w-full h-11 text-base font-medium", children: [
+          /* @__PURE__ */ jsx(KeyRound, { className: "mr-2 h-4 w-4" }),
+          "Update Password"
+        ] }) })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "mt-6 p-4 bg-muted/50 rounded-lg border", children: [
+      /* @__PURE__ */ jsx("h3", { className: "font-medium text-sm mb-2", children: "Password Security Tips:" }),
+      /* @__PURE__ */ jsxs("ul", { className: "text-xs text-muted-foreground space-y-1", children: [
+        /* @__PURE__ */ jsx("li", { children: "• Use a combination of letters, numbers, and special characters" }),
+        /* @__PURE__ */ jsx("li", { children: "• Make it at least 8 characters long for better security" }),
+        /* @__PURE__ */ jsx("li", { children: "• Avoid using personal information or common words" }),
+        /* @__PURE__ */ jsx("li", { children: "• Don't reuse passwords from other accounts" })
+      ] })
+    ] })
+  ] });
+}
+const route24 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  action: action$1,
+  default: ChangePassword,
+  loader: loader$1
+}, Symbol.toStringTag, { value: "Module" }));
+async function loader({ request }) {
+  const user = await getUser(request);
+  if (!user || user.role_name !== "super_admin") {
+    throw new Response("Unauthorized", { status: 403 });
+  }
+  try {
+    const blogs = await db.query(`
+      SELECT 
+        b.id, b.title, b.category_id, b.author_id, b.short_desc, b.content, 
+        b.publish_date, b.created_at,
+        bc.name as category_name,
+        u.name as author_name
+      FROM blogs b
+      JOIN blog_categories bc ON b.category_id = bc.id
+      JOIN users u ON b.author_id = u.id
+      ORDER BY b.created_at DESC
+    `);
+    const categories = await db.query("SELECT * FROM blog_categories ORDER BY name");
+    console.log("Loaded blogs:", blogs.length);
+    console.log("Loaded categories:", categories.length);
+    return new Response(JSON.stringify({ blogs, categories, user }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    });
+  } catch (error) {
+    console.error("Error loading blog management data:", error);
+    return new Response(JSON.stringify({ blogs: [], categories: [], user }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store"
+      }
+    });
+  }
+}
+async function action({ request }) {
+  const user = await getUser(request);
+  if (!user || user.role_name !== "super_admin") {
+    throw new Response("Unauthorized", { status: 403 });
+  }
+  const formData = await request.formData();
+  const action2 = formData.get("_action");
+  try {
+    if (action2 === "create" || action2 === "update") {
+      const thumbnailFile = formData.get("thumbnail_image");
+      const coverFile = formData.get("cover_image");
+      let thumbnailBuffer = null;
+      let coverBuffer = null;
+      if (thumbnailFile && thumbnailFile.size > 0) {
+        thumbnailBuffer = Buffer.from(await thumbnailFile.arrayBuffer());
+      }
+      if (coverFile && coverFile.size > 0) {
+        coverBuffer = Buffer.from(await coverFile.arrayBuffer());
+      }
+      const blogData = {
+        title: formData.get("title"),
+        category_id: parseInt(formData.get("category_id")),
+        short_desc: formData.get("short_desc"),
+        content: formData.get("content"),
+        thumbnail_image: thumbnailBuffer,
+        cover_image: coverBuffer,
+        publish_date: formData.get("publish_date")
+      };
+      if (action2 === "create") {
+        await db.query(`
+          INSERT INTO blogs (title, category_id, author_id, short_desc, content, thumbnail_image, cover_image, publish_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `, [
+          blogData.title,
+          blogData.category_id,
+          user.id,
+          blogData.short_desc,
+          blogData.content,
+          blogData.thumbnail_image,
+          blogData.cover_image,
+          blogData.publish_date
+        ]);
+        return { success: true, message: "Blog created successfully!" };
+      } else {
+        const blogId = formData.get("blog_id");
+        const updateFields = [];
+        const updateValues = [];
+        updateFields.push("title = ?", "category_id = ?", "short_desc = ?", "content = ?", "publish_date = ?");
+        updateValues.push(blogData.title, blogData.category_id, blogData.short_desc, blogData.content, blogData.publish_date);
+        if (blogData.thumbnail_image) {
+          updateFields.push("thumbnail_image = ?");
+          updateValues.push(blogData.thumbnail_image);
+        }
+        if (blogData.cover_image) {
+          updateFields.push("cover_image = ?");
+          updateValues.push(blogData.cover_image);
+        }
+        updateValues.push(blogId);
+        await db.query(`UPDATE blogs SET ${updateFields.join(", ")} WHERE id = ?`, updateValues);
+        return { success: true, message: "Blog updated successfully!" };
+      }
+    }
+    if (action2 === "delete") {
+      const blogId = formData.get("blog_id");
+      await db.query("DELETE FROM blogs WHERE id = ?", [blogId]);
+      return { success: true, message: "Blog deleted successfully!" };
+    }
+    if (action2 === "create_category") {
+      const name = formData.get("category_name");
+      const description = formData.get("category_description");
+      await db.query("INSERT INTO blog_categories (name, description) VALUES (?, ?)", [name, description]);
+      return { success: true, message: "Category created successfully!" };
+    }
+    if (action2 === "update_category") {
+      const categoryId = formData.get("category_id");
+      const name = formData.get("category_name");
+      const description = formData.get("category_description");
+      await db.query("UPDATE blog_categories SET name = ?, description = ? WHERE id = ?", [name, description, categoryId]);
+      return { success: true, message: "Category updated successfully!" };
+    }
+    if (action2 === "delete_category") {
+      const categoryId = formData.get("category_id");
+      await db.query("DELETE FROM blog_categories WHERE id = ?", [categoryId]);
+      return { success: true, message: "Category deleted successfully!" };
+    }
+  } catch (error) {
+    console.error("Error in blog action:", error);
+    return { success: false, message: "An error occurred. Please try again." };
+  }
+}
+function ManageBlogs() {
+  const { blogs, categories, user } = useLoaderData();
+  const actionData = useActionData();
+  const navigation = useNavigation();
+  const [editingBlog, setEditingBlog] = useState(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const isSubmitting = navigation.state === "submitting";
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+  const BlogForm = ({ blog = null, onClose }) => {
+    var _a;
+    return /* @__PURE__ */ jsxs(Form, { method: "post", encType: "multipart/form-data", className: "space-y-4", children: [
+      /* @__PURE__ */ jsx("input", { type: "hidden", name: "_action", value: blog ? "update" : "create" }),
+      blog && /* @__PURE__ */ jsx("input", { type: "hidden", name: "blog_id", value: blog.id }),
+      /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "title", children: "Title *" }),
+          /* @__PURE__ */ jsx(
+            Input,
+            {
+              id: "title",
+              name: "title",
+              defaultValue: blog == null ? void 0 : blog.title,
+              required: true,
+              placeholder: "Enter blog title"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "category_id", children: "Category *" }),
+          /* @__PURE__ */ jsxs(Select, { name: "category_id", defaultValue: (_a = blog == null ? void 0 : blog.category_id) == null ? void 0 : _a.toString(), required: true, children: [
+            /* @__PURE__ */ jsx(SelectTrigger, { children: /* @__PURE__ */ jsx(SelectValue, { placeholder: "Select category" }) }),
+            /* @__PURE__ */ jsx(SelectContent, { children: categories.map((category) => /* @__PURE__ */ jsx(SelectItem, { value: category.id.toString(), children: category.name }, category.id)) })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsx(Label, { htmlFor: "short_desc", children: "Short Description" }),
+        /* @__PURE__ */ jsx(
+          Textarea,
+          {
+            id: "short_desc",
+            name: "short_desc",
+            defaultValue: blog == null ? void 0 : blog.short_desc,
+            placeholder: "Brief description for blog cards (150 characters max)",
+            maxLength: 150
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsx(Label, { htmlFor: "content", children: "Content *" }),
+        /* @__PURE__ */ jsx(
+          Textarea,
+          {
+            id: "content",
+            name: "content",
+            defaultValue: blog == null ? void 0 : blog.content,
+            required: true,
+            placeholder: "Full blog content (HTML supported)",
+            rows: 8
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "thumbnail_image", children: "Thumbnail Image" }),
+          /* @__PURE__ */ jsx(
+            Input,
+            {
+              id: "thumbnail_image",
+              name: "thumbnail_image",
+              type: "file",
+              accept: "image/*",
+              className: "cursor-pointer"
+            }
+          ),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "For blog card display (recommended: 400x300px)" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx(Label, { htmlFor: "cover_image", children: "Cover Image" }),
+          /* @__PURE__ */ jsx(
+            Input,
+            {
+              id: "cover_image",
+              name: "cover_image",
+              type: "file",
+              accept: "image/*",
+              className: "cursor-pointer"
+            }
+          ),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "For blog detail page (recommended: 1200x600px)" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsx(Label, { htmlFor: "publish_date", children: "Publish Date *" }),
+        /* @__PURE__ */ jsx(
+          Input,
+          {
+            id: "publish_date",
+            name: "publish_date",
+            type: "date",
+            defaultValue: blog == null ? void 0 : blog.publish_date,
+            required: true
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx("input", { type: "hidden", name: "status", value: "published" }),
+      /* @__PURE__ */ jsx("input", { type: "hidden", name: "audience", value: "all" }),
+      /* @__PURE__ */ jsx("input", { type: "hidden", name: "comments_enabled", value: "off" }),
+      /* @__PURE__ */ jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsx(Button, { type: "button", variant: "outline", onClick: onClose, children: "Cancel" }),
+        /* @__PURE__ */ jsx(Button, { type: "submit", disabled: isSubmitting, children: isSubmitting ? "Saving..." : blog ? "Update Blog" : "Create Blog" })
+      ] })
+    ] });
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "space-y-6", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("h1", { className: "text-3xl font-bold", children: "Blog Management" }),
+        /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: "Create and manage blog posts for Learn Srinagar" })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex gap-2", children: [
+        /* @__PURE__ */ jsxs(Dialog, { open: showCategoryDialog, onOpenChange: setShowCategoryDialog, children: [
+          /* @__PURE__ */ jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(Button, { variant: "outline", children: [
+            /* @__PURE__ */ jsx(Plus, { className: "h-4 w-4 mr-2" }),
+            "Add Category"
+          ] }) }),
+          /* @__PURE__ */ jsxs(DialogContent, { children: [
+            /* @__PURE__ */ jsxs(DialogHeader, { children: [
+              /* @__PURE__ */ jsx(DialogTitle, { children: "Create New Category" }),
+              /* @__PURE__ */ jsx(DialogDescription, { children: "Add a new blog category for organizing posts" })
+            ] }),
+            /* @__PURE__ */ jsxs(Form, { method: "post", className: "space-y-4", onSubmit: () => setShowCategoryDialog(false), children: [
+              /* @__PURE__ */ jsx("input", { type: "hidden", name: "_action", value: "create_category" }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx(Label, { htmlFor: "category_name", children: "Category Name *" }),
+                /* @__PURE__ */ jsx(
+                  Input,
+                  {
+                    id: "category_name",
+                    name: "category_name",
+                    required: true,
+                    placeholder: "e.g., School Events"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx(Label, { htmlFor: "category_description", children: "Description" }),
+                /* @__PURE__ */ jsx(
+                  Textarea,
+                  {
+                    id: "category_description",
+                    name: "category_description",
+                    placeholder: "Brief description of this category"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs(DialogFooter, { children: [
+                /* @__PURE__ */ jsx(Button, { type: "button", variant: "outline", onClick: () => setShowCategoryDialog(false), children: "Cancel" }),
+                /* @__PURE__ */ jsx(Button, { type: "submit", disabled: isSubmitting, children: "Create Category" })
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Dialog, { open: showCreateDialog, onOpenChange: setShowCreateDialog, children: [
+          /* @__PURE__ */ jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(Button, { children: [
+            /* @__PURE__ */ jsx(Plus, { className: "h-4 w-4 mr-2" }),
+            "Create Blog"
+          ] }) }),
+          /* @__PURE__ */ jsxs(DialogContent, { className: "max-w-4xl max-h-[90vh] overflow-y-auto", children: [
+            /* @__PURE__ */ jsxs(DialogHeader, { children: [
+              /* @__PURE__ */ jsx(DialogTitle, { children: "Create New Blog Post" }),
+              /* @__PURE__ */ jsx(DialogDescription, { children: "Create a new blog post for the Learn Srinagar community" })
+            ] }),
+            /* @__PURE__ */ jsx(BlogForm, { onClose: () => setShowCreateDialog(false) })
+          ] })
+        ] })
+      ] })
+    ] }),
+    (actionData == null ? void 0 : actionData.message) && /* @__PURE__ */ jsx("div", { className: `p-4 rounded-lg ${actionData.success ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`, children: actionData.message }),
+    /* @__PURE__ */ jsxs(Tabs, { defaultValue: "blogs", className: "space-y-4", children: [
+      /* @__PURE__ */ jsxs(TabsList, { children: [
+        /* @__PURE__ */ jsxs(TabsTrigger, { value: "blogs", children: [
+          "All Blogs (",
+          blogs.length,
+          ")"
+        ] }),
+        /* @__PURE__ */ jsxs(TabsTrigger, { value: "categories", children: [
+          "Categories (",
+          categories.length,
+          ")"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx(TabsContent, { value: "blogs", children: /* @__PURE__ */ jsxs(Card, { children: [
+        /* @__PURE__ */ jsxs(CardHeader, { children: [
+          /* @__PURE__ */ jsx(CardTitle, { children: "Blog Posts" }),
+          /* @__PURE__ */ jsx(CardDescription, { children: "Manage all blog posts in the system" })
+        ] }),
+        /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsxs(Table, { children: [
+          /* @__PURE__ */ jsx(TableHeader, { children: /* @__PURE__ */ jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsx(TableHead, { children: "Title" }),
+            /* @__PURE__ */ jsx(TableHead, { children: "Category" }),
+            /* @__PURE__ */ jsx(TableHead, { children: "Author" }),
+            /* @__PURE__ */ jsx(TableHead, { children: "Publish Date" }),
+            /* @__PURE__ */ jsx(TableHead, { children: "Actions" })
+          ] }) }),
+          /* @__PURE__ */ jsx(TableBody, { children: blogs.map((blog) => /* @__PURE__ */ jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsx(TableCell, { className: "font-medium", children: blog.title }),
+            /* @__PURE__ */ jsx(TableCell, { children: blog.category_name }),
+            /* @__PURE__ */ jsx(TableCell, { children: blog.author_name }),
+            /* @__PURE__ */ jsx(TableCell, { children: formatDate(blog.publish_date) }),
+            /* @__PURE__ */ jsx(TableCell, { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+              blog.status === "published" && /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", asChild: true, children: /* @__PURE__ */ jsx("a", { href: `/blog/${blog.id}`, target: "_blank", children: /* @__PURE__ */ jsx(Eye, { className: "h-4 w-4" }) }) }),
+              /* @__PURE__ */ jsxs(Dialog, { children: [
+                /* @__PURE__ */ jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", onClick: () => setEditingBlog(blog), children: /* @__PURE__ */ jsx(Edit, { className: "h-4 w-4" }) }) }),
+                /* @__PURE__ */ jsxs(DialogContent, { className: "max-w-4xl max-h-[90vh] overflow-y-auto", children: [
+                  /* @__PURE__ */ jsxs(DialogHeader, { children: [
+                    /* @__PURE__ */ jsx(DialogTitle, { children: "Edit Blog Post" }),
+                    /* @__PURE__ */ jsx(DialogDescription, { children: "Update the blog post details" })
+                  ] }),
+                  /* @__PURE__ */ jsx(BlogForm, { blog: editingBlog, onClose: () => setEditingBlog(null) })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs(AlertDialog, { children: [
+                /* @__PURE__ */ jsx(AlertDialogTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", children: /* @__PURE__ */ jsx(Trash2, { className: "h-4 w-4" }) }) }),
+                /* @__PURE__ */ jsxs(AlertDialogContent, { children: [
+                  /* @__PURE__ */ jsxs(AlertDialogHeader, { children: [
+                    /* @__PURE__ */ jsx(AlertDialogTitle, { children: "Delete Blog Post" }),
+                    /* @__PURE__ */ jsxs(AlertDialogDescription, { children: [
+                      'Are you sure you want to delete "',
+                      blog.title,
+                      '"? This action cannot be undone.'
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxs(AlertDialogFooter, { children: [
+                    /* @__PURE__ */ jsx(AlertDialogCancel, { children: "Cancel" }),
+                    /* @__PURE__ */ jsxs(Form, { method: "post", children: [
+                      /* @__PURE__ */ jsx("input", { type: "hidden", name: "_action", value: "delete" }),
+                      /* @__PURE__ */ jsx("input", { type: "hidden", name: "blog_id", value: blog.id }),
+                      /* @__PURE__ */ jsx(Button, { type: "submit", variant: "destructive", children: "Delete" })
+                    ] })
+                  ] })
+                ] })
+              ] })
+            ] }) })
+          ] }, blog.id)) })
+        ] }) })
+      ] }) }),
+      /* @__PURE__ */ jsx(TabsContent, { value: "categories", children: /* @__PURE__ */ jsxs(Card, { children: [
+        /* @__PURE__ */ jsxs(CardHeader, { children: [
+          /* @__PURE__ */ jsx(CardTitle, { children: "Blog Categories" }),
+          /* @__PURE__ */ jsx(CardDescription, { children: "Manage blog categories for organizing posts" })
+        ] }),
+        /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: categories.map((category) => /* @__PURE__ */ jsxs(Card, { children: [
+          /* @__PURE__ */ jsxs(CardHeader, { children: [
+            /* @__PURE__ */ jsx(CardTitle, { className: "text-lg", children: category.name }),
+            /* @__PURE__ */ jsx(CardDescription, { children: category.description })
+          ] }),
+          /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+            /* @__PURE__ */ jsxs("span", { className: "text-sm text-muted-foreground", children: [
+              blogs.filter((blog) => blog.category_id === category.id).length,
+              " posts"
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex gap-2", children: [
+              /* @__PURE__ */ jsxs(Dialog, { children: [
+                /* @__PURE__ */ jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", onClick: () => setEditingCategory(category), children: /* @__PURE__ */ jsx(Edit, { className: "h-4 w-4" }) }) }),
+                /* @__PURE__ */ jsxs(DialogContent, { children: [
+                  /* @__PURE__ */ jsxs(DialogHeader, { children: [
+                    /* @__PURE__ */ jsx(DialogTitle, { children: "Edit Category" }),
+                    /* @__PURE__ */ jsx(DialogDescription, { children: "Update category details" })
+                  ] }),
+                  /* @__PURE__ */ jsxs(Form, { method: "post", className: "space-y-4", onSubmit: () => setEditingCategory(null), children: [
+                    /* @__PURE__ */ jsx("input", { type: "hidden", name: "_action", value: "update_category" }),
+                    /* @__PURE__ */ jsx("input", { type: "hidden", name: "category_id", value: editingCategory == null ? void 0 : editingCategory.id }),
+                    /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsx(Label, { htmlFor: "edit_category_name", children: "Category Name *" }),
+                      /* @__PURE__ */ jsx(Input, { id: "edit_category_name", name: "category_name", defaultValue: editingCategory == null ? void 0 : editingCategory.name, required: true })
+                    ] }),
+                    /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsx(Label, { htmlFor: "edit_category_description", children: "Description" }),
+                      /* @__PURE__ */ jsx(Textarea, { id: "edit_category_description", name: "category_description", defaultValue: editingCategory == null ? void 0 : editingCategory.description })
+                    ] }),
+                    /* @__PURE__ */ jsxs(DialogFooter, { children: [
+                      /* @__PURE__ */ jsx(Button, { type: "button", variant: "outline", onClick: () => setEditingCategory(null), children: "Cancel" }),
+                      /* @__PURE__ */ jsx(Button, { type: "submit", disabled: isSubmitting, children: "Update" })
+                    ] })
+                  ] })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs(AlertDialog, { children: [
+                /* @__PURE__ */ jsx(AlertDialogTrigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", children: /* @__PURE__ */ jsx(Trash2, { className: "h-4 w-4" }) }) }),
+                /* @__PURE__ */ jsxs(AlertDialogContent, { children: [
+                  /* @__PURE__ */ jsxs(AlertDialogHeader, { children: [
+                    /* @__PURE__ */ jsx(AlertDialogTitle, { children: "Delete Category" }),
+                    /* @__PURE__ */ jsxs(AlertDialogDescription, { children: [
+                      'Are you sure you want to delete "',
+                      category.name,
+                      '"? This will affect all blogs in this category.'
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxs(AlertDialogFooter, { children: [
+                    /* @__PURE__ */ jsx(AlertDialogCancel, { children: "Cancel" }),
+                    /* @__PURE__ */ jsxs(Form, { method: "post", children: [
+                      /* @__PURE__ */ jsx("input", { type: "hidden", name: "_action", value: "delete_category" }),
+                      /* @__PURE__ */ jsx("input", { type: "hidden", name: "category_id", value: category.id }),
+                      /* @__PURE__ */ jsx(Button, { type: "submit", variant: "destructive", children: "Delete" })
+                    ] })
+                  ] })
+                ] })
+              ] })
+            ] })
+          ] }) })
+        ] }, category.id)) }) })
+      ] }) })
+    ] })
+  ] });
+}
+const route25 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  action,
+  default: ManageBlogs,
   loader
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-tWtejC-A.js", "imports": ["/assets/components-DNEopB8l.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/root-22k1P0P_.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js"], "css": ["/assets/root-BqkLYzrV.css"] }, "./pages/index": { "id": "./pages/index", "parentId": "root", "path": "/", "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/index-CCiJZfa1.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/button-DmCSXUvz.js", "/assets/card-C6ZhIbSz.js", "/assets/school-CdVvG36K.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/book-open-DGBbRqVw.js"], "css": [] }, "./pages/login": { "id": "./pages/login", "parentId": "root", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/login-DySJ-A0M.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/card-C6ZhIbSz.js", "/assets/input-B4036BWQ.js", "/assets/label-CqMZDcZc.js", "/assets/button-DmCSXUvz.js", "/assets/index-bREvOmy8.js"], "css": [] }, "./components/layout": { "id": "./components/layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/layout-DabJQaJz.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/button-DmCSXUvz.js", "/assets/chevron-right-Sm6q8V6a.js", "/assets/index-B1Wa2_Lw.js", "/assets/x-BMWVmNVa.js", "/assets/index-DI9OIEKY.js", "/assets/index-hRx_RXvi.js", "/assets/index-Czq8eJ6L.js", "/assets/index-bREvOmy8.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/school-CdVvG36K.js", "/assets/book-open-DGBbRqVw.js", "/assets/index-Beviy4mB.js"], "css": [] }, "./pages/logout": { "id": "./pages/logout", "parentId": "./components/layout", "path": "/logout", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/logout-CSxRPO1x.js", "imports": [], "css": [] }, "./pages/dashboard": { "id": "./pages/dashboard", "parentId": "./components/layout", "path": "dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/dashboard-CAGvvoue.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/button-DmCSXUvz.js", "/assets/card-C6ZhIbSz.js", "/assets/select-0BSzPRfs.js", "/assets/popover-PgOMidk7.js", "/assets/format-CkqhGn1q.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/chevron-right-Sm6q8V6a.js", "/assets/index-Czq8eJ6L.js"], "css": [] }, "./pages/school": { "id": "./pages/school", "parentId": "./components/layout", "path": "/school", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/school-crdQt9_O.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/textarea-CJU3mRXV.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/select-0BSzPRfs.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/teacher": { "id": "./pages/teacher", "parentId": "./components/layout", "path": "/teacher", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/teacher-DCOq4pjq.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/select-0BSzPRfs.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/badge-DjLCa4jX.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/live-class": { "id": "./pages/live-class", "parentId": "./components/layout", "path": "/live-class", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/live-class-PSaBfUtR.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/card-C6ZhIbSz.js", "/assets/input-B4036BWQ.js", "/assets/label-CqMZDcZc.js", "/assets/button-DmCSXUvz.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/select-0BSzPRfs.js", "/assets/table-CALqcIIP.js", "/assets/index-C_3qY_oq.js", "/assets/badge-DjLCa4jX.js", "/assets/plus-CdrJRhaZ.js", "/assets/search-Cr9CJLNR.js", "/assets/trash-2-BbE6-bGl.js", "/assets/clock-CqMB_GdE.js", "/assets/index-bREvOmy8.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/manage-live-classes": { "id": "./pages/manage-live-classes", "parentId": "./components/layout", "path": "/manage-live-classes", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/manage-live-classes-DX6l7dA_.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/card-C6ZhIbSz.js", "/assets/input-B4036BWQ.js", "/assets/label-CqMZDcZc.js", "/assets/button-DmCSXUvz.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/select-0BSzPRfs.js", "/assets/table-CALqcIIP.js", "/assets/badge-DjLCa4jX.js", "/assets/plus-CdrJRhaZ.js", "/assets/search-Cr9CJLNR.js", "/assets/trash-2-BbE6-bGl.js", "/assets/clock-CqMB_GdE.js", "/assets/index-bREvOmy8.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/subject": { "id": "./pages/subject", "parentId": "./components/layout", "path": "/subject", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/subject-CODeESNT.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/checkbox-DqZxbzz9.js", "/assets/table-CALqcIIP.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-BCBzHor-.js", "/assets/index-Beviy4mB.js"], "css": [] }, "./pages/class": { "id": "./pages/class", "parentId": "./components/layout", "path": "/class", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/class-CY8-0oEM.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js"], "css": [] }, "./pages/timetable": { "id": "./pages/timetable", "parentId": "./components/layout", "path": "/timetable", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/timetable-iVN896sH.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/select-0BSzPRfs.js", "/assets/input-B4036BWQ.js", "/assets/button-DmCSXUvz.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/format-CkqhGn1q.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/school-admin": { "id": "./pages/school-admin", "parentId": "./components/layout", "path": "/school-admin", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/school-admin-DKhgqDVA.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js"], "css": [] }, "./pages/class-admin": { "id": "./pages/class-admin", "parentId": "./components/layout", "path": "/class-admin", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/class-admin-0mK9xDZL.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/select-0BSzPRfs.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js"], "css": [] }, "./pages/attendance": { "id": "./pages/attendance", "parentId": "./components/layout", "path": "/attendance", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/attendance-DKBsh9vN.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/popover-PgOMidk7.js", "/assets/select-0BSzPRfs.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/clock-CqMB_GdE.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/trash-skOUOoGy.js", "/assets/format-CkqhGn1q.js", "/assets/chevron-right-Sm6q8V6a.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-Czq8eJ6L.js", "/assets/index-BCBzHor-.js", "/assets/index-B1Wa2_Lw.js"], "css": [] }, "./pages/student": { "id": "./pages/student", "parentId": "./components/layout", "path": "/student", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/student-XLoWFm_q.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/popover-PgOMidk7.js", "/assets/select-0BSzPRfs.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/badge-DjLCa4jX.js", "/assets/checkbox-DqZxbzz9.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/format-CkqhGn1q.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/chevron-right-Sm6q8V6a.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-Czq8eJ6L.js", "/assets/index-BCBzHor-.js", "/assets/index-B1Wa2_Lw.js", "/assets/x-BMWVmNVa.js"], "css": [] }, "./pages/parent": { "id": "./pages/parent", "parentId": "./components/layout", "path": "/parent", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/parent-BA8dyG0f.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/select-0BSzPRfs.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/badge-DjLCa4jX.js", "/assets/plus-CdrJRhaZ.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js"], "css": [] }, "./pages/homework": { "id": "./pages/homework", "parentId": "./components/layout", "path": "/homework", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/homework-DyFwYo81.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/textarea-CJU3mRXV.js", "/assets/select-0BSzPRfs.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/table-CALqcIIP.js", "/assets/label-CqMZDcZc.js", "/assets/plus-CdrJRhaZ.js", "/assets/book-open-DGBbRqVw.js", "/assets/eye-BYkaO2NC.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js"], "css": [] }, "./pages/feedback": { "id": "./pages/feedback", "parentId": "./components/layout", "path": "/feedback", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/feedback-DlsR9fke.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/index-A8lymLFx.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/textarea-CJU3mRXV.js", "/assets/select-0BSzPRfs.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/index-C_3qY_oq.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-Czq8eJ6L.js", "/assets/table-CALqcIIP.js", "/assets/label-CqMZDcZc.js", "/assets/plus-CdrJRhaZ.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/eye-BYkaO2NC.js", "/assets/pencil-BGp3lt72.js", "/assets/trash-skOUOoGy.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js", "/assets/index-B1Wa2_Lw.js", "/assets/x-BMWVmNVa.js"], "css": [] }, "./pages/student-live-classes": { "id": "./pages/student-live-classes", "parentId": "./components/layout", "path": "/student-live-classes", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/student-live-classes-Cy8_55LG.js", "imports": ["/assets/components-DNEopB8l.js", "/assets/card-C6ZhIbSz.js", "/assets/badge-DjLCa4jX.js", "/assets/button-DmCSXUvz.js", "/assets/input-B4036BWQ.js", "/assets/select-0BSzPRfs.js", "/assets/dialog-ZJ1iQ9TC.js", "/assets/createLucideIcon-BH6nH0mB.js", "/assets/search-Cr9CJLNR.js", "/assets/clock-CqMB_GdE.js", "/assets/index-DI9OIEKY.js", "/assets/index-bREvOmy8.js", "/assets/index-hRx_RXvi.js", "/assets/index-Beviy4mB.js", "/assets/index-BCBzHor-.js", "/assets/index-B1Wa2_Lw.js", "/assets/index-Czq8eJ6L.js", "/assets/x-BMWVmNVa.js"], "css": [] } }, "url": "/assets/manifest-5932938e.js", "version": "5932938e" };
+const serverManifest = { "entry": { "module": "/assets/entry.client-C7Wci-9z.js", "imports": ["/assets/components-Czgs4ZDY.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/root-DLcbtQV7.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js"], "css": ["/assets/root-56VpvzKo.css"] }, "./pages/index": { "id": "./pages/index", "parentId": "root", "path": "/", "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/index-DDC1TrSP.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-K27MDxhX.js", "/assets/card-NwEIi3Au.js", "/assets/sheet-CUXRcGbf.js", "/assets/users-BYiVQmMm.js", "/assets/zap-Lk0uNDZf.js", "/assets/book-open-BfE3ysdu.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/shield-DQbmizdw.js", "/assets/building-2-DvjlIz1M.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/login": { "id": "./pages/login", "parentId": "root", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/login-CXzDuE_p.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/card-NwEIi3Au.js", "/assets/input-iaXS3qcT.js", "/assets/label-DemHS7MM.js", "/assets/index-K27MDxhX.js"], "css": [] }, "./pages/blogs": { "id": "./pages/blogs", "parentId": "root", "path": "/blogs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/blogs-DGG9z4s3.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/card-NwEIi3Au.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/select-Ylyn-pTb.js", "/assets/badge-4Lg0JiJQ.js", "/assets/sheet-CUXRcGbf.js", "/assets/users-BYiVQmMm.js", "/assets/zap-Lk0uNDZf.js", "/assets/book-open-BfE3ysdu.js", "/assets/search-DVnqUBNx.js", "/assets/funnel-bqOpwt4T.js", "/assets/user-E-M6m6-h.js", "/assets/calendar-D8L6Jr1O.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-De8nHuaW.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/blog.$id": { "id": "./pages/blog.$id", "parentId": "root", "path": "/blog/:id", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/blog._id-BtKjqMzM.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/card-NwEIi3Au.js", "/assets/index-K27MDxhX.js", "/assets/badge-4Lg0JiJQ.js", "/assets/separator-Ch5HiLUN.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/user-E-M6m6-h.js", "/assets/calendar-D8L6Jr1O.js"], "css": [] }, "./pages/.well-known": { "id": "./pages/.well-known", "parentId": "root", "path": "/.well-known/*", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/.well-known-l0sNRNKZ.js", "imports": [], "css": [] }, "./components/layout": { "id": "./components/layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/layout-BOq8fsVb.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-K27MDxhX.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/sheet-CUXRcGbf.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-Ir32sE-q.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/separator-Ch5HiLUN.js", "/assets/building-2-DvjlIz1M.js", "/assets/book-open-BfE3ysdu.js", "/assets/index-De8nHuaW.js", "/assets/x-Cc2OQ3x-.js", "/assets/index-D_P41LgU.js"], "css": [] }, "./pages/logout": { "id": "./pages/logout", "parentId": "./components/layout", "path": "/logout", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/logout-CSxRPO1x.js", "imports": [], "css": [] }, "./pages/dashboard": { "id": "./pages/dashboard", "parentId": "./components/layout", "path": "dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/dashboard-8EiHRMMm.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-K27MDxhX.js", "/assets/card-NwEIi3Au.js", "/assets/select-Ylyn-pTb.js", "/assets/popover-C5RYcyP8.js", "/assets/tabs-DMM2dmSg.js", "/assets/calendar-D8L6Jr1O.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/message-square-C15futK_.js", "/assets/users-BYiVQmMm.js", "/assets/format-CkqhGn1q.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/index-Ir32sE-q.js"], "css": [] }, "./pages/school": { "id": "./pages/school", "parentId": "./components/layout", "path": "/school", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/school-7VRy6DtX.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/textarea-C_lwqRTU.js", "/assets/dialog-D-9Xvx_2.js", "/assets/select-Ylyn-pTb.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/teacher": { "id": "./pages/teacher", "parentId": "./components/layout", "path": "/teacher", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/teacher-DJiEX_-S.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/dialog-D-9Xvx_2.js", "/assets/select-Ylyn-pTb.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/badge-4Lg0JiJQ.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/live-class": { "id": "./pages/live-class", "parentId": "./components/layout", "path": "/live-class", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/live-class-C4Qw1a1C.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/card-NwEIi3Au.js", "/assets/input-iaXS3qcT.js", "/assets/label-DemHS7MM.js", "/assets/index-K27MDxhX.js", "/assets/dialog-D-9Xvx_2.js", "/assets/select-Ylyn-pTb.js", "/assets/table-JF8Sqja-.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/badge-4Lg0JiJQ.js", "/assets/index-Cl04mDCL.js", "/assets/plus-Bh29YP0v.js", "/assets/search-DVnqUBNx.js", "/assets/trash-2-CQQTqzn3.js", "/assets/external-link-3MTC7dGh.js", "/assets/clock-BeD-_8hj.js", "/assets/play-B9odYYVg.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/manage-live-classes": { "id": "./pages/manage-live-classes", "parentId": "./components/layout", "path": "/manage-live-classes", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/manage-live-classes-D2hM4FdD.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/card-NwEIi3Au.js", "/assets/input-iaXS3qcT.js", "/assets/label-DemHS7MM.js", "/assets/index-K27MDxhX.js", "/assets/dialog-D-9Xvx_2.js", "/assets/select-Ylyn-pTb.js", "/assets/table-JF8Sqja-.js", "/assets/badge-4Lg0JiJQ.js", "/assets/plus-Bh29YP0v.js", "/assets/search-DVnqUBNx.js", "/assets/trash-2-CQQTqzn3.js", "/assets/external-link-3MTC7dGh.js", "/assets/clock-BeD-_8hj.js", "/assets/play-B9odYYVg.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/subject": { "id": "./pages/subject", "parentId": "./components/layout", "path": "/subject", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/subject-BftTDBTd.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/checkbox-wp3taflu.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-ChsTconA.js", "/assets/index-D_P41LgU.js"], "css": [] }, "./pages/class": { "id": "./pages/class", "parentId": "./components/layout", "path": "/class", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/class-jAk1xBgc.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js"], "css": [] }, "./pages/timetable": { "id": "./pages/timetable", "parentId": "./components/layout", "path": "/timetable", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/timetable-Cz03Yjta.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/select-Ylyn-pTb.js", "/assets/input-iaXS3qcT.js", "/assets/index-K27MDxhX.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/format-CkqhGn1q.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/school-admin": { "id": "./pages/school-admin", "parentId": "./components/layout", "path": "/school-admin", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/school-admin-Cg7bmHIp.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js"], "css": [] }, "./pages/class-admin": { "id": "./pages/class-admin", "parentId": "./components/layout", "path": "/class-admin", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/class-admin-BbqDZBrU.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/select-Ylyn-pTb.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-De8nHuaW.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/attendance": { "id": "./pages/attendance", "parentId": "./components/layout", "path": "/attendance", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/attendance-J5aHN-3T.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/popover-C5RYcyP8.js", "/assets/select-Ylyn-pTb.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/calendar-D8L6Jr1O.js", "/assets/clock-BeD-_8hj.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/trash-Djyh65hH.js", "/assets/format-CkqhGn1q.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-Ir32sE-q.js", "/assets/index-ChsTconA.js", "/assets/index-De8nHuaW.js"], "css": [] }, "./pages/student": { "id": "./pages/student", "parentId": "./components/layout", "path": "/student", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/student-BaEI26Yc.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/popover-C5RYcyP8.js", "/assets/select-Ylyn-pTb.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/badge-4Lg0JiJQ.js", "/assets/checkbox-wp3taflu.js", "/assets/plus-Bh29YP0v.js", "/assets/calendar-D8L6Jr1O.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/format-CkqhGn1q.js", "/assets/chevron-right-DLObG_Jp.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-Ir32sE-q.js", "/assets/index-ChsTconA.js", "/assets/index-De8nHuaW.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/parent": { "id": "./pages/parent", "parentId": "./components/layout", "path": "/parent", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/parent-BGFLTl2W.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/dialog-D-9Xvx_2.js", "/assets/select-Ylyn-pTb.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/badge-4Lg0JiJQ.js", "/assets/plus-Bh29YP0v.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-De8nHuaW.js", "/assets/index-CLLXIHNP.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js"], "css": [] }, "./pages/homework": { "id": "./pages/homework", "parentId": "./components/layout", "path": "/homework", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/homework-BJiWi6Vn.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/textarea-C_lwqRTU.js", "/assets/select-Ylyn-pTb.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/label-DemHS7MM.js", "/assets/plus-Bh29YP0v.js", "/assets/book-open-BfE3ysdu.js", "/assets/eye-CqmDHwN2.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-De8nHuaW.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/feedback": { "id": "./pages/feedback", "parentId": "./components/layout", "path": "/feedback", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/feedback-GooclUFK.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/textarea-C_lwqRTU.js", "/assets/select-Ylyn-pTb.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/tabs-DMM2dmSg.js", "/assets/index-Cl04mDCL.js", "/assets/table-JF8Sqja-.js", "/assets/label-DemHS7MM.js", "/assets/plus-Bh29YP0v.js", "/assets/message-square-C15futK_.js", "/assets/eye-CqmDHwN2.js", "/assets/pencil-D9IIEJvc.js", "/assets/trash-Djyh65hH.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/index-De8nHuaW.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/student-live-classes": { "id": "./pages/student-live-classes", "parentId": "./components/layout", "path": "/student-live-classes", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/student-live-classes-DjxJ3hoo.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/card-NwEIi3Au.js", "/assets/badge-4Lg0JiJQ.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/select-Ylyn-pTb.js", "/assets/dialog-D-9Xvx_2.js", "/assets/funnel-bqOpwt4T.js", "/assets/search-DVnqUBNx.js", "/assets/play-B9odYYVg.js", "/assets/clock-BeD-_8hj.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-De8nHuaW.js", "/assets/index-Ir32sE-q.js", "/assets/x-Cc2OQ3x-.js"], "css": [] }, "./pages/change-password": { "id": "./pages/change-password", "parentId": "./components/layout", "path": "/change-password", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/change-password-D-jMdXsB.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/index-Bwv9VWKl.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/label-DemHS7MM.js", "/assets/card-NwEIi3Au.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/shield-DQbmizdw.js", "/assets/eye-CqmDHwN2.js"], "css": [] }, "./pages/manage-blogs": { "id": "./pages/manage-blogs", "parentId": "./components/layout", "path": "/manage-blogs", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/manage-blogs-Dxr_1mzg.js", "imports": ["/assets/components-Czgs4ZDY.js", "/assets/card-NwEIi3Au.js", "/assets/index-K27MDxhX.js", "/assets/input-iaXS3qcT.js", "/assets/label-DemHS7MM.js", "/assets/textarea-C_lwqRTU.js", "/assets/select-Ylyn-pTb.js", "/assets/tabs-DMM2dmSg.js", "/assets/table-JF8Sqja-.js", "/assets/dialog-D-9Xvx_2.js", "/assets/alert-dialog-X_iYVi-Y.js", "/assets/plus-Bh29YP0v.js", "/assets/eye-CqmDHwN2.js", "/assets/trash-2-CQQTqzn3.js", "/assets/index-CLLXIHNP.js", "/assets/index-CrACJ58a.js", "/assets/index-D_P41LgU.js", "/assets/index-ChsTconA.js", "/assets/createLucideIcon-28OpmP44.js", "/assets/index-Ir32sE-q.js", "/assets/index-De8nHuaW.js", "/assets/x-Cc2OQ3x-.js"], "css": [] } }, "url": "/assets/manifest-3bae99d2.js", "version": "3bae99d2" };
 const mode = "production";
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
@@ -9502,13 +11340,37 @@ const routes = {
     caseSensitive: void 0,
     module: route2
   },
+  "./pages/blogs": {
+    id: "./pages/blogs",
+    parentId: "root",
+    path: "/blogs",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route3
+  },
+  "./pages/blog.$id": {
+    id: "./pages/blog.$id",
+    parentId: "root",
+    path: "/blog/:id",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route4
+  },
+  "./pages/.well-known": {
+    id: "./pages/.well-known",
+    parentId: "root",
+    path: "/.well-known/*",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route5
+  },
   "./components/layout": {
     id: "./components/layout",
     parentId: "root",
     path: void 0,
     index: void 0,
     caseSensitive: void 0,
-    module: route3
+    module: route6
   },
   "./pages/logout": {
     id: "./pages/logout",
@@ -9516,7 +11378,7 @@ const routes = {
     path: "/logout",
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route7
   },
   "./pages/dashboard": {
     id: "./pages/dashboard",
@@ -9524,7 +11386,7 @@ const routes = {
     path: "dashboard",
     index: void 0,
     caseSensitive: void 0,
-    module: route5
+    module: route8
   },
   "./pages/school": {
     id: "./pages/school",
@@ -9532,7 +11394,7 @@ const routes = {
     path: "/school",
     index: void 0,
     caseSensitive: void 0,
-    module: route6
+    module: route9
   },
   "./pages/teacher": {
     id: "./pages/teacher",
@@ -9540,7 +11402,7 @@ const routes = {
     path: "/teacher",
     index: void 0,
     caseSensitive: void 0,
-    module: route7
+    module: route10
   },
   "./pages/live-class": {
     id: "./pages/live-class",
@@ -9548,7 +11410,7 @@ const routes = {
     path: "/live-class",
     index: void 0,
     caseSensitive: void 0,
-    module: route8
+    module: route11
   },
   "./pages/manage-live-classes": {
     id: "./pages/manage-live-classes",
@@ -9556,7 +11418,7 @@ const routes = {
     path: "/manage-live-classes",
     index: void 0,
     caseSensitive: void 0,
-    module: route9
+    module: route12
   },
   "./pages/subject": {
     id: "./pages/subject",
@@ -9564,7 +11426,7 @@ const routes = {
     path: "/subject",
     index: void 0,
     caseSensitive: void 0,
-    module: route10
+    module: route13
   },
   "./pages/class": {
     id: "./pages/class",
@@ -9572,7 +11434,7 @@ const routes = {
     path: "/class",
     index: void 0,
     caseSensitive: void 0,
-    module: route11
+    module: route14
   },
   "./pages/timetable": {
     id: "./pages/timetable",
@@ -9580,7 +11442,7 @@ const routes = {
     path: "/timetable",
     index: void 0,
     caseSensitive: void 0,
-    module: route12
+    module: route15
   },
   "./pages/school-admin": {
     id: "./pages/school-admin",
@@ -9588,7 +11450,7 @@ const routes = {
     path: "/school-admin",
     index: void 0,
     caseSensitive: void 0,
-    module: route13
+    module: route16
   },
   "./pages/class-admin": {
     id: "./pages/class-admin",
@@ -9596,7 +11458,7 @@ const routes = {
     path: "/class-admin",
     index: void 0,
     caseSensitive: void 0,
-    module: route14
+    module: route17
   },
   "./pages/attendance": {
     id: "./pages/attendance",
@@ -9604,7 +11466,7 @@ const routes = {
     path: "/attendance",
     index: void 0,
     caseSensitive: void 0,
-    module: route15
+    module: route18
   },
   "./pages/student": {
     id: "./pages/student",
@@ -9612,7 +11474,7 @@ const routes = {
     path: "/student",
     index: void 0,
     caseSensitive: void 0,
-    module: route16
+    module: route19
   },
   "./pages/parent": {
     id: "./pages/parent",
@@ -9620,7 +11482,7 @@ const routes = {
     path: "/parent",
     index: void 0,
     caseSensitive: void 0,
-    module: route17
+    module: route20
   },
   "./pages/homework": {
     id: "./pages/homework",
@@ -9628,7 +11490,7 @@ const routes = {
     path: "/homework",
     index: void 0,
     caseSensitive: void 0,
-    module: route18
+    module: route21
   },
   "./pages/feedback": {
     id: "./pages/feedback",
@@ -9636,7 +11498,7 @@ const routes = {
     path: "/feedback",
     index: void 0,
     caseSensitive: void 0,
-    module: route19
+    module: route22
   },
   "./pages/student-live-classes": {
     id: "./pages/student-live-classes",
@@ -9644,7 +11506,23 @@ const routes = {
     path: "/student-live-classes",
     index: void 0,
     caseSensitive: void 0,
-    module: route20
+    module: route23
+  },
+  "./pages/change-password": {
+    id: "./pages/change-password",
+    parentId: "./components/layout",
+    path: "/change-password",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route24
+  },
+  "./pages/manage-blogs": {
+    id: "./pages/manage-blogs",
+    parentId: "./components/layout",
+    path: "/manage-blogs",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route25
   }
 };
 export {
